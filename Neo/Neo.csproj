@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Components\Buttons\**" />
+    <EmbeddedResource Remove="Components\Buttons\**" />
+    <None Remove="Components\Buttons\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+</Project>
