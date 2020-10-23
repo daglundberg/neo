@@ -1,7 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Neo.Components;
 using System;
 
 namespace ScreenTest
@@ -10,13 +8,16 @@ namespace ScreenTest
 	{
 		private GraphicsDeviceManager _graphics;
 		private SpriteBatch _spriteBatch;
-		private Gui gui;
+		private Gui _gui;
 
 		public Game1()
 		{
 			_graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
 			IsMouseVisible = true;
+
+			this.IsFixedTimeStep = true;//false;
+			this.TargetElapsedTime = TimeSpan.FromSeconds(1d / 25); //60);
 		}
 
 		protected override void Initialize()
@@ -26,7 +27,7 @@ namespace ScreenTest
 			_graphics.ApplyChanges();
 
 			base.Initialize();
-			gui = new Gui(Content, new Point(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
+			_gui = new Gui(Content, new Point(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
 		}
 
 		protected override void LoadContent()
@@ -37,14 +38,14 @@ namespace ScreenTest
 		protected override void Update(GameTime gameTime)
 		{
 			base.Update(gameTime);
-			gui.Update();
+			_gui.Update(gameTime);
 		}
 
 		protected override void Draw(GameTime gameTime)
 		{
 			GraphicsDevice.Clear(Color.Indigo);
 			_spriteBatch.Begin();
-			gui.Draw(_spriteBatch);
+			_gui.Draw(_spriteBatch);
 			_spriteBatch.End();
 			base.Draw(gameTime);
 		}

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -7,13 +8,19 @@ namespace Neo.Components
 {
 	public abstract class Control : IEnumerable
 	{
+		public EventHandler Clicked;
 		public PixelUnit Size { get; set; }
 		public PixelUnit Position { get; set; }
 		public Flow Flow { get; set; }
 
-		public bool HasChildren	{ get { return _children.Count > 0;} }
-
 		private List<Control> _children;
+		public bool HasChildren { get { return _children.Count > 0; } }
+		public void AddChild(Control control) { _children.Add(control); }
+
+		public Control() : this(new PixelUnit(0, 0), new PixelUnit(10, 10))
+		{
+
+		}
 
 		public Control(PixelUnit position, PixelUnit size)
 		{
@@ -23,16 +30,17 @@ namespace Neo.Components
 			Flow = Flow.TopLeft;
 		}
 
-		public void AddChild(Control control){ _children.Add(control); }
-
-		public abstract void Initialize(Neo neo);
-
-		public IEnumerator GetEnumerator(){	return _children.GetEnumerator(); }
+		public IEnumerator GetEnumerator(){ return _children.GetEnumerator(); }
 
 		//Drawable
 		public Rectangle Bounds { get; protected set; }
 		protected Vector2 _position;
 		protected float _scale;
+
+		public void Click()
+		{
+			Clicked?.Invoke(this, new EventArgs());
+		}
 
 		public void SetPositionAndScale(Rectangle parentBounds, float scale)
 		{
@@ -94,51 +102,6 @@ namespace Neo.Components
 		}
 
 		public abstract void Draw(SpriteBatch spriteBatch);
-	}
-
-	public class Button : Control
-	{
-		//Control
-		public string Text;
-		public Button(string text) : base(new PixelUnit(0, 0), new PixelUnit(0, 0))
-		{
-			Text = text;
-		}
-
-		//Neo-init
-		Neo _neo;
-		public override void Initialize(Neo neo)
-		{
-			_neo = neo;
-			Size = new PixelUnit(_neo.Style.Font.MeasureString(Text).ToPoint()); 
-			//This line is mixing Pixel Units with pixels.... fix it!
-		}
-
-		//Drawable
-		public override void Draw(SpriteBatch spriteBatch)
-		{
-			spriteBatch.Draw(_neo.Style.ButtonBg, _position, null, Color.White, 0, Vector2.Zero, _scale, SpriteEffects.None, 0);
-			spriteBatch.DrawString(_neo.Style.Font, Text, _position, Color.White, 0, Vector2.Zero, _scale, SpriteEffects.None, 0);
-		}
-	}
-
-	public class Container : Control
-	{
-		public Container(PixelUnit position, PixelUnit size) : base(position, size)	{}
-		public override void Initialize(Neo neo){}
-		public override void Draw(SpriteBatch spriteBatch){}
-	}
-
-	public struct PixelUnit
-	{
-		public PixelUnit(int width, int height) { Width = width; Height = height; }
-		public PixelUnit(Point point) { Width = point.X; Height = point.Y; }
-		private int Width;
-		private int Height;
-
-		public Vector2 GetScaled(float scale)
-		{
-			return new Vector2(Width * scale, Height * scale);
-		}
+		public abstract void Initialize(Neo neo);
 	}
 }

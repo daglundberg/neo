@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Neo.Components;
 using System.Collections.Generic;
 
@@ -19,10 +20,7 @@ namespace Neo
 			_screenSize = screenSize;
 		}
 
-		public void AddControl(Control control)
-		{
-			_controls.Add(control);
-		}
+		public void AddControl(Control control){ _controls.Add(control); }
 
 		public void Calculate(float scale)
 		{
@@ -34,6 +32,31 @@ namespace Neo
 		{
 			foreach (Control control in _controls)
 				DrawControl(control, spriteBatch);
+		}
+
+		MouseState mouseOld;
+		MouseState mouseNew;
+		public void Update(GameTime gameTime)
+		{
+			mouseOld = mouseNew;
+			mouseNew = Mouse.GetState();
+
+			if (mouseNew.LeftButton == ButtonState.Released && mouseOld.LeftButton == ButtonState.Pressed)
+				GetControlWithMouse(mouseNew.Position)?.Click();
+		}
+
+		Control moused = null;
+		public Control GetControlWithMouse(Point point)
+		{
+			moused = null;
+			foreach (Control control in _controls)
+				if (control.Bounds.Contains(point))
+					ControlHasMouse(control, point);
+
+			if (moused != null)
+				return moused;
+
+			return null;
 		}
 
 		private void ComputeControl(Control control, Rectangle parentBounds, float scale)
@@ -52,20 +75,33 @@ namespace Neo
 			foreach (Control child in control)
 				DrawControl(child, spriteBatch);
 		}
+
+		private void ControlHasMouse(Control control, Point point)
+		{
+			if (control.Bounds.Contains(point))
+			{
+				moused = control;
+				foreach (Control child in control)
+					ControlHasMouse(child, point);
+			}
+		}
 	}
 
 	public class Style
 	{
-		ContentManager _content;
+		public Texture2D
+			ButtonBg,
+			SwitchBg;
+
+		public SpriteFont Font;
 		public Style(ContentManager content)
 		{
-			_content = content;
 			ButtonBg = content.Load<Texture2D>("buttonbg");
 			Font = content.Load<SpriteFont>("fonts/patuaone-big");
+			SwitchBg = content.Load<Texture2D>("switch");
 		}
 
-		public Texture2D ButtonBg;
-		public SpriteFont Font;
+
 	}
 
 	public enum Flow
