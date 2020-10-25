@@ -12,6 +12,7 @@ namespace Neo.Components
 		public PixelUnit Size { get; set; }
 		public PixelUnit Position { get; set; }
 		public Flow Flow { get; set; }
+		public bool WantsMouse { get; set; }
 
 		private List<Control> _children;
 		public bool HasChildren { get { return _children.Count > 0; } }
@@ -28,6 +29,7 @@ namespace Neo.Components
 			Size = size;
 			Position = position;
 			Flow = Flow.TopLeft;
+			WantsMouse = false;
 		}
 
 		public IEnumerator GetEnumerator(){ return _children.GetEnumerator(); }
@@ -102,6 +104,6 @@ namespace Neo.Components
 		}
 
 		public abstract void Draw(SpriteBatch spriteBatch);
-		public abstract void Initialize(Neo neo);
+		public abstract void Initialize(Neo neo, GraphicsDeviceManager graphics);
 	}
 }

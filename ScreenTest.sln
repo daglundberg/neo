@@ -5,7 +5,13 @@ VisualStudioVersion = 16.0.30608.117
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScreenTest", "ScreenTest\ScreenTest.csproj", "{A0EE7E0C-5233-42A6-A0E0-4BCD0C4ADC7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neo", "Neo\Neo.csproj", "{2CEF2843-B14C-4783-BF0A-1C60BB1B6F2E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neo", "Neo\Neo.csproj", "{2CEF2843-B14C-4783-BF0A-1C60BB1B6F2E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeoTestApp.Android", "NeoTestApp.Android\NeoTestApp.Android.csproj", "{6D42288E-E032-40C7-B009-81A373CC94FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeoTestApp.Code", "NeoTestApp.Code\NeoTestApp.Code.csproj", "{8F91AAD2-FFA4-4D55-8E98-46B0EBC0EFA9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeoTestApp.Desktop", "NeoTestApp.Desktop\NeoTestApp.Desktop.csproj", "{02F29548-BDD7-4D34-AB7B-338B5CF8EF9C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +27,20 @@ Global
 		{2CEF2843-B14C-4783-BF0A-1C60BB1B6F2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CEF2843-B14C-4783-BF0A-1C60BB1B6F2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CEF2843-B14C-4783-BF0A-1C60BB1B6F2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D42288E-E032-40C7-B009-81A373CC94FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D42288E-E032-40C7-B009-81A373CC94FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D42288E-E032-40C7-B009-81A373CC94FB}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{6D42288E-E032-40C7-B009-81A373CC94FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D42288E-E032-40C7-B009-81A373CC94FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D42288E-E032-40C7-B009-81A373CC94FB}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{8F91AAD2-FFA4-4D55-8E98-46B0EBC0EFA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F91AAD2-FFA4-4D55-8E98-46B0EBC0EFA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F91AAD2-FFA4-4D55-8E98-46B0EBC0EFA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F91AAD2-FFA4-4D55-8E98-46B0EBC0EFA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02F29548-BDD7-4D34-AB7B-338B5CF8EF9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02F29548-BDD7-4D34-AB7B-338B5CF8EF9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02F29548-BDD7-4D34-AB7B-338B5CF8EF9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02F29548-BDD7-4D34-AB7B-338B5CF8EF9C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
