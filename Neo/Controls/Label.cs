@@ -7,10 +7,13 @@ namespace Neo.Components
 	{
 		//Control
 		public string Text;
+		public Color Color;
 
-		public Label(string text) : base(new PixelUnit(0, 0), new PixelUnit(0, 0))
+		public Label(string text)
 		{
+			Color = Color.White;
 			Text = text;
+			WantsMouse = false;
 		}
 
 		//Neo-init
@@ -24,7 +27,7 @@ namespace Neo.Components
 		//Drawable
 		public override void Draw(SpriteBatch spriteBatch)
 		{
-			spriteBatch.DrawString(_neo.Style.Font, Text, _position, Color.White, 0, Vector2.Zero, _scale, SpriteEffects.None, 0);
+			spriteBatch.DrawString(_neo.Style.Font, Text, _position, Color, 0, Vector2.Zero, _scale, SpriteEffects.None, 0);
 		}
 
 

@@ -8,7 +8,7 @@ namespace Neo.Components
 		//Control
 		public string Text;
 
-		public Button(string text) : base(new PixelUnit(0, 0), new PixelUnit(0, 0))
+		public Button(string text)
 		{
 			Text = text;
 			WantsMouse = true;

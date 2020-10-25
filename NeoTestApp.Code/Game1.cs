@@ -13,6 +13,7 @@ namespace NeoTestApp.Code
 		private SpriteBatch _spriteBatch;
 		private Gui _gui;
 
+
 		public static MonoGamePlatform CurrentPlatform;
 
 		public Game1(MonoGamePlatform platform)
@@ -22,7 +23,7 @@ namespace NeoTestApp.Code
 			Content.RootDirectory = "Content";
 			IsMouseVisible = true;
 
-			this.IsFixedTimeStep = true;//false;
+			this.IsFixedTimeStep = true;
 			this.TargetElapsedTime = TimeSpan.FromSeconds(1d / 25); //60);
 
 
@@ -49,16 +50,15 @@ namespace NeoTestApp.Code
 			Window.ClientSizeChanged += OnResize;
 		}
 
-
-public void OnResize(Object sender, EventArgs e)
-{
+		public void OnResize(Object sender, EventArgs e)
+		{
 			_graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
 			_graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
 
 			_gui.Calculate();
-}
+		}
 
-protected override void LoadContent()
+		protected override void LoadContent()
 		{
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
 		}
@@ -67,15 +67,15 @@ protected override void LoadContent()
 		{
 			base.Update(gameTime);
 			_gui.Update(gameTime);
-
-
 		}
+
+
 
 		protected override void Draw(GameTime gameTime)
 		{
 			GraphicsDevice.Clear(Color.Indigo);
 			_spriteBatch.Begin();
-			_gui.Draw(_spriteBatch);
+				_gui.Draw(_spriteBatch);
 			_spriteBatch.End();
 			base.Draw(gameTime);
 		}
@@ -100,37 +100,37 @@ protected override void LoadContent()
 			if (_oldMouseState.LeftButton == ButtonState.Pressed && _newMouseState.LeftButton == ButtonState.Released)
 			{
 				//Handle click
-			//	if (_gui.WantsMouse(_newMouseState.Position))
-			//	{
-			//		_gui.Click(_newMouseState.Position);
-			//		return;
-			//	}
+				//	if (_gui.WantsMouse(_newMouseState.Position))
+				//	{
+				//		_gui.Click(_newMouseState.Position);
+				//		return;
+				//	}
 
-/*				if (_units.HasMouseFocus(_newMouseState.Position))
-				{
-					_units.Click();
-					return;
-				}
+				/*				if (_units.HasMouseFocus(_newMouseState.Position))
+								{
+									_units.Click();
+									return;
+								}
 
-				if (_mapComponent.HasMouseFocus(_newMouseState.Position))
-				{
-					_mapComponent.Click();
-					return;
-				}
-				else
-				{
-					_units.ClearSelection();
-					_mapComponent.ClearSelection();
-					return;
-				}*/
+								if (_mapComponent.HasMouseFocus(_newMouseState.Position))
+								{
+									_mapComponent.Click();
+									return;
+								}
+								else
+								{
+									_units.ClearSelection();
+									_mapComponent.ClearSelection();
+									return;
+								}*/
 			}
 			else
 			{
 				// No click, just hovering..
-/*				if (!_gui.HasMouseFocus(_newMouseState.Position))
-					if (!_units.HasMouseFocus(_newMouseState.Position))
-						if (!_mapComponent.HasMouseFocus(_newMouseState.Position))
-							return;*/
+				/*				if (!_gui.HasMouseFocus(_newMouseState.Position))
+									if (!_units.HasMouseFocus(_newMouseState.Position))
+										if (!_mapComponent.HasMouseFocus(_newMouseState.Position))
+											return;*/
 			}
 
 		}
@@ -146,29 +146,29 @@ protected override void LoadContent()
 					Point pos = tl.Position.ToPoint();
 
 					//Handle click
-			//		if (_gui.WantsMouse(pos))
-			//		{
-			//			_gui.Click(pos);
-			//			return;
-			//		}
+					//		if (_gui.WantsMouse(pos))
+					//		{
+					//			_gui.Click(pos);
+					//			return;
+					//		}
 
-/*					if (_units.HasMouseFocus(pos))
-					{
-						_units.Click();
-						return;
-					}
+					/*					if (_units.HasMouseFocus(pos))
+										{
+											_units.Click();
+											return;
+										}
 
-					if (_mapComponent.HasMouseFocus(pos))
-					{
-						_mapComponent.Click();
-						return;
-					}
-					else
-					{
-						_units.ClearSelection();
-						_mapComponent.ClearSelection();
-						return;
-					}*/
+										if (_mapComponent.HasMouseFocus(pos))
+										{
+											_mapComponent.Click();
+											return;
+										}
+										else
+										{
+											_units.ClearSelection();
+											_mapComponent.ClearSelection();
+											return;
+										}*/
 				}
 			}
 		}

@@ -17,25 +17,42 @@ namespace Neo
 		public Style Style { get; private set; }
 		private MonoGamePlatform _currentPlatform;
 		public float Scale { get; private set; }
-		public float ScaleMultiplier { get; set; }
+		private float _scaleMultiplier = 1;
+
+		public float ScaleMultiplier
+		{
+			get
+			{
+				return _scaleMultiplier;
+			}
+
+			set
+			{
+				_scaleMultiplier = value;
+				Calculate(true);
+			}
+		}
+
 		private GraphicsDeviceManager _graphics;
 
 		public Neo(GraphicsDeviceManager graphics, Style style, MonoGamePlatform platform)
 		{
-			ScaleMultiplier = 1;
 			_graphics = graphics;
 			_currentPlatform = platform;
 			_controls = new List<Control>();
 			Style = style;
 		}
 
-		public void AddControl(Control control){ _controls.Add(control); }
+		public void AddControl(Control control){ _controls.Add(control); Calculate(false); }
+		public void AddControls(Control[] controls){ _controls.AddRange(controls); Calculate(false); }
+		public void RemoveControl(Control control) { _controls.Remove(control); Calculate(false); }
 
-		public void Calculate()
+		public void Calculate(bool force)
 		{
 			CalculateScale();
 			foreach (Control control in _controls)
-				ComputeControl(control, new Rectangle(0, 0, _screenSize.X, _screenSize.Y));
+				if (!control.IsCalculated || force)
+					ComputeControl(control, new Rectangle(0, 0, _screenSize.X, _screenSize.Y));
 		}
 
 		private void CalculateScale()

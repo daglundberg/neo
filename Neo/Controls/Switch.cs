@@ -19,8 +19,6 @@ namespace Neo.Controls
 		Neo _neo;
 		public override void Draw(SpriteBatch spriteBatch)
 		{
-			//spriteBatch.Draw(_neo.Style.SwitchBg, _position, null, Color.White, 0, Vector2.Zero, _scale, SpriteEffects.None, 0);
-			//spriteBatch.Draw(_neo.Style.ButtonBg, _position, null, Color.White, 0, Vector2.Zero, _scale, SpriteEffects.None, 0);
 			spriteBatch.Draw(_neo.Style.SwitchBg, _position, new Rectangle(0, Checked ? 0:50, 100, 50), Color.White, 0, Vector2.Zero, _scale, SpriteEffects.None, 0); ;
 		}
 

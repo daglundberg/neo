@@ -2,7 +2,7 @@
 
 namespace Neo
 {
-	public struct PixelUnit
+	public class PixelUnit
 	{
 		public PixelUnit(int width, int height) { Width = width; Height = height; }
 		public PixelUnit(Point point) { Width = point.X; Height = point.Y; }

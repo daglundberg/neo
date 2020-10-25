@@ -8,31 +8,26 @@ namespace Neo.Components
 {
 	public abstract class Control : IEnumerable
 	{
-		public EventHandler Clicked;
+		public event EventHandler Clicked;
 		public PixelUnit Size { get; set; }
-		public PixelUnit Position { get; set; }
-		public Flow Flow { get; set; }
-		public bool WantsMouse { get; set; }
+		public PixelUnit PositionOffset { get; set; }
+		public Flow Flow { get; set; } = Flow.TopLeft;
+		public bool WantsMouse { get; set; } = false;
 
-		private List<Control> _children;
+		public bool IsCalculated { get; protected set; }
+
+		private List<Control> _children = new List<Control>();
 		public bool HasChildren { get { return _children.Count > 0; } }
-		public void AddChild(Control control) { _children.Add(control); }
+		public Control AddChild(Control child) { _children.Add(child); return this; }
+		public Control AddChildren(Control[] children) { _children.AddRange(children); return this; }
 
-		public Control() : this(new PixelUnit(0, 0), new PixelUnit(10, 10))
+		public Control()
 		{
-
+			Size = null;
+			PositionOffset = new PixelUnit(0,0);
 		}
 
-		public Control(PixelUnit position, PixelUnit size)
-		{
-			_children = new List<Control>();
-			Size = size;
-			Position = position;
-			Flow = Flow.TopLeft;
-			WantsMouse = false;
-		}
-
-		public IEnumerator GetEnumerator(){ return _children.GetEnumerator(); }
+		public IEnumerator GetEnumerator() { return _children.GetEnumerator(); }
 
 		//Drawable
 		public Rectangle Bounds { get; protected set; }
@@ -44,66 +39,74 @@ namespace Neo.Components
 			Clicked?.Invoke(this, new EventArgs());
 		}
 
-		public void SetPositionAndScale(Rectangle parentBounds, float scale)
+		public virtual void SetPositionAndScale(Rectangle parentBounds, float scale)
 		{
 			_scale = scale;
 
-			int x = 0;
-			int y = 0;
+			if (Size == null)
+				Bounds = parentBounds;
+			else
+				Bounds = GetPixelBoundsFromFlow(parentBounds, Flow, scale, PositionOffset, Size);
 
-			switch (this.Flow)
-			{
-				case Flow.TopLeft:
-					x = parentBounds.X + (int)Position.GetScaled(scale).X;
-					y = parentBounds.Y + (int)Position.GetScaled(scale).Y;
-					break;
-
-				case Flow.TopRight:
-					x = parentBounds.X + parentBounds.Width - ((int)(Size.GetScaled(scale).X + Position.GetScaled(scale).X));
-					y = parentBounds.Y + (int)Position.GetScaled(scale).Y;
-					break;
-
-				case Flow.BottomRight:
-					x = parentBounds.X + parentBounds.Width - ((int)(Size.GetScaled(scale).X + Position.GetScaled(scale).X));
-					y = parentBounds.Y + parentBounds.Height - ((int)(Size.GetScaled(scale).Y + Position.GetScaled(scale).Y));
-					break;
-
-				case Flow.BottomLeft:
-					x = parentBounds.X + (int)Position.GetScaled(scale).X;
-					y = parentBounds.Y + parentBounds.Height - ((int)(Size.GetScaled(scale).Y + Position.GetScaled(scale).Y));
-					break;
-
-				case Flow.Left:
-					x = parentBounds.X + (int)Position.GetScaled(scale).X;
-					y = parentBounds.Y + (parentBounds.Height/2 - (int)(Size.GetScaled(scale).Y/2));
-					break;
-
-				case Flow.Right:
-					x = parentBounds.X + parentBounds.Width - ((int)(Size.GetScaled(scale).X + Position.GetScaled(scale).X));
-					y = parentBounds.Y + (parentBounds.Height / 2 - (int)(Size.GetScaled(scale).Y / 2));
-					break;
-
-				case Flow.Center:
-					x = parentBounds.X + (parentBounds.Width / 2 - (int)(Size.GetScaled(scale).X / 2));
-					y = parentBounds.Y + (parentBounds.Height / 2 - (int)(Size.GetScaled(scale).Y / 2));
-					break;
-
-				case Flow.Top:
-					x = parentBounds.X + (parentBounds.Width / 2 - (int)(Size.GetScaled(scale).X / 2));
-					y = parentBounds.Y + (int)Position.GetScaled(scale).Y;
-					break;
-
-				case Flow.Bottom:
-					x = parentBounds.X + (parentBounds.Width / 2 - (int)(Size.GetScaled(scale).X / 2));
-					y = parentBounds.Y + parentBounds.Height - ((int)(Size.GetScaled(scale).Y + Position.GetScaled(scale).Y));
-					break;
-			}
-
-			Bounds = new Rectangle(new Point(x, y), Size.GetScaled(scale).ToPoint());
 			_position = Bounds.Location.ToVector2();
+			IsCalculated = true;
 		}
 
 		public abstract void Draw(SpriteBatch spriteBatch);
 		public abstract void Initialize(Neo neo, GraphicsDeviceManager graphics);
+
+		protected static Rectangle GetPixelBoundsFromFlow(Rectangle parentBounds, Flow flow, float scale, PixelUnit positionOffset, PixelUnit size)
+		{
+			int x = 0;
+			int y = 0;
+			switch (flow)
+			{
+				case Flow.TopLeft:
+					x = parentBounds.X + (int)positionOffset.GetScaled(scale).X;
+					y = parentBounds.Y + (int)positionOffset.GetScaled(scale).Y;
+					break;
+
+				case Flow.TopRight:
+					x = parentBounds.X + parentBounds.Width - ((int)(size.GetScaled(scale).X + positionOffset.GetScaled(scale).X));
+					y = parentBounds.Y + (int)positionOffset.GetScaled(scale).Y;
+					break;
+
+				case Flow.BottomRight:
+					x = parentBounds.X + parentBounds.Width - ((int)(size.GetScaled(scale).X + positionOffset.GetScaled(scale).X));
+					y = parentBounds.Y + parentBounds.Height - ((int)(size.GetScaled(scale).Y + positionOffset.GetScaled(scale).Y));
+					break;
+
+				case Flow.BottomLeft:
+					x = parentBounds.X + (int)positionOffset.GetScaled(scale).X;
+					y = parentBounds.Y + parentBounds.Height - ((int)(size.GetScaled(scale).Y + positionOffset.GetScaled(scale).Y));
+					break;
+
+				case Flow.Left:
+					x = parentBounds.X + (int)positionOffset.GetScaled(scale).X;
+					y = parentBounds.Y + (parentBounds.Height / 2 - (int)(size.GetScaled(scale).Y / 2)) + (int)positionOffset.GetScaled(scale).Y;
+					break;
+
+				case Flow.Right:
+					x = parentBounds.X + parentBounds.Width - ((int)(size.GetScaled(scale).X + positionOffset.GetScaled(scale).X));
+					y = parentBounds.Y + (parentBounds.Height / 2 - (int)(size.GetScaled(scale).Y / 2));
+					break;
+
+				case Flow.Center:
+					x = parentBounds.X + (parentBounds.Width / 2 - (int)(size.GetScaled(scale).X / 2));
+					y = parentBounds.Y + (parentBounds.Height / 2 - (int)(size.GetScaled(scale).Y / 2));
+					break;
+
+				case Flow.Top:
+					x = parentBounds.X + (parentBounds.Width / 2 - (int)(size.GetScaled(scale).X / 2));
+					y = parentBounds.Y + (int)positionOffset.GetScaled(scale).Y;
+					break;
+
+				case Flow.Bottom:
+					x = parentBounds.X + (parentBounds.Width / 2 - (int)(size.GetScaled(scale).X / 2));
+					y = parentBounds.Y + parentBounds.Height - ((int)(size.GetScaled(scale).Y + positionOffset.GetScaled(scale).Y));
+					break;
+			}
+			return new Rectangle(new Point(x, y), size.GetScaled(scale).ToPoint());
+		}
 	}
 }
