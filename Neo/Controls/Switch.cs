@@ -25,11 +25,11 @@ namespace Neo.Controls
 		public override void Initialize(Neo neo, GraphicsDeviceManager graphics)
 		{
 			_neo = neo;
-			Size = new PixelUnit(100,50);
 		}
 
 		private void Switch_Clicked(object sender, EventArgs e)
 		{
+			Size = new ScreenUnit(100, 50);
 			Checked = !Checked;
 		}
 	}

@@ -2,10 +2,10 @@
 
 namespace Neo
 {
-	public class PixelUnit
+	public class ScreenUnit
 	{
-		public PixelUnit(int width, int height) { Width = width; Height = height; }
-		public PixelUnit(Point point) { Width = point.X; Height = point.Y; }
+		public ScreenUnit(int width, int height) { Width = width; Height = height; }
+		public ScreenUnit(Point point) { Width = point.X; Height = point.Y; }
 		private int Width;
 		private int Height;
 

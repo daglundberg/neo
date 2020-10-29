@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using MonoGame.Framework.Utilities;
 using Neo.Components;
-using System;
 using System.Collections.Generic;
 
 namespace Neo
@@ -52,7 +51,7 @@ namespace Neo
 			CalculateScale();
 			foreach (Control control in _controls)
 				if (!control.IsCalculated || force)
-					ComputeControl(control, new Rectangle(0, 0, _screenSize.X, _screenSize.Y));
+					ComputeControl(control, new Rectangle(0, 0, _screenSize.X, _screenSize.Y), _controls.Count-1, 0);
 		}
 
 		private void CalculateScale()
@@ -115,7 +114,7 @@ namespace Neo
 		{
 			moused = null;
 			foreach (Control control in _controls)
-				if (control.Bounds.Contains(point))
+				if (control.PixelBounds.Contains(point))
 					ControlHasMouse(control, point);
 
 			if (moused != null)
@@ -138,13 +137,15 @@ namespace Neo
 			moused.Click();
 		}
 
-		private void ComputeControl(Control control, Rectangle parentBounds)
+		private void ComputeControl(Control control, Rectangle parentBounds, int numSiblings, int siblingIndex)
 		{
 			control.Initialize(this, _graphics);
-			control.SetPositionAndScale(parentBounds, Scale);
+			control.SetPositionAndScale(parentBounds, Scale, numSiblings, siblingIndex);
 
-			foreach (Control child in control)
-				ComputeControl(child, control.Bounds);
+			for (int i = 0; i < control.ChildCount; i++)
+				ComputeControl(control[i], control.PixelBounds, control.ChildCount-1, i);
+/*			foreach (Control child in control)
+				ComputeControl(child, control.PixelBounds);*/
 		}
 
 		private void DrawControl(Control control, SpriteBatch spriteBatch)
@@ -157,7 +158,7 @@ namespace Neo
 
 		private void ControlHasMouse(Control control, Point point)
 		{
-			if (control.Bounds.Contains(point))
+			if (control.PixelBounds.Contains(point))
 			{
 				moused = control;
 				foreach (Control child in control)
@@ -179,8 +180,6 @@ namespace Neo
 			Font = content.Load<SpriteFont>("fonts/patuaone-big");
 			SwitchBg = content.Load<Texture2D>("switch");
 		}
-
-
 	}
 
 	public enum Flow
@@ -193,6 +192,7 @@ namespace Neo
 		BottomRight,
 		Bottom,
 		BottomLeft,
-		Left
+		Left,
+		HorizontalSharing,
 	}
 }

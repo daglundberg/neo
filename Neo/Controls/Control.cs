@@ -9,8 +9,8 @@ namespace Neo.Components
 	public abstract class Control : IEnumerable
 	{
 		public event EventHandler Clicked;
-		public PixelUnit Size { get; set; }
-		public PixelUnit PositionOffset { get; set; }
+		public ScreenUnit Size { get; set; }
+		public ScreenUnit PositionOffset { get; set; }
 		public Flow Flow { get; set; } = Flow.TopLeft;
 		public bool WantsMouse { get; set; } = false;
 
@@ -18,19 +18,28 @@ namespace Neo.Components
 
 		private List<Control> _children = new List<Control>();
 		public bool HasChildren { get { return _children.Count > 0; } }
+		public int ChildCount { get { return _children.Count; } }
 		public Control AddChild(Control child) { _children.Add(child); return this; }
 		public Control AddChildren(Control[] children) { _children.AddRange(children); return this; }
 
 		public Control()
 		{
 			Size = null;
-			PositionOffset = new PixelUnit(0,0);
+			PositionOffset = new ScreenUnit(0,0);
+		}
+
+		public Control this[int index]
+		{
+			get
+			{
+				return _children[index];
+			}
 		}
 
 		public IEnumerator GetEnumerator() { return _children.GetEnumerator(); }
 
 		//Drawable
-		public Rectangle Bounds { get; protected set; }
+		public Rectangle PixelBounds { get; protected set; }
 		protected Vector2 _position;
 		protected float _scale;
 
@@ -39,23 +48,23 @@ namespace Neo.Components
 			Clicked?.Invoke(this, new EventArgs());
 		}
 
-		public virtual void SetPositionAndScale(Rectangle parentBounds, float scale)
+		public virtual void SetPositionAndScale(Rectangle parentBounds, float scale, int numSiblings, int siblingIndex)
 		{
 			_scale = scale;
 
 			if (Size == null)
-				Bounds = parentBounds;
+				PixelBounds = parentBounds;
 			else
-				Bounds = GetPixelBoundsFromFlow(parentBounds, Flow, scale, PositionOffset, Size);
+				PixelBounds = GetPixelBoundsFromFlow(parentBounds, Flow, scale, PositionOffset, Size, numSiblings, siblingIndex);
 
-			_position = Bounds.Location.ToVector2();
+			_position = PixelBounds.Location.ToVector2();
 			IsCalculated = true;
 		}
 
 		public abstract void Draw(SpriteBatch spriteBatch);
 		public abstract void Initialize(Neo neo, GraphicsDeviceManager graphics);
 
-		protected static Rectangle GetPixelBoundsFromFlow(Rectangle parentBounds, Flow flow, float scale, PixelUnit positionOffset, PixelUnit size)
+		protected static Rectangle GetPixelBoundsFromFlow(Rectangle parentBounds, Flow flow, float scale, ScreenUnit positionOffset, ScreenUnit size, int numSiblings, int siblingIndex)
 		{
 			int x = 0;
 			int y = 0;
@@ -103,6 +112,13 @@ namespace Neo.Components
 
 				case Flow.Bottom:
 					x = parentBounds.X + (parentBounds.Width / 2 - (int)(size.GetScaled(scale).X / 2));
+					y = parentBounds.Y + parentBounds.Height - ((int)(size.GetScaled(scale).Y + positionOffset.GetScaled(scale).Y));
+					break;
+
+				case Flow.HorizontalSharing:
+					float width = (parentBounds.Width / numSiblings+1);
+					int xpos = (int)(siblingIndex * width);
+					x = parentBounds.X + xpos +  (int)(width / 2);
 					y = parentBounds.Y + parentBounds.Height - ((int)(size.GetScaled(scale).Y + positionOffset.GetScaled(scale).Y));
 					break;
 			}

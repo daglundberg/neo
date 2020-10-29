@@ -21,7 +21,7 @@ namespace Neo.Components
 		public override void Initialize(Neo neo, GraphicsDeviceManager graphics)
 		{
 			_neo = neo;
-			Size = new PixelUnit(_neo.Style.Font.MeasureString(Text).ToPoint() + new Point(20,10));
+			Size = new ScreenUnit(_neo.Style.Font.MeasureString(Text).ToPoint() + new Point(20,10));
 		}
 
 		//Drawable

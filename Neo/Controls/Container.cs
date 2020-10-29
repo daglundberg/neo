@@ -5,53 +5,44 @@ namespace Neo.Components
 {
 	public class Container : Control
 	{
-		public Container() { }
-		public Container(PixelUnit positionOffset, PixelUnit size)
+		public Container(){}
+		public Container(ScreenUnit positionOffset, ScreenUnit size)
 		{
 			Size = size;
 			PositionOffset = positionOffset;
 		}
 
 		//Neo-init
-		Neo _neo;
 		GraphicsDeviceManager _graphics;
 		public override void Initialize(Neo neo, GraphicsDeviceManager graphics)
 		{
-			_neo = neo;
 			_graphics = graphics;
 		}
 
-		public override void SetPositionAndScale(Rectangle parentBounds, float scale)
+		public override void SetPositionAndScale(Rectangle parentBounds, float scale, int numSiblings, int siblingIndex)
 		{
 			_scale = scale;
 
-			Point size;
-
 			if (Size == null)
-			{
-				Bounds = parentBounds;
-				size = parentBounds.Size;
-			}
+				PixelBounds = parentBounds;
 			else
-			{
-				Bounds = GetPixelBoundsFromFlow(parentBounds, Flow, scale, PositionOffset, Size);
-				size = new Point((int)Size.GetScaled(_neo.Scale).X, (int)Size.GetScaled(_neo.Scale).Y);
-			}
+				PixelBounds = GetPixelBoundsFromFlow(parentBounds, Flow, scale, PositionOffset, Size, numSiblings, siblingIndex);
 
-			_position = Bounds.Location.ToVector2();
+			_position = PixelBounds.Location.ToVector2();
 			IsCalculated = true;
 
 			basicEffect = new BasicEffect(_graphics.GraphicsDevice);
 			basicEffect.VertexColorEnabled = true;
 
-			Point position = new Point(0, 0);
-			Vector2 size2 = new Vector2((float)size.X / (float)_graphics.PreferredBackBufferWidth, (float)size.Y / (float)_graphics.PreferredBackBufferHeight);
+			//Because the coordinate systems are different
+			Vector2 size2 = new Vector2((float)PixelBounds.Size.X / (float)_graphics.PreferredBackBufferWidth, (float)PixelBounds.Size.Y / (float)_graphics.PreferredBackBufferHeight);
+			Vector2 _pos = new Vector2((((_position.X / (float)_graphics.PreferredBackBufferWidth + size2.X / 2) * 2f) - 1f) * -1.0f, (((_position.Y / (float)_graphics.PreferredBackBufferHeight + size2.Y / 2) * 2f ) -1f ) * -1.0f);
 
 			Color color = new Color(10, 10, 10, 200);
-			_vertices[0].Position = new Vector3(-1 * size2.X + position.X, -1 * size2.Y + position.Y, 0);
-			_vertices[1].Position = new Vector3(-1 * size2.X + position.X, 1 * size2.Y + position.Y, 0);
-			_vertices[2].Position = new Vector3(1 * size2.X + position.X, -1 * size2.Y + position.Y, 0);
-			_vertices[4].Position = new Vector3(1 * size2.X + position.X, 1 * size2.Y + position.Y, 0);
+			_vertices[0].Position = new Vector3(-1 * size2.X + _pos.X, -1 * size2.Y + _pos.Y, 0);
+			_vertices[1].Position = new Vector3(-1 * size2.X + _pos.X, 1 * size2.Y + _pos.Y, 0);
+			_vertices[2].Position = new Vector3(1 * size2.X + _pos.X, -1 * size2.Y + _pos.Y, 0);
+			_vertices[4].Position = new Vector3(1 * size2.X + _pos.X, 1 * size2.Y + _pos.Y, 0);
 
 			_vertices[0].Color = color;
 			_vertices[1].Color = color;
@@ -79,8 +70,6 @@ namespace Neo.Components
 
 			_graphics.GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 2);
 			spriteBatch.Begin();
-
 		}
-
 	}
 }

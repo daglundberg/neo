@@ -20,18 +20,28 @@ namespace NeoTestApp.Code
 			_neo = new Neo.Neo(graphics, style, Game1.CurrentPlatform);
 
 			_btnOk = new Button("Hey hey") { Flow = Flow.TopRight };
-			_switch = new Switch() { Flow = Flow.Left, PositionOffset = new PixelUnit(0, 0) };
+			_switch = new Switch() { Flow = Flow.Left, PositionOffset = new ScreenUnit(0, 0) };
 			_switch.Clicked += swOk_Clicked;
-
 
 			_label = new Label("Heeey there!") { Color = Color.Aquamarine, Flow = Flow.Top };
 
 			_btnOk.Clicked += btnCancel_Clicked;
 
-			_neo.AddControls(new Control[]{
-				_btnOk,
-				_switch,
-				_label });
+			/*						_neo.AddControls(new Control[]{
+										new Container(){ Size = new ScreenUnit(200, 200), Flow = Flow.Bottom },
+										_btnOk,
+										_switch,
+										_label });*/
+
+			MessageBox elenasMessageBox = new MessageBox("Do you want to take \nElena out on a date?", ElenasAction, MessageBox.Result.Yes, MessageBox.Result.Yes, MessageBox.Result.Yes);
+			_neo.AddControl(elenasMessageBox);
+/*			MessageBox _messageBox = new MessageBox("Hey there dude!", RunThisCode, MessageBox.Result.Yes, MessageBox.Result.Cancel, MessageBox.Result.No);
+			_neo.AddControl(_messageBox);*/
+		}
+
+		private void ElenasAction(MessageBox.Result result)
+		{
+
 		}
 
 		private void swOk_Clicked(object sender, EventArgs e)
@@ -46,13 +56,13 @@ namespace NeoTestApp.Code
 		{
 			((Button)sender).Text = "Thanks!";
 			_btnOk.Text = "Click me!";
-			MessageBox _messageBox = new MessageBox("Hey there dude!", RunThisCode);
+			MessageBox _messageBox = new MessageBox("Hey there dude!", RunThisCode, MessageBox.Result.Yes, MessageBox.Result.Cancel, MessageBox.Result.No);
 			_neo.AddControl(_messageBox);
 		}
 
 		private void RunThisCode(MessageBox.Result result)
 		{
-			MessageBox messageBox = new MessageBox("you clicked " + result.ToString());
+			MessageBox messageBox = new MessageBox("You clicked " + result.ToString());
 			_neo.AddControl(messageBox);
 		}
 
