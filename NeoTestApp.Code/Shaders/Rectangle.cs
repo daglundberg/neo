@@ -5,34 +5,40 @@ namespace NeoTestApp.Code
 {
 	public class Rectangle
 	{
-		public enum Techniques
-		{
-			Normal,
-			Water
-		}
 
 		private Effect _effect;
 
 		private TextureVertex[] _vertices;
-		private Techniques _technique;
+		private Color _color;
+		private Vector2 _size;
 
-		public Rectangle(Vector2 position, Techniques technique, float scale = 1, Texture2D flowmap = null)
+		public Rectangle(Vector2 position, Color color, Vector2 size, float scale = 1)
 		{
 			_effect = Game1.MyContent.Load<Effect>(@"Rectangle");
-
-			_technique = technique;
+			_size = size;
+			_color = Color.AliceBlue;
 		
 			CreateWith16BitIndices(position, scale);
 		}
 
 		private void CreateWith16BitIndices(Vector2 position, float scale)
 		{
+			scale = 1f;
 			_vertices = new TextureVertex[6];
 
-			_vertices[0].Position = new Vector3((-1 * scale) + position.X, (-1 * scale) + position.Y, 0);
+/*			_vertices[0].Position = new Vector3((-1 * scale) + position.X, (-1 * scale) + position.Y, 0);
 			_vertices[1].Position = new Vector3((-1 * scale) + position.X, (1 * scale) + position.Y, 0);
 			_vertices[2].Position = new Vector3((1 * scale) + position.X, (-1 * scale) + position.Y, 0);
-			_vertices[4].Position = new Vector3((1 * scale) + position.X, (1 * scale) + position.Y, 0);
+			_vertices[4].Position = new Vector3((1 * scale) + position.X, (1 * scale) + position.Y, 0);*/
+
+			//Because the coordinate systems are different
+			Vector2 _size2 = new Vector2((float)_size.X / (float)1920f, (float)_size.Y / (float)1080f);
+			Vector2 _pos = new Vector2((((position.X / (float)1920f + _size2.X / 2) * 2f) - 1f) * -1.0f, (((position.Y / (float)1080f + _size2.Y / 2) * 2f) - 1f) * -1.0f);
+
+						_vertices[0].Position = new Vector3( (position.X / (float)1920f) * 2 - 1f, (position.Y / (float)1080f) * 2 - 1f, 0);
+						_vertices[1].Position = new Vector3( (position.X / (float)1920f) * 2 - 1f, (position.Y / (float)1080f) * 2 - 1f + (_size2.Y * 2), 0);
+						_vertices[2].Position = new Vector3( (position.X / (float)1920f) * 2 - 1f + (_size2.X*2), (position.Y / (float)1080f) * 2 - 1f, 0);
+						_vertices[4].Position = new Vector3( (position.X / (float)1920f) * 2 - 1f + (_size2.X * 2), (position.Y / (float)1080f) * 2 - 1f + ( _size2.Y * 2), 0);
 
 			_vertices[3].Position = _vertices[1].Position;
 			_vertices[5].Position = _vertices[2].Position;
@@ -46,15 +52,16 @@ namespace NeoTestApp.Code
 			_vertices[5].TextureCoordinate = _vertices[2].TextureCoordinate;
 		}
 
-		public void Draw(GameTime gameTime, Camera camera, Vector3 position, float alpha = 1, float scale = 1, float rotation = 0)
+		public void Draw(GameTime gameTime)
 		{
 			//_effect.Parameters["World"].SetValue(Matrix.CreateRotationZ(rotation) * Matrix.CreateScale(scale) * Matrix.CreateTranslation(position));
 			//_effect.Parameters["View"].SetValue(camera.View);
 			//_effect.Parameters["Projection"].SetValue(camera.Projection);
-			//_effect.Parameters["Alpha"].SetValue(alpha);
+			_effect.Parameters["Color2"].SetValue(Color.AliceBlue.ToVector4());
+		//	_effect.Parameters["Size"].SetValue(_size);
 			if (Game1.GraphicsDevice != null && _effect != null)
 			{
-				_effect.CurrentTechnique = _effect.Techniques[_technique.ToString()];
+				_effect.CurrentTechnique = _effect.Techniques["Normal"];
 				_effect.CurrentTechnique.Passes[0].Apply();
 				Game1.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, _vertices, 0, 2);
 

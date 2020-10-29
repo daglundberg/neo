@@ -16,6 +16,7 @@ namespace NeoTestApp.Code
 		public static ContentManager MyContent;
 		public static GraphicsDevice GraphicsDevice;
 		private Camera camera = new Camera(1);
+		NonInstanced nonInstanced;
 
 
 	//	Rectangle rectangle;
@@ -32,22 +33,18 @@ namespace NeoTestApp.Code
 			Content.RootDirectory = "Content";
 			IsMouseVisible = true;
 			_graphics.SynchronizeWithVerticalRetrace = false;
-			this.IsFixedTimeStep = false;
-		//	this.TargetElapsedTime = TimeSpan.FromSeconds(1d / 25); //60);
+			IsFixedTimeStep = false;
 
+			
 			rectangleMap = new RectangleMap(this);
 
 
 			Components.Add(rectangleMap);
-			if (platform == MonoGamePlatform.DesktopGL)
-			{
-				IsMouseVisible = true;
-			}
-			else if (platform == MonoGamePlatform.Android)
-			{
-				_graphics.IsFullScreen = true;
-				TouchPanel.EnabledGestures = GestureType.HorizontalDrag | GestureType.VerticalDrag | GestureType.Pinch;
-			}
+
+
+			IsMouseVisible = true;
+
+
 		}
 
 		protected override void Initialize()
@@ -58,8 +55,8 @@ namespace NeoTestApp.Code
 			_graphics.ApplyChanges();
 
 			base.Initialize();
-			
-		//	_gui = new Gui(_graphics, Content);
+			nonInstanced = new NonInstanced();
+			//	_gui = new Gui(_graphics, Content);
 			Window.AllowUserResizing = true;
 			Window.ClientSizeChanged += OnResize;
 
@@ -99,10 +96,11 @@ namespace NeoTestApp.Code
 		double timepassed;
 		protected override void Draw(GameTime gameTime)
 		{
-			GraphicsDevice.Clear(Color.Black);
+			GraphicsDevice.Clear(Color.Indigo);
 			_spriteBatch.Begin();
 		//	_gui.Draw(_spriteBatch);
 			_spriteBatch.End();
+		//	nonInstanced.Draw(gameTime);
 
 			//texture.Draw(gameTime, camera, Vector3.Zero);
 			//rectangle.Draw(gameTime, camera, Vector3.Zero);

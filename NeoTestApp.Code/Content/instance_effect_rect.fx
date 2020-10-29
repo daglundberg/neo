@@ -3,37 +3,32 @@
 struct InstancingVSinput
 {
 	float4 Position : POSITION0;
-    float2 UV : TEXCOORD1;
+    float2 UV : TEXCOORD0;
 };
 
 struct InstancingVSoutput
 {
 	float4 Position : POSITION;
+    float2 UV : TEXCOORD;
     float4 Color : COLOR;
-    float2 Size : TEXCOORD;
-    float2 UV : TEXCOORD1;
+    float2 Size : TEXCOORD2;
+    float Radius : TEXCOORD3;
 };
 
-InstancingVSoutput InstancingVS(InstancingVSinput input, float4 instancePos : POSITION1, float4 Color : COLOR1, float2 Size : TEXCOORD)
+InstancingVSoutput InstancingVS(InstancingVSinput input, float4 instancePos : POSITION1, float4 Color : COLOR1, float2 Size : TEXCOORD2, float Radius : TEXCOORD3)
 {
 	InstancingVSoutput output;
-
     Size = Size * Scale;
 
     output.Position = input.Position;
-    
+
     output.Position.xy = output.Position.xy * Size.xy + instancePos.xy;
     output.UV = input.UV;
     output.Color = Color;
     output.Size = Size;
+    output.Radius = Radius;
 	return output;
 }
-
-float4 InstancingPS(InstancingVSoutput input) : COLOR0
-{
-	return input.Color;
-}
-
 
 
 //Signed Distance Field
@@ -53,16 +48,15 @@ float4 RoundedBlockPS(InstancingVSoutput input) : COLOR0
     float2 pixelPos = float2(input.UV.x * Size.x, input.UV.y * Size.y);
 
     // Calculate distance to edge.   
-    float distance = roundedBoxSDF(pixelPos - (Size / 2.0f), Size, 10);
+    float distance = roundedBoxSDF(pixelPos - (Size / 2.0f), Size, input.Radius);
     
-    clip(0.01 - distance);
+   // clip(1 - distance);
     
     // Smooth the result (free antialiasing).
     // How soft the edges should be (in pixels). Higher values could be used to simulate a drop shadow.
-    // float edgeSoftness = 0.001;
-    // float smoothedAlpha = 1.0f - smoothstep(0.0f, edgeSoftness * 2.0f, distance);
-    // Return the resultant shape.
-    return input.Color;
+
+    return input.Color * smoothstep(1, 0, distance);
+   // return input.Color;
 }
 
 technique Instancing
@@ -70,6 +64,6 @@ technique Instancing
 	pass P0
 	{
         VertexShader = compile vs_3_0 InstancingVS();
-        PixelShader = compile ps_3_0 InstancingPS();
+        PixelShader = compile ps_3_0 RoundedBlockPS();
     }
 };
