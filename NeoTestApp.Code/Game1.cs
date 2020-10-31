@@ -16,12 +16,12 @@ namespace NeoTestApp.Code
 		public static ContentManager MyContent;
 		public static GraphicsDevice GraphicsDevice;
 		private Camera camera = new Camera(1);
-		NonInstanced nonInstanced;
+
 
 
 	//	Rectangle rectangle;
 
-		RectangleMap rectangleMap;
+		InstancedRectangles rectangleMap;
 
 		public static MonoGamePlatform CurrentPlatform;
 
@@ -32,19 +32,15 @@ namespace NeoTestApp.Code
 			_graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
 			IsMouseVisible = true;
-			_graphics.SynchronizeWithVerticalRetrace = false;
-			IsFixedTimeStep = false;
+			//_graphics.SynchronizeWithVerticalRetrace = false;
+			TargetElapsedTime = TimeSpan.FromSeconds(1.0/30.0);
+			IsFixedTimeStep = true;
 
-			
-			rectangleMap = new RectangleMap(this);
-
+			rectangleMap = new InstancedRectangles(this);
 
 			Components.Add(rectangleMap);
 
-
 			IsMouseVisible = true;
-
-
 		}
 
 		protected override void Initialize()
@@ -55,12 +51,11 @@ namespace NeoTestApp.Code
 			_graphics.ApplyChanges();
 
 			base.Initialize();
-			nonInstanced = new NonInstanced();
-			//	_gui = new Gui(_graphics, Content);
+
+				_gui = new Gui(_graphics, Content);
 			Window.AllowUserResizing = true;
 			Window.ClientSizeChanged += OnResize;
 
-		//	rectangle = new Rectangle(Vector2.Zero, Rectangle.Techniques.Normal);
 		}
 
 		public void OnResize(Object sender, EventArgs e)
@@ -68,7 +63,7 @@ namespace NeoTestApp.Code
 			_graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
 			_graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
 
-			//_gui.Calculate();
+			_gui.Calculate();
 		}
 
 		protected override void LoadContent()
@@ -83,9 +78,7 @@ namespace NeoTestApp.Code
 		{
 			base.Update(gameTime);
 
-/*			rectangleMap.View = camera.View;
-			rectangleMap.Projection = camera.Projection;*/
-		//	_gui.Update(gameTime);
+			_gui.Update(gameTime);
 
 			camera.Update(gameTime);
 		}
@@ -98,13 +91,11 @@ namespace NeoTestApp.Code
 		{
 			GraphicsDevice.Clear(Color.Indigo);
 			_spriteBatch.Begin();
-		//	_gui.Draw(_spriteBatch);
+			_gui.Draw(_spriteBatch);
 			_spriteBatch.End();
-		//	nonInstanced.Draw(gameTime);
 
-			//texture.Draw(gameTime, camera, Vector3.Zero);
-			//rectangle.Draw(gameTime, camera, Vector3.Zero);
 			base.Draw(gameTime);
+
 			//FPS counter
 			framecount++;
 			timepassed += (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -121,14 +112,6 @@ namespace NeoTestApp.Code
 			_spriteBatch.DrawString(_fpsFont, deltaTime.ToString(), new Vector2(1, 1), Color.Blue);
 			_spriteBatch.End();
 		}
-
-		/*		public override void Update(GameTime gameTime)
-				{
-					_mapComponent.Update(gameTime);
-					_units.Update(gameTime);
-					_camera.Update(gameTime);
-					_gui.Update(gameTime);
-				}*/
 
 		MouseState _oldMouseState, _newMouseState;
 		private void CheckMouse()
