@@ -71,9 +71,9 @@ namespace NeoTestApp.Code
 				for (int y = 0; y < 10; y++)
 				{
 					instances[id].Color = new Vector4(0.2f, 0.8f - (x * 0.03f), 0.5f + (y * 0.03f), 1); ;
-					instances[id].Position = new Vector2(80 * x, 80 * y);
-					instances[id].Size = new Vector2(70, 70);
-					instances[id].Radius = 20;
+					instances[id].Position = new Vector2(150 * x + 20, 150 * y + 20);
+					instances[id].Size = new Vector2(140, 40);
+					instances[id].Radius = 10;
 					id++;
 				}
 			}
@@ -95,11 +95,7 @@ namespace NeoTestApp.Code
 			var vp = GraphicsDevice.Viewport;
 			if ((vp.Width != _lastViewport.Width) || (vp.Height != _lastViewport.Height))
 			{
-				// Normal 3D cameras look into the -z direction (z = 1 is in front of z = 0). The
-				// sprite batch layer depth is the opposite (z = 0 is in front of z = 1).
-				// --> We get the correct matrix with near plane 0 and far plane -1.
-				Matrix.CreateOrthographicOffCenter(0, vp.Width, vp.Height, 0, 0, -1, out _projection);
-
+				Matrix.CreateOrthographicOffCenter(0, vp.Width, vp.Height, 0, 0, 1, out _projection);
 				if (GraphicsDevice.UseHalfPixelOffset)
 				{
 					_projection.M41 += -0.5f * _projection.M11;
@@ -109,19 +105,10 @@ namespace NeoTestApp.Code
 				_lastViewport = vp;
 			}
 
-			// Set the effect technique and parameters
-			Vector2 scale = new Vector2(2.0f / (float)Game.GraphicsDevice.Viewport.Width, 2.0f / (float)Game.GraphicsDevice.Viewport.Height);
-			effect.CurrentTechnique = effect.Techniques["Instancing"];
 			effect.Parameters["MatrixTransform"].SetValue(_projection);
-
-			//RasterizerState rasterizerState = new RasterizerState();
-			//rasterizerState.CullMode = CullMode.None;
-			//GraphicsDevice.RasterizerState = rasterizerState;
-			GraphicsDevice.Indices = indexBuffer;
-
 			effect.CurrentTechnique.Passes[0].Apply();
 
-			// Set the vertex buffer and draw the instanced primitives.
+			GraphicsDevice.Indices = indexBuffer;
 			GraphicsDevice.SetVertexBuffers(bindings);
 			GraphicsDevice.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0, 2, instances.Length);
 
