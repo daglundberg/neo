@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Neo
 {
@@ -60,34 +61,38 @@ namespace Neo
 			indexBuffer = new IndexBuffer(GraphicsDevice, typeof(short), 6, BufferUsage.WriteOnly);
 			indexBuffer.SetData(_indices);
 		}
-		
+
 		private Block[] instances;
-		private void CreateInstances()
-		{
-				instances = new Block[1];
-
-/*				int id = 0;
-				for (int x = 0; x < 5; x++)
+				private void CreateInstances()
 				{
-					for (int y = 0; y < 5; y++)
-					{
-						instances[id].Color = new Vector4(0.2f, 0.8f - (x * 0.03f), 0.5f + (y * 0.03f), 1); ;
-						instances[id].Position = new Vector2(200 * x + 20, 200 * y + 20);
-						instances[id].Size = new Vector2(180, 180);
-						instances[id].Radius = 20;
-						id++;
-					}
-				}*/
+						instances = new Block[1];
+			count = 1;
+		/*				int id = 0;
+						for (int x = 0; x < 5; x++)
+						{
+							for (int y = 0; y < 5; y++)
+							{
+								instances[id].Color = new Vector4(0.2f, 0.8f - (x * 0.03f), 0.5f + (y * 0.03f), 1); ;
+								instances[id].Position = new Vector2(200 * x + 20, 200 * y + 20);
+								instances[id].Size = new Vector2(180, 180);
+								instances[id].Radius = 20;
+								id++;
+							}
+						}*/
 
-				// Set the instace data to the instanceBuffer.
-				instanceBuffer = new VertexBuffer(GraphicsDevice, RectDeclaration, instances.Length, BufferUsage.WriteOnly);
-				instanceBuffer.SetData(instances);
+						// Set the instace data to the instanceBuffer.
+						instanceBuffer = new VertexBuffer(GraphicsDevice, RectDeclaration, instances.Length, BufferUsage.WriteOnly);
+						instanceBuffer.SetData(instances);
 
-		}
-
-		public void SetBlocks(List<Block> blocks)
+				}
+		int count;
+		public void SetBlocks(Block[] blocks)
 		{
+			count = blocks.Length;
+			instanceBuffer = new VertexBuffer(GraphicsDevice, RectDeclaration, count, BufferUsage.WriteOnly);
 			instanceBuffer.SetData(blocks.ToArray());
+			bindings[0] = new VertexBufferBinding(geometryBuffer);
+			bindings[1] = new VertexBufferBinding(instanceBuffer, 0, 1);
 		}
 
 		public override void Update(GameTime gameTime)
@@ -117,7 +122,7 @@ namespace Neo
 
 			GraphicsDevice.Indices = indexBuffer;
 			GraphicsDevice.SetVertexBuffers(bindings);
-			GraphicsDevice.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0, 2, instances.Length);
+			GraphicsDevice.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0, 2, count);
 
 			base.Draw(gameTime);
 		}

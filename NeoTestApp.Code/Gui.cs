@@ -1,25 +1,96 @@
 ﻿using Neo;
 using Neo.Controls;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace NeoTestApp.Code
 {
 	class Gui : DrawableGameComponent
 	{
+
 		Neo.Neo _neo;
-		public Gui(Game game) : base (game)
+		public Gui(Game game) : base(game)
 		{
 			Style style = new Style(Game.Content);
 			_neo = new Neo.Neo(game, style, Game1.CurrentPlatform);
 
-			Row row = new Row()
-			{
-				Anchors = Anchors.Right,
-				Size = new Size(200),
-				Margins = new Margins(50, 0, 50, 0)
-			};
 
-			_neo.AddChild(row);
+
+			_neo.AddChildren(
+				new Control[]
+				{
+					new Grid()
+					{
+						Anchors = Anchors.Right | Anchors.Top | Anchors.Left | Anchors.Bottom,
+						Size = new Size(0),
+						Margins = new Margins(200,100,200,300)
+					},
+
+					new Grid()
+					{
+						Anchors = Anchors.Top | Anchors.Left,
+						Size = new Size(100),
+						Margins = new Margins(20)
+					},
+
+					new Row()
+					{
+						Anchors = Anchors.Right | Anchors.Left | Anchors.Bottom,
+						Size = new Size(100),
+						Margins = new Margins(20)
+					}.AddChildren(
+						new Control[]
+						{
+							new Grid()
+							{
+								Anchors = Anchors.Top | Anchors.Bottom,
+								Size = new Size(100),
+								Margins = new Margins(20)
+							},
+							new Grid()
+							{
+								Anchors = Anchors.Top | Anchors.Bottom,
+								Size = new Size(100),
+								Margins = new Margins(20)
+							},
+							new Grid()
+							{
+								Anchors = Anchors.Top | Anchors.Bottom,
+								Size = new Size(100),
+								Margins = new Margins(20)
+							},
+							new Grid()
+							{
+								Anchors = Anchors.Top | Anchors.Bottom,
+								Size = new Size(100),
+								Margins = new Margins(20)
+							},
+							new Grid()
+							{
+								Anchors = Anchors.Top | Anchors.Bottom,
+								Size = new Size(100),
+								Margins = new Margins(20)
+							},
+							new Grid()
+							{
+								Anchors = Anchors.Top | Anchors.Bottom,
+								Size = new Size(100),
+								Margins = new Margins(20)
+							},
+							new Grid()
+							{
+								Anchors = Anchors.Top | Anchors.Bottom,
+								Size = new Size(100),
+								Margins = new Margins(20)
+							},
+							new Grid()
+							{
+								Anchors = Anchors.Top | Anchors.Bottom,
+								Size = new Size(100),
+								Margins = new Margins(20)
+							},
+						}),
+				});
 		}
 
 		public override void Draw(GameTime gameTime)
@@ -29,7 +100,7 @@ namespace NeoTestApp.Code
 
 		public void Init()
 		{
-			_neo.Init();//Initialize()
+			_neo.Init();
 		}
 	}
 }

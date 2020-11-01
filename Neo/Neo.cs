@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoGame.Framework.Utilities;
 using Neo.Controls;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Neo
 {
@@ -9,7 +11,6 @@ namespace Neo
 	{
 		public Style Style { get; private set; }
 		private MonoGamePlatform _currentPlatform;
-
 		private InstancedRectangles _instancedRectangles;
 		private Game _game;
 
@@ -23,26 +24,33 @@ namespace Neo
 
 		}
 
-
-		internal override void Initialize(Neo neo)
-		{
-
-				SetBounds(new Rectangle(0, 0, _game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height));
-
-	
-
-			List<Block> blocks = new List<Block>();
-			foreach (Control child in this)
-			{
-				blocks.Add(child.Block);
-			}
-
-			_instancedRectangles.SetBlocks(blocks);
-		}
-
 		public void Init()
 		{
 			Initialize(this);
+		}
+
+		List<Block> blocks;
+		internal override void Initialize(Neo neo)
+		{
+
+			SetBounds(new Rectangle(0, 0, _game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height));
+
+			blocks = new List<Block>();
+
+/*						foreach (Control child in this)
+							blocks.Add(child.Block);*/
+
+
+			GetBlocksRecursively(this);
+
+			_instancedRectangles.SetBlocks(blocks.Skip(1).ToArray());
+		}
+
+		private void GetBlocksRecursively(Control control)
+		{
+			blocks.Add(control.Block);
+			foreach (Control c in control)
+				GetBlocksRecursively(c);
 		}
 
 		public void Draw(GameTime gameTime)

@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿/*using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
@@ -26,7 +26,7 @@ namespace Neo.Controls
 
 		public MessageBox(string message, Result[] resultButtons)
 		{
-/*			Flow = Flow.Center;
+*//*			Flow = Flow.Center;
 			WantsMouse = true;
 			Container _box = new Container(*//*new ScreenUnit(0, 0), new ScreenUnit(600, 300)*//*);
 			_box.Flow = Flow.Center;
@@ -45,7 +45,7 @@ namespace Neo.Controls
 			}
 
 			_box.AddChild(_label);
-			AddChild(_box) ;*/
+			AddChild(_box) ;*//*
 		}
 
 		public MessageBox(string message) : this(message, new Result[] { Result.Ok })
@@ -71,7 +71,7 @@ namespace Neo.Controls
 		private void btnClicked(object sender, EventArgs e)
 		{
 			_neo.RemoveChild(this);
-			_method?.Invoke(((ResultButton)sender).Result);
+		//	_method?.Invoke(((ResultButton)sender).Result);
 			Closed?.Invoke(this, e);
 		}
 
@@ -87,7 +87,7 @@ namespace Neo.Controls
 		}
 	}
 
-	public class ResultButton : Button
+*//*	public class ResultButton : Button
 	{
 		public MessageBox.Result Result { get; private set; }
 		public ResultButton(MessageBox.Result result)
@@ -95,5 +95,6 @@ namespace Neo.Controls
 			Result = result;
 			Text = result.ToString();
 		}
-	}
+	}*//*
 }
+*/

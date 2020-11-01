@@ -59,6 +59,14 @@ namespace Neo
 
     public struct Margins
     {
+        public Margins(int margins)
+        {
+            Left = margins;
+            Top = margins;
+            Right = margins;
+            Bottom = margins;
+        }
+
         public Margins(int left, int top, int right, int bottom)
 		{
             Left = left;
@@ -75,13 +83,6 @@ namespace Neo
 
     public struct Block
     {
-        public Block(Vector2 position, Vector2 size, Color color, float radius)
-		{
-            Position = position;
-            Size = size;
-            Color = color.ToVector4();
-            Radius = radius;
-		}
         public Vector2 Position;
         public Vector4 Color;
         public Vector2 Size;

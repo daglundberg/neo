@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace Neo.Controls
 {
@@ -13,7 +14,7 @@ namespace Neo.Controls
 			Text = " ";
 		}
 
-		public Button(string text) : this()
+		public Button(string text)
 		{
 			Text = text;
 		}
