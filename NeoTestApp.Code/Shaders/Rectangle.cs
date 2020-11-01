@@ -35,10 +35,10 @@ namespace NeoTestApp.Code
 			Vector2 _size2 = new Vector2((float)_size.X / (float)1920f, (float)_size.Y / (float)1080f);
 			Vector2 _pos = new Vector2((((position.X / (float)1920f + _size2.X / 2) * 2f) - 1f) * -1.0f, (((position.Y / (float)1080f + _size2.Y / 2) * 2f) - 1f) * -1.0f);
 
-						_vertices[0].Position = new Vector3( (position.X / (float)1920f) * 2 - 1f, (position.Y / (float)1080f) * 2 - 1f, 0);
-						_vertices[1].Position = new Vector3( (position.X / (float)1920f) * 2 - 1f, (position.Y / (float)1080f) * 2 - 1f + (_size2.Y * 2), 0);
-						_vertices[2].Position = new Vector3( (position.X / (float)1920f) * 2 - 1f + (_size2.X*2), (position.Y / (float)1080f) * 2 - 1f, 0);
-						_vertices[4].Position = new Vector3( (position.X / (float)1920f) * 2 - 1f + (_size2.X * 2), (position.Y / (float)1080f) * 2 - 1f + ( _size2.Y * 2), 0);
+			_vertices[0].Position = new Vector3( (position.X / (float)1920f) * 2 - 1f, (position.Y / (float)1080f) * 2 - 1f, 0);
+			_vertices[1].Position = new Vector3( (position.X / (float)1920f) * 2 - 1f, (position.Y / (float)1080f) * 2 - 1f + (_size2.Y * 2), 0);
+			_vertices[2].Position = new Vector3( (position.X / (float)1920f) * 2 - 1f + (_size2.X*2), (position.Y / (float)1080f) * 2 - 1f, 0);
+			_vertices[4].Position = new Vector3( (position.X / (float)1920f) * 2 - 1f + (_size2.X * 2), (position.Y / (float)1080f) * 2 - 1f + ( _size2.Y * 2), 0);
 
 			_vertices[3].Position = _vertices[1].Position;
 			_vertices[5].Position = _vertices[2].Position;

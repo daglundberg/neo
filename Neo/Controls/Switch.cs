@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Neo.Components;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,26 +10,25 @@ namespace Neo.Controls
 	{
 		public Switch()
 		{
-			this.Clicked += Switch_Clicked;
-			WantsMouse = true;
+			Clicked += Switch_Clicked;
 		}
 
 		public bool Checked = false;
-		Neo _neo;
-		public override void Draw(SpriteBatch spriteBatch)
-		{
-			spriteBatch.Draw(_neo.Style.SwitchBg, _position, new Rectangle(0, Checked ? 0:50, 100, 50), Color.White, 0, Vector2.Zero, _scale, SpriteEffects.None, 0); ;
-		}
 
-		public override void Initialize(Neo neo, GraphicsDeviceManager graphics)
+		internal override void Initialize(Neo neo)
 		{
-			_neo = neo;
+
 		}
 
 		private void Switch_Clicked(object sender, EventArgs e)
 		{
-			Size = new ScreenUnit(100, 50);
+			Size = new Size(100, 50);
 			Checked = !Checked;
+		}
+
+		internal override void SetBounds(Rectangle bounds)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

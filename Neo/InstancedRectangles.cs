@@ -1,7 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
-namespace NeoTestApp.Code
+namespace Neo
 {
 	public class InstancedRectangles : DrawableGameComponent
 	{
@@ -11,11 +12,11 @@ namespace NeoTestApp.Code
 
 		private VertexBufferBinding[] bindings;
 
-		public InstancedRectangles(Game game) : base(game) { }
+		public InstancedRectangles(Game game) : base(game) { effect = Game.Content.Load<Effect>("InstancingRectangleShader"); Initialize(); }
 
 		protected override void LoadContent()
 		{
-			effect = Game.Content.Load<Effect>("InstancingRectangleShader");
+			
 			base.LoadContent();
 		}
 
@@ -59,28 +60,34 @@ namespace NeoTestApp.Code
 			indexBuffer = new IndexBuffer(GraphicsDevice, typeof(short), 6, BufferUsage.WriteOnly);
 			indexBuffer.SetData(_indices);
 		}
-
-		private RectangleInstance[] instances;
+		
+		private Block[] instances;
 		private void CreateInstances()
 		{
-			instances = new RectangleInstance[25];
+				instances = new Block[1];
 
-			int id = 0;
-			for (int x = 0; x < 5; x++)
-			{
-				for (int y = 0; y < 5; y++)
+/*				int id = 0;
+				for (int x = 0; x < 5; x++)
 				{
-					instances[id].Color = new Vector4(0.2f, 0.8f - (x * 0.03f), 0.5f + (y * 0.03f), 1); ;
-					instances[id].Position = new Vector2(200 * x + 20, 200 * y + 20);
-					instances[id].Size = new Vector2(180, 180);
-					instances[id].Radius = 20;
-					id++;
-				}
-			}
+					for (int y = 0; y < 5; y++)
+					{
+						instances[id].Color = new Vector4(0.2f, 0.8f - (x * 0.03f), 0.5f + (y * 0.03f), 1); ;
+						instances[id].Position = new Vector2(200 * x + 20, 200 * y + 20);
+						instances[id].Size = new Vector2(180, 180);
+						instances[id].Radius = 20;
+						id++;
+					}
+				}*/
 
-			// Set the instace data to the instanceBuffer.
-			instanceBuffer = new VertexBuffer(GraphicsDevice, RectangleInstance.VertexDeclaration, instances.Length, BufferUsage.WriteOnly);
-			instanceBuffer.SetData(instances);
+				// Set the instace data to the instanceBuffer.
+				instanceBuffer = new VertexBuffer(GraphicsDevice, RectDeclaration, instances.Length, BufferUsage.WriteOnly);
+				instanceBuffer.SetData(instances);
+
+		}
+
+		public void SetBlocks(List<Block> blocks)
+		{
+			instanceBuffer.SetData(blocks.ToArray());
 		}
 
 		public override void Update(GameTime gameTime)
@@ -115,21 +122,12 @@ namespace NeoTestApp.Code
 			base.Draw(gameTime);
 		}
 
-
-		public struct RectangleInstance
-		{
-			public Vector2 Position;
-			public Vector4 Color;
-			public Vector2 Size;
-			public float Radius;
-
-			public static readonly VertexDeclaration VertexDeclaration = new VertexDeclaration
-			(
-				new VertexElement(0, VertexElementFormat.Vector2, VertexElementUsage.Position, 1),
-				new VertexElement(sizeof(float) * 2, VertexElementFormat.Vector4, VertexElementUsage.Color, 0),
-				new VertexElement(sizeof(float) * 6, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, 2),
-				new VertexElement(sizeof(float) * 8, VertexElementFormat.Single, VertexElementUsage.TextureCoordinate, 3)
-			);
-		};
+		public static readonly VertexDeclaration RectDeclaration = new VertexDeclaration
+(
+	new VertexElement(0, VertexElementFormat.Vector2, VertexElementUsage.Position, 1),
+	new VertexElement(sizeof(float) * 2, VertexElementFormat.Vector4, VertexElementUsage.Color, 0),
+	new VertexElement(sizeof(float) * 6, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, 2),
+	new VertexElement(sizeof(float) * 8, VertexElementFormat.Single, VertexElementUsage.TextureCoordinate, 3)
+);
 	}
 }

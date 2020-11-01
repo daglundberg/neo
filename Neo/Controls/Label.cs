@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using Neo.Extensions;
 
-namespace Neo.Components
+namespace Neo.Controls
 {
 	public class Label : Control
 	{
@@ -13,23 +13,19 @@ namespace Neo.Components
 		{
 			Color = Color.White;
 			Text = text;
-			WantsMouse = false;
 		}
 
 		//Neo-init
 		Neo _neo;
-		public override void Initialize(Neo neo, GraphicsDeviceManager graphics)
+		internal override void Initialize(Neo neo)
 		{
 			_neo = neo;
-			Size = new ScreenUnit(_neo.Style.Font.MeasureString(Text).ToPoint() + new Point(20,10));
+			Size = _neo.Style.Font.MeasureString(Text).ToSize() + new Size(20, 10);
 		}
 
-		//Drawable
-		public override void Draw(SpriteBatch spriteBatch)
+		internal override void SetBounds(Rectangle bounds)
 		{
-			spriteBatch.DrawString(_neo.Style.Font, Text, _position, Color, 0, Vector2.Zero, _scale, SpriteEffects.None, 0);
+			throw new System.NotImplementedException();
 		}
-
-
 	}
 }

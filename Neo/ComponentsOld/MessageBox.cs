@@ -1,8 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Neo.Components;
 using System;
 
-namespace Neo.Controls
+namespace Neo.Component
 {
 	public class MessageBox : Control
 	{
@@ -26,9 +27,9 @@ namespace Neo.Controls
 
 		public MessageBox(string message, Result[] resultButtons)
 		{
-/*			Flow = Flow.Center;
+			Flow = Flow.Center;
 			WantsMouse = true;
-			Container _box = new Container(*//*new ScreenUnit(0, 0), new ScreenUnit(600, 300)*//*);
+			Container _box = new Container(new ScreenUnit(0, 0), new ScreenUnit(600, 300));
 			_box.Flow = Flow.Center;
 			_box.WantsMouse = true;
 
@@ -40,12 +41,12 @@ namespace Neo.Controls
 				ResultButton _btn = new ResultButton(r);
 				_btn.Flow = resultButtons.Length > 1 ? Flow.HorizontalSharing : Flow.Bottom;
 				_btn.Clicked += btnClicked;
-				_btn.Offset = new Point(0, 20);
+				_btn.PositionOffset = new ScreenUnit(0, 20);
 				_box.AddChild(_btn);
 			}
 
 			_box.AddChild(_label);
-			AddChild(_box) ;*/
+			AddChild(_box) ;
 		}
 
 		public MessageBox(string message) : this(message, new Result[] { Result.Ok })
@@ -70,20 +71,20 @@ namespace Neo.Controls
 
 		private void btnClicked(object sender, EventArgs e)
 		{
-			_neo.RemoveChild(this);
+			_neo.RemoveControl(this);
 			_method?.Invoke(((ResultButton)sender).Result);
 			Closed?.Invoke(this, e);
 		}
 
-		Neo _neo;
-		internal override void Initialize(Neo neo)
+		public override void Draw(SpriteBatch spriteBatch)
 		{
-			_neo = neo;
+			//throw new NotImplementedException();
 		}
 
-		internal override void SetBounds(Rectangle bounds)
+		Neo _neo;
+		public override void Initialize(Neo neo, GraphicsDeviceManager graphics)
 		{
-			throw new NotImplementedException();
+			_neo = neo;
 		}
 	}
 
