@@ -14,8 +14,6 @@ namespace NeoTestApp.Code
 			Style style = new Style(Game.Content);
 			_neo = new Neo.Neo(game, style, Game1.CurrentPlatform);
 
-
-
 			_neo.AddChildren(
 				new Control[]
 				{
@@ -36,61 +34,69 @@ namespace NeoTestApp.Code
 					new Row()
 					{
 						Anchors = Anchors.Right | Anchors.Left | Anchors.Bottom,
-						Size = new Size(100),
-						Margins = new Margins(20)
+						Size = new Size(500),
+						Margins = new Margins(20),
+						LayoutRule = Row.LayoutRules.TopToBottom
 					}.AddChildren(
 						new Control[]
 						{
 							new Grid()
 							{
-								Anchors = Anchors.Top | Anchors.Bottom,
+								Anchors = Anchors.Left | Anchors.Right,
+								Size = new Size(10),
+								Margins = new Margins(2)
+
+							},
+							new Grid()
+							{
+								Anchors = Anchors.Left | Anchors.Right,
 								Size = new Size(100),
-								Margins = new Margins(20)
+								Margins = new Margins(2)
+							},
+							new Grid()
+							{
+								Anchors = Anchors.Left | Anchors.Right,
+								Size = new Size(100),
+								Margins = new Margins(2)
+							},
+							new Grid()
+							{
+								Anchors = Anchors.Left | Anchors.Right,
+								Size = new Size(100),
+								Margins = new Margins(2)
+							},
+							new Grid()
+							{
+								Anchors = Anchors.Left | Anchors.Right,
+								Size = new Size(100),
+								Margins = new Margins(2)
+							},
+							new Grid()
+							{
+								Anchors = Anchors.Left | Anchors.Right,
+								Size = new Size(100),
+								Margins = new Margins(2)
+							},
+							new Grid()
+							{
+								Anchors = Anchors.Left | Anchors.Right,
+								Size = new Size(100),
+								Margins = new Margins(2)
+							},
+							new Grid()
+							{
+								Anchors = Anchors.Left | Anchors.Right,
+								Size = new Size(100),
+								Margins = new Margins(2)
 							},
 							new Grid()
 							{
 								Anchors = Anchors.Top | Anchors.Bottom,
 								Size = new Size(100),
-								Margins = new Margins(20)
-							},
-							new Grid()
-							{
-								Anchors = Anchors.Top | Anchors.Bottom,
-								Size = new Size(100),
-								Margins = new Margins(20)
-							},
-							new Grid()
-							{
-								Anchors = Anchors.Top | Anchors.Bottom,
-								Size = new Size(100),
-								Margins = new Margins(20)
-							},
-							new Grid()
-							{
-								Anchors = Anchors.Top | Anchors.Bottom,
-								Size = new Size(100),
-								Margins = new Margins(20)
-							},
-							new Grid()
-							{
-								Anchors = Anchors.Top | Anchors.Bottom,
-								Size = new Size(100),
-								Margins = new Margins(20)
-							},
-							new Grid()
-							{
-								Anchors = Anchors.Top | Anchors.Bottom,
-								Size = new Size(100),
-								Margins = new Margins(20)
-							},
-							new Grid()
-							{
-								Anchors = Anchors.Top | Anchors.Bottom,
-								Size = new Size(100),
-								Margins = new Margins(20)
+								Margins = new Margins(2)
 							},
 						}),
-				});
+				}); ;
 		}
 
 		public override void Draw(GameTime gameTime)

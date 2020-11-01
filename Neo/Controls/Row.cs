@@ -6,7 +6,7 @@ namespace Neo.Controls
 {
 	public class Row : Control
 	{
-		public LayoutRules LayoutRule { get; set; } = LayoutRules.ShareEqually;
+		public LayoutRules LayoutRule { get; set; } = LayoutRules.LeftToRight;
 
 		public Row()
 		{
@@ -45,13 +45,13 @@ namespace Neo.Controls
 				foreach (Control child in this)
 				{
 					Rectangle childBounds = CalculateChildBounds(Bounds, child, false, true);
-
-					childBounds.X = Bounds.X + x + child.Margins.Left;
+					x -= child.Size.Width + child.Margins.Left + child.Margins.Right;
+					childBounds.X = Bounds.X + x + child.Margins.Right;
 					childBounds.Width = child.Size.Width;
 
 					child.SetBounds(childBounds);
 
-					x -= child.Size.Width + child.Margins.Left + child.Margins.Right;
+
 				}
 			}
 			else if (LayoutRule == LayoutRules.ShareEqually)
@@ -73,6 +73,21 @@ namespace Neo.Controls
 					x ++;
 				}
 			}
+			else if (LayoutRule == LayoutRules.TopToBottom)
+			{
+				int y = 0;
+				foreach (Control child in this)
+				{
+					Rectangle childBounds = CalculateChildBounds(Bounds, child, true, false);
+
+					childBounds.Y = Bounds.Y + y + child.Margins.Top;
+					childBounds.Height = child.Size.Height;
+
+					child.SetBounds(childBounds);
+
+					y += child.Size.Height + child.Margins.Top + child.Margins.Bottom;
+				}
+			}
 		}
 
 		public enum LayoutRules
@@ -80,6 +95,7 @@ namespace Neo.Controls
 			LeftToRight,
 			RightToLeft,
 			ShareEqually,
+			TopToBottom,
 		}
 	}
 }
