@@ -13,6 +13,7 @@ namespace Neo
 		private MonoGamePlatform _currentPlatform;
 		private InstancedRectangles _instancedRectangles;
 		private Game _game;
+		public float Scale = 1.2f;
 
 		public Neo(Game game, Style style, MonoGamePlatform platform)
 		{
@@ -20,9 +21,12 @@ namespace Neo
 			_currentPlatform = platform;
 
 			Style = style;
-			_instancedRectangles = new InstancedRectangles(game);
+			_instancedRectangles = new InstancedRectangles(game, this);
+			_game.Window.ClientSizeChanged += OnResize;
 
 		}
+
+		private void OnResize(object sender, EventArgs e) { ForceRefresh(); }
 
 		public void Init()
 		{
@@ -32,19 +36,24 @@ namespace Neo
 		List<Block> blocks;
 		internal override void Initialize(Neo neo)
 		{
-
-			SetBounds(new Rectangle(0, 0, _game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height));
+			SetBounds(new Rectangle(0, 0, (int)(_game.GraphicsDevice.Viewport.Width / Scale), (int)(_game.GraphicsDevice.Viewport.Height / Scale)));
 
 			blocks = new List<Block>();
-
-/*						foreach (Control child in this)
-							blocks.Add(child.Block);*/
-
 
 			GetBlocksRecursively(this);
 
 			_instancedRectangles.SetBlocks(blocks.Skip(1).ToArray());
 		}
+
+		public void ForceRefresh()
+		{
+			blocks.Clear();
+			SetBounds(new Rectangle(0, 0, (int)(_game.GraphicsDevice.Viewport.Width / Scale), (int)(_game.GraphicsDevice.Viewport.Height / Scale)));
+			GetBlocksRecursively(this);
+
+			_instancedRectangles.SetBlocks(blocks.Skip(1).ToArray());
+		}
+
 
 		private void GetBlocksRecursively(Control control)
 		{
@@ -57,6 +66,8 @@ namespace Neo
 		{
 			_instancedRectangles.Draw(gameTime);
 		}
+
+
 
 		#region Old code
 		/*		public void Calculate(bool force)

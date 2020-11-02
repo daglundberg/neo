@@ -12,8 +12,9 @@ namespace Neo
 		private IndexBuffer indexBuffer;
 
 		private VertexBufferBinding[] bindings;
+		private Neo _neo;
 
-		public InstancedRectangles(Game game) : base(game) { effect = Game.Content.Load<Effect>("InstancingRectangleShader"); Initialize(); }
+		public InstancedRectangles(Game game, Neo neo) : base(game) { _neo = neo; effect = Game.Content.Load<Effect>("InstancingRectangleShader"); Initialize(); }
 
 		protected override void LoadContent()
 		{
@@ -102,12 +103,13 @@ namespace Neo
 
 		private Viewport _lastViewport;
 		private Matrix _projection;
+		float _lastScale = 0;
 		public override void Draw(GameTime gameTime)
 		{
 			var vp = GraphicsDevice.Viewport;
-			if ((vp.Width != _lastViewport.Width) || (vp.Height != _lastViewport.Height))
+			if ((vp.Width != _lastViewport.Width) || (vp.Height != _lastViewport.Height) || _lastScale != _neo.Scale)
 			{
-				Matrix.CreateOrthographicOffCenter(0, vp.Width, vp.Height, 0, 0, 1, out _projection);
+				Matrix.CreateOrthographicOffCenter(0, vp.Width/_neo.Scale, vp.Height/_neo.Scale, 0, 0, 1, out _projection);
 				if (GraphicsDevice.UseHalfPixelOffset)
 				{
 					_projection.M41 += -0.5f * _projection.M11;
@@ -115,6 +117,7 @@ namespace Neo
 				}
 
 				_lastViewport = vp;
+				_lastScale = _neo.Scale;
 			}
 
 			effect.Parameters["MatrixTransform"].SetValue(_projection);

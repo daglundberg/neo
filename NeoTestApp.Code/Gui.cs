@@ -19,9 +19,9 @@ namespace NeoTestApp.Code
 				{
 					new Grid()
 					{
-						Anchors = Anchors.Right | Anchors.Top | Anchors.Left | Anchors.Bottom,
-						Size = new Size(0),
-						Margins = new Margins(200,100,200,300)
+						Anchors =  Anchors.Top,
+						Size = new Size(600, 400),
+						Margins = new Margins(0, 100, 0, 0)
 					},
 
 					new Grid()
@@ -34,66 +34,57 @@ namespace NeoTestApp.Code
 					new Row()
 					{
 						Anchors = Anchors.Right | Anchors.Left | Anchors.Bottom,
-						Size = new Size(500),
+						Size = new Size(80),
 						Margins = new Margins(20),
-						LayoutRule = Row.LayoutRules.TopToBottom
+						LayoutRule = Row.LayoutRules.LeftToRight
 					}.AddChildren(
 						new Control[]
 						{
 							new Grid()
 							{
-								Anchors = Anchors.Left | Anchors.Right,
-								Size = new Size(10),
-								Margins = new Margins(2)
+								Size = new Size(50),
+								Margins = new Margins(4)
 
 							},
 							new Grid()
 							{
-								Anchors = Anchors.Left | Anchors.Right,
-								Size = new Size(100),
-								Margins = new Margins(2)
+								Size = new Size(50),
+								Margins = new Margins(4)
 							},
 							new Grid()
 							{
-								Anchors = Anchors.Left | Anchors.Right,
-								Size = new Size(100),
-								Margins = new Margins(2)
+								Size = new Size(50),
+								Margins = new Margins(4)
 							},
 							new Grid()
 							{
-								Anchors = Anchors.Left | Anchors.Right,
-								Size = new Size(100),
-								Margins = new Margins(2)
+								Size = new Size(50),
+								Margins = new Margins(4)
 							},
 							new Grid()
 							{
-								Anchors = Anchors.Left | Anchors.Right,
-								Size = new Size(100),
-								Margins = new Margins(2)
+								Size = new Size(50),
+								Margins = new Margins(4)
 							},
 							new Grid()
 							{
-								Anchors = Anchors.Left | Anchors.Right,
-								Size = new Size(100),
-								Margins = new Margins(2)
+								Size = new Size(50),
+								Margins = new Margins(4)
 							},
 							new Grid()
 							{
-								Anchors = Anchors.Left | Anchors.Right,
-								Size = new Size(100),
-								Margins = new Margins(2)
+								Size = new Size(50),
+								Margins = new Margins(4)
 							},
 							new Grid()
 							{
-								Anchors = Anchors.Left | Anchors.Right,
-								Size = new Size(100),
-								Margins = new Margins(2)
+								Size = new Size(50),
+								Margins = new Margins(4)
 							},
 							new Grid()
 							{
-								Anchors = Anchors.Top | Anchors.Bottom,
-								Size = new Size(100),
-								Margins = new Margins(2)
+								Size = new Size(50),
+								Margins = new Margins(4)
 							},
 						}),
 				}); ;
