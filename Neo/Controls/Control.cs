@@ -14,7 +14,7 @@ namespace Neo.Controls
 		internal bool HasChanged { get; set; }
 
 		#region Children
-		private List<Control> _children = new List<Control>();
+		private List<Control> _children;
 		public bool HasChildren { get { return _children.Count > 0; } }
 		public int ChildCount { get { return _children.Count; } }
 		public Control AddChild(Control child) { _children.Add(child); return this; }
@@ -25,6 +25,17 @@ namespace Neo.Controls
 		#endregion
 		public Control()
 		{
+			_children = new List<Control>();
+			Size = new Size(10, 10);
+		}
+
+		public Control(bool CanHaveChildren)
+		{
+			if (CanHaveChildren)
+				_children = new List<Control>();
+			else
+				_children = new List<Control>(0);
+
 			Size = new Size(10, 10);
 		}
 
@@ -34,7 +45,7 @@ namespace Neo.Controls
 
 		internal Rectangle Bounds { get; set; }
 
-		internal Block Block
+		internal virtual Block Block
 		{
 			get
 			{
@@ -110,6 +121,5 @@ namespace Neo.Controls
 
 			return childBounds;
 		}
-
 	}
 }

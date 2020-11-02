@@ -35,7 +35,7 @@ namespace NeoTestApp.Code
 					{
 						Anchors = Anchors.Right | Anchors.Left | Anchors.Bottom,
 						Size = new Size(80),
-						Margins = new Margins(20),
+						Margins = new Margins(200, 0, 200, 20),
 						LayoutRule = Row.LayoutRules.LeftToRight
 					}.AddChildren(
 						new Control[]
@@ -43,7 +43,8 @@ namespace NeoTestApp.Code
 							new Grid()
 							{
 								Size = new Size(50),
-								Margins = new Margins(4)
+								Margins = new Margins(8, 4,4,4)
+
 
 							},
 							new Grid()
@@ -56,11 +57,7 @@ namespace NeoTestApp.Code
 								Size = new Size(50),
 								Margins = new Margins(4)
 							},
-							new Grid()
-							{
-								Size = new Size(50),
-								Margins = new Margins(4)
-							},
+
 							new Grid()
 							{
 								Size = new Size(50),
@@ -87,7 +84,21 @@ namespace NeoTestApp.Code
 								Margins = new Margins(4)
 							},
 						}),
-				}); ;
+
+					new Button()
+					{
+						Anchors = Anchors.Right | Anchors.Bottom,
+						Size = new Size(110, 40),
+						Margins = new Margins(40)
+					},
+
+					new Button()
+					{
+						Anchors = Anchors.Left | Anchors.Bottom,
+						Size = new Size(110, 40),
+						Margins = new Margins(40)
+					},
+				});
 		}
 
 		public override void Draw(GameTime gameTime)

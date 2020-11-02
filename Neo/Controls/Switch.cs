@@ -28,7 +28,7 @@ namespace Neo.Controls
 
 		internal override void SetBounds(Rectangle bounds)
 		{
-			throw new NotImplementedException();
+			Bounds = bounds;
 		}
 	}
 }

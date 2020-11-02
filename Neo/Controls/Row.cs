@@ -18,6 +18,14 @@ namespace Neo.Controls
 
 		}
 
+		internal override Block Block
+		{
+			get
+			{
+				return new Block() { Position = Bounds.Location.ToVector2(), Size = Bounds.Size.ToVector2(), Color = new Color(0.1f, 0.1f, 0.1f, 0.01f).ToVector4(), Radius = 10 };
+			}
+		}
+
 		internal override void SetBounds(Rectangle bounds)
 		{
 			Bounds = bounds;

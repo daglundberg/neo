@@ -13,7 +13,7 @@ namespace Neo
 		private MonoGamePlatform _currentPlatform;
 		private InstancedRectangles _instancedRectangles;
 		private Game _game;
-		public float Scale = 1.2f;
+		public float Scale = 0.2f;
 
 		public Neo(Game game, Style style, MonoGamePlatform platform)
 		{
@@ -24,6 +24,10 @@ namespace Neo
 			_instancedRectangles = new InstancedRectangles(game, this);
 			_game.Window.ClientSizeChanged += OnResize;
 
+			if (_currentPlatform == MonoGamePlatform.Android)
+				Scale = 2;
+			else
+				Scale = 1.5f;
 		}
 
 		private void OnResize(object sender, EventArgs e) { ForceRefresh(); }

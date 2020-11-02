@@ -9,12 +9,12 @@ namespace Neo.Controls
 		//Control
 		public string Text;
 
-		public Button()
+		public Button() : base (false)
 		{
 			Text = " ";
 		}
 
-		public Button(string text)
+		public Button(string text) : base(false)
 		{
 			Text = text;
 		}
@@ -27,7 +27,15 @@ namespace Neo.Controls
 
 		internal override void SetBounds(Rectangle bounds)
 		{
-			throw new System.NotImplementedException();
+			Bounds = bounds;
+		}
+
+		internal override Block Block
+		{
+			get
+			{
+				return new Block() { Position = Bounds.Location.ToVector2(), Size = Bounds.Size.ToVector2(), Color = new Color(0.9f, 0.3f, 0.0f, 1f).ToVector4(), Radius = 14 };
+			}
 		}
 	}
 

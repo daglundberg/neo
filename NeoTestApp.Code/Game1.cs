@@ -27,8 +27,13 @@ namespace NeoTestApp.Code
 
 		protected override void Initialize()
 		{
-			_graphics.PreferredBackBufferWidth = 1920;
-			_graphics.PreferredBackBufferHeight = 1080;
+			if (CurrentPlatform == MonoGamePlatform.Android)
+				_graphics.IsFullScreen = true;
+			else
+			{
+				_graphics.PreferredBackBufferWidth = 1920;
+				_graphics.PreferredBackBufferHeight = 1080;
+			}
 			_graphics.ApplyChanges();
 			Window.AllowUserResizing = true;
 			Window.ClientSizeChanged += OnResize;
@@ -62,7 +67,7 @@ namespace NeoTestApp.Code
 
 		protected override void Draw(GameTime gameTime)
 		{
-			GraphicsDevice.Clear(Color.Indigo);
+			GraphicsDevice.Clear(new Color(20,20,20));
 
 			_gui.Draw(gameTime);
 
