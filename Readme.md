@@ -6,14 +6,17 @@
 
 ### Problem
 
-While using Texture2Ds and SpriteFonts with a SpriteBatch to create a simple UI or HUD for your game is easy to implement, it quickly becomes a pain to accommodate different screen sizes and DPIs.
+While using Texture2Ds and SpriteFonts with a SpriteBatch to create a simple UI or HUD for your game is easy to implement, it can become tedious to accommodate different screen sizes and DPIs.
+
+There are a dozen UI frameworks out there for Monogame but many are on the clunky side and/or lack proper support for touch devices. Others are highly opinionated and come with a learning curve.
 
 ### Solution
 
 - Lets use math and shaders to draw crisp, lightweight, performant and infinitely scalable controls from basic shapes (no more loading textures).
-- Lets use [multi-spectrum signed distance field fonts](https://github.com/Chlumsky/msdfgen) instead of SpriteFonts. MSDFs are lightweight and highly scalable.
 - Lets implement a simple constraint system to help accommodate different screens.
-- Lets keep it simple, clear and speedy. Neo does not include a bathroom sink, and that's a good thing (arguably).
+- Lets use [multi-spectrum signed distance field fonts](https://github.com/Chlumsky/msdfgen) instead of SpriteFonts. MSDFs are lightweight and highly scalable.
+- Lets maintain 100% cross platform support.
+- Lets keep it simple small. Neo does not include a bathroom sink, and that's a good thing.
 
 ### Alternatives
 
