@@ -41,7 +41,7 @@ namespace NeoTestApp.Code
 			}
 			_graphics.ApplyChanges();
 			Window.AllowUserResizing = true;
-			Window.ClientSizeChanged += OnResize;
+			//Window.ClientSizeChanged += OnResize;
 
 			base.Initialize();
 
@@ -51,8 +51,8 @@ namespace NeoTestApp.Code
 
 		public void OnResize(Object sender, EventArgs e)
 		{
-			_graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
-			_graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
+		//	_graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
+		//	_graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
 
 		//	_gui.Calculate();
 		}

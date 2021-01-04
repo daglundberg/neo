@@ -9,11 +9,13 @@ namespace NeoTestApp.Code
 	class Gui : DrawableGameComponent
 	{
 		Neo.Neo _neo;
+		Game _game;
 		public Gui(Game game) : base(game)
 		{
+			_game = game;
 			Style style = new Style(Game.Content);
 			_neo = new Neo.Neo(game, style, Game1.CurrentPlatform);
-
+			_neo.Scale = 3f;
 			_neo.AddChildren(
 				new Control[]
 				{
@@ -45,6 +47,12 @@ namespace NeoTestApp.Code
 								Size = new Size(50),
 								Margins = new Margins(16, 4,4,4)
 							},
+							new Switch()
+							{
+								Size = new Size(100,50),
+								Margins = new Margins(4,4,4,4),
+								Checked = true
+							},
 							new Button()
 							{
 								Size = new Size(50),
@@ -60,6 +68,7 @@ namespace NeoTestApp.Code
 								Size = new Size(50),
 								Margins = new Margins(4,4,16,4)
 							},
+
 						}),
 
 					new Button()
@@ -76,7 +85,7 @@ namespace NeoTestApp.Code
 						Margins = new Margins(40),
 						Color = Color.Blue
 					},
-				});
+				}) ;
 		}
 
 		public override void Draw(GameTime gameTime)
@@ -112,6 +121,20 @@ namespace NeoTestApp.Code
 					_neo.Click(_newMouseState.Position);
 					return;
 				}
+			}
+
+			if (_oldMouseState.ScrollWheelValue > _newMouseState.ScrollWheelValue)
+			{
+				_neo.Scale -= 0.07f;
+				_neo.ForceRefresh();
+
+			}
+
+			if (_oldMouseState.ScrollWheelValue < _newMouseState.ScrollWheelValue)
+			{
+				_neo.Scale += 0.07f;
+				//_game.GraphicsDevice.Viewport.Upe
+				_neo.ForceRefresh();
 			}
 
 

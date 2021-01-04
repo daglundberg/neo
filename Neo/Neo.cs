@@ -67,11 +67,27 @@ namespace Neo
 
 		public new bool ListensForMouseOrTouchAt(Point mouseOrTouchPosition)
 		{
+			Point pos = new Point((int)(mouseOrTouchPosition.X / Scale), (int)(mouseOrTouchPosition.Y / Scale));
+
 			foreach (Control c in this)
-				if (c.ListensForMouseOrTouchAt(mouseOrTouchPosition))
+				if (c.ListensForMouseOrTouchAt(pos))
 					return true;
 
 			return false;
+		}
+
+		public new bool Click(Point mouseOrTouchPosition)
+		{
+			Point pos = new Point((int)(mouseOrTouchPosition.X / Scale), (int)(mouseOrTouchPosition.Y / Scale));
+
+			foreach (Control c in this)
+				if (c.ListensForMouseOrTouchAt(pos))
+				{
+					if (c.Click(pos))
+						return true;
+				}
+
+				return false;
 		}
 
 
