@@ -20,25 +20,20 @@ namespace Neo.Controls
 			Text = text;
 		}
 
-
-		internal override void Initialize(Neo neo)
-		{
-
-		}
+		internal override void Initialize(Neo neo) { }
 
 		internal override void SetBounds(Rectangle bounds)
 		{
 			Bounds = bounds;
 		}
 
-		internal override Block Block
+		internal override void Draw(GameTime gameTime, GuiBatch guiBatch)
 		{
-			get
+			if (IsClipped != true)
 			{
-				return new Block() { Position = Bounds.Location.ToVector2(), Size = Bounds.Size.ToVector2(), Color = Color.ToVector4(), Radius = 5 };
+				Vector4 c = new Vector4(0.9f, 0.3f, (float)(Math.Abs(Math.Sin(2 * gameTime.TotalGameTime.TotalSeconds))), 1f);
+				guiBatch.DrawBlock(new Block { Position = Bounds.Location.ToVector2(), Size = Bounds.Size.ToVector2(), Color = c, Radius = 8 });
 			}
 		}
 	}
-
-
 }

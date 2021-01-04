@@ -1,24 +1,27 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Neo
 {
 	public class InstancedRectangles : DrawableGameComponent
 	{
-		private Effect effect;
-		private VertexBuffer instanceBuffer, geometryBuffer;
-		private IndexBuffer indexBuffer;
+		private Effect _effectInstanced;
+		private VertexBuffer _instanceBuffer, _commonGeometry;
+		private IndexBuffer _indexBuffer;
 
-		private VertexBufferBinding[] bindings;
+		private VertexBufferBinding[] _bindings;
 		private Neo _neo;
 
-		public InstancedRectangles(Game game, Neo neo) : base(game) { _neo = neo; effect = Game.Content.Load<Effect>("InstancingRectangleShader"); Initialize(); }
+		public InstancedRectangles(Game game, Neo neo) : base(game)
+		{
+			_neo = neo;
+			_effectInstanced = Game.Content.Load<Effect>("InstancingRectangleShader");
+			Initialize();
+		}
 
 		protected override void LoadContent()
 		{
-
 			base.LoadContent();
 		}
 
@@ -28,9 +31,9 @@ namespace Neo
 			CreateInstances();
 
 			// Creates the binding between the geometry and the instances.
-			bindings = new VertexBufferBinding[2];
-			bindings[0] = new VertexBufferBinding(geometryBuffer);
-			bindings[1] = new VertexBufferBinding(instanceBuffer, 0, 1);
+			_bindings = new VertexBufferBinding[2];
+			_bindings[0] = new VertexBufferBinding(_commonGeometry);
+			_bindings[1] = new VertexBufferBinding(_instanceBuffer, 0, 1);
 
 			base.Initialize();
 		}
@@ -48,8 +51,8 @@ namespace Neo
 			_vertices[2].TextureCoordinate = new Vector2(1, 0);
 			_vertices[3].TextureCoordinate = new Vector2(1, 1);
 
-			geometryBuffer = new VertexBuffer(GraphicsDevice, VertexPositionTexture.VertexDeclaration, 4, BufferUsage.WriteOnly);
-			geometryBuffer.SetData(_vertices);
+			_commonGeometry = new VertexBuffer(GraphicsDevice, VertexPositionTexture.VertexDeclaration, 4, BufferUsage.WriteOnly);
+			_commonGeometry.SetData(_vertices);
 
 			short[] _indices = new short[6];
 			_indices[5] = 0;
@@ -59,28 +62,28 @@ namespace Neo
 			_indices[1] = 3;
 			_indices[0] = 2;
 
-			indexBuffer = new IndexBuffer(GraphicsDevice, typeof(short), 6, BufferUsage.WriteOnly);
-			indexBuffer.SetData(_indices);
+			_indexBuffer = new IndexBuffer(GraphicsDevice, typeof(short), 6, BufferUsage.WriteOnly);
+			_indexBuffer.SetData(_indices);
 		}
 
-		private Block[] instances;
+		private Block[] _instances;
 		private void CreateInstances()
 		{
-			instances = new Block[1];
-			count = 1;
-			// Set the instace data to the instanceBuffer.
-			instanceBuffer = new VertexBuffer(GraphicsDevice, RectDeclaration, instances.Length, BufferUsage.WriteOnly);
-			instanceBuffer.SetData(instances);
+			_instances = new Block[1];
+			_count = 1;
+			// Set the instance data to the instanceBuffer.
+			_instanceBuffer = new VertexBuffer(GraphicsDevice, RectDeclaration, _instances.Length, BufferUsage.WriteOnly);
+			_instanceBuffer.SetData(_instances);
 		}
 
-		int count;
+		int _count;
 		public void SetBlocks(Block[] blocks)
 		{
-			count = blocks.Length;
-			instanceBuffer = new VertexBuffer(GraphicsDevice, RectDeclaration, count, BufferUsage.WriteOnly);
-			instanceBuffer.SetData(blocks.ToArray());
-			bindings[0] = new VertexBufferBinding(geometryBuffer);
-			bindings[1] = new VertexBufferBinding(instanceBuffer, 0, 1);
+			_count = blocks.Length;
+			_instanceBuffer = new VertexBuffer(GraphicsDevice, RectDeclaration, _count, BufferUsage.WriteOnly);
+			_instanceBuffer.SetData(blocks.ToArray());
+			_bindings[0] = new VertexBufferBinding(_commonGeometry);
+			_bindings[1] = new VertexBufferBinding(_instanceBuffer, 0, 1);
 		}
 
 		public override void Update(GameTime gameTime)
@@ -92,6 +95,20 @@ namespace Neo
 		private Matrix _projection;
 		float _lastScale = 0;
 		public override void Draw(GameTime gameTime)
+		{
+			CheckScreenResolution();
+
+			_effectInstanced.Parameters["MatrixTransform"].SetValue(_projection);
+			_effectInstanced.CurrentTechnique.Passes[0].Apply();
+
+			GraphicsDevice.Indices = _indexBuffer;
+			GraphicsDevice.SetVertexBuffers(_bindings);
+			GraphicsDevice.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0, 2, _count);
+
+			base.Draw(gameTime);
+		}
+
+		private void CheckScreenResolution()
 		{
 			var vp = GraphicsDevice.Viewport;
 			if ((vp.Width != _lastViewport.Width) || (vp.Height != _lastViewport.Height) || _lastScale != _neo.Scale)
@@ -106,23 +123,13 @@ namespace Neo
 				_lastViewport = vp;
 				_lastScale = _neo.Scale;
 			}
-
-			effect.Parameters["MatrixTransform"].SetValue(_projection);
-			effect.CurrentTechnique.Passes[0].Apply();
-
-			GraphicsDevice.Indices = indexBuffer;
-			GraphicsDevice.SetVertexBuffers(bindings);
-			GraphicsDevice.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0, 2, count);
-
-			base.Draw(gameTime);
 		}
 
-		public static readonly VertexDeclaration RectDeclaration = new VertexDeclaration
-(
-	new VertexElement(0, VertexElementFormat.Vector2, VertexElementUsage.Position, 1),
-	new VertexElement(sizeof(float) * 2, VertexElementFormat.Vector4, VertexElementUsage.Color, 0),
-	new VertexElement(sizeof(float) * 6, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, 2),
-	new VertexElement(sizeof(float) * 8, VertexElementFormat.Single, VertexElementUsage.TextureCoordinate, 3)
-);
+		public static readonly VertexDeclaration RectDeclaration = new VertexDeclaration(
+			new VertexElement(0, VertexElementFormat.Vector2, VertexElementUsage.Position, 1),
+			new VertexElement(sizeof(float) * 2, VertexElementFormat.Vector4, VertexElementUsage.Color, 0),
+			new VertexElement(sizeof(float) * 6, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, 2),
+			new VertexElement(sizeof(float) * 8, VertexElementFormat.Single, VertexElementUsage.TextureCoordinate, 3)
+		);
 	}
 }

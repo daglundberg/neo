@@ -17,7 +17,7 @@ namespace NeoTestApp.Code
 				{
 					new Grid()
 					{
-						Anchors = Anchors.Top | Anchors.Bottom,
+						Anchors = Anchors.Top | Anchors.Bottom | Anchors.Right,
 						Size = new Size(600, 400),
 						Margins = new Margins(135, 50, 135, 135)
 					},
@@ -34,7 +34,7 @@ namespace NeoTestApp.Code
 						Anchors = Anchors.Right | Anchors.Left | Anchors.Bottom,
 						Size = new Size(80),
 						Margins = new Margins(200, 0, 200, 20),
-						LayoutRule = Row.LayoutRules.ShareEqually
+						LayoutRule = Row.LayoutRules.RightToLeft
 					}.AddChildren(
 						new Control[]
 						{
@@ -64,7 +64,7 @@ namespace NeoTestApp.Code
 								Size = new Size(50),
 								Margins = new Margins(4)
 							},
-							new Grid()
+							new Button()
 							{
 								Size = new Size(50),
 								Margins = new Margins(4)

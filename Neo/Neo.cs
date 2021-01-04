@@ -1,9 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Framework.Utilities;
 using Neo.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 
 namespace Neo
 {
@@ -11,23 +13,26 @@ namespace Neo
 	{
 		public Style Style { get; private set; }
 		private MonoGamePlatform _currentPlatform;
-		private InstancedRectangles _instancedRectangles;
+
 		private Game _game;
-		public float Scale = 0.2f;
+		public float Scale;
+		private GuiBatch _guiBatch;
+		private Texture2D _texture;
+		private SpriteFont _guiFont;
 
 		public Neo(Game game, Style style, MonoGamePlatform platform)
 		{
 			_game = game;
 			_currentPlatform = platform;
-
+			_guiFont = game.Content.Load<SpriteFont>("patuaone-med");
 			Style = style;
-			_instancedRectangles = new InstancedRectangles(game, this);
-			_game.Window.ClientSizeChanged += OnResize;
+
+			_game.Window.ClientSizeChanged += OnResize;		
 
 			if (_currentPlatform == MonoGamePlatform.Android)
-				Scale = 2;
+				Scale = 2.2f;
 			else
-				Scale = 2;
+				Scale = 1f;
 		}
 
 		private void OnResize(object sender, EventArgs e) { ForceRefresh(); }
@@ -35,42 +40,30 @@ namespace Neo
 		public void Init()
 		{
 			Initialize(this);
+			_guiBatch = new GuiBatch(_game.GraphicsDevice, _game.Content.Load<Effect>("effecty"), _game.Content.Load<Effect>("InstancingRectangleShader"), this);
+			_texture = _game.Content.Load<Texture2D>("yup");
 		}
 
-		List<Block> blocks;
 		internal override void Initialize(Neo neo)
 		{
 			SetBounds(new Rectangle(0, 0, (int)(_game.GraphicsDevice.Viewport.Width / Scale), (int)(_game.GraphicsDevice.Viewport.Height / Scale)));
-
-			blocks = new List<Block>();
-
-			GetBlocksRecursively(this);
-
-			_instancedRectangles.SetBlocks(blocks.Skip(1).ToArray());
 		}
 
 		public void ForceRefresh()
 		{
-			blocks.Clear();
 			SetBounds(new Rectangle(0, 0, (int)(_game.GraphicsDevice.Viewport.Width / Scale), (int)(_game.GraphicsDevice.Viewport.Height / Scale)));
-			GetBlocksRecursively(this);
-
-			_instancedRectangles.SetBlocks(blocks.Skip(1).ToArray());
-		}
-
-
-		private void GetBlocksRecursively(Control control)
-		{
-			blocks.Add(control.Block);
-			foreach (Control c in control)
-				GetBlocksRecursively(c);
+			_guiBatch.ForceRefresh();
 		}
 
 		public void Draw(GameTime gameTime)
 		{
-			_instancedRectangles.Draw(gameTime);
-		}
+			_guiBatch.Begin();
 
+			foreach (Control c in this)
+				c.Draw(gameTime, _guiBatch);
+
+			_guiBatch.End();
+		}
 
 
 		#region Old code

@@ -7,6 +7,7 @@ using MonoGame.Framework.Utilities;
 using System;
 using Neo;
 
+
 namespace NeoTestApp.Code
 {
 	public class Game1 : Game
@@ -14,6 +15,7 @@ namespace NeoTestApp.Code
 		private GraphicsDeviceManager _graphics;
 		private SpriteBatch _spriteBatch;
 		private Gui _gui;
+
 
 		public static MonoGamePlatform CurrentPlatform;
 
@@ -55,7 +57,9 @@ namespace NeoTestApp.Code
 		protected override void LoadContent()
 		{
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
-			_fpsFont = Content.Load<SpriteFont>("patuaone-med");
+			//	_fpsFont = Content.Load<SpriteFont>("patuaone-med");
+			Texture2D s = Content.Load<Texture2D>("yup");
+
 		}
 
 		protected override void Update(GameTime gameTime)

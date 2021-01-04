@@ -8,29 +8,23 @@ namespace Neo.Controls
 	{
 		public LayoutRules LayoutRule { get; set; } = LayoutRules.LeftToRight;
 
-		public Row()
-		{
+		public Row() { }
 
-		}
+		internal override void Initialize(Neo neo) { }
 
-		internal override void Initialize(Neo neo)
-		{
-
-		}
-
-		internal override Block Block
+		internal override Block[] Blocks
 		{
 			get
 			{
-				return new Block() { Position = Bounds.Location.ToVector2(), Size = Bounds.Size.ToVector2(), Color = new Color(0.1f, 0.1f, 0.1f, 0.01f).ToVector4(), Radius = 10 };
+				return new Block[] { new Block { Position = Bounds.Location.ToVector2(), Size = Bounds.Size.ToVector2(), Color = new Vector4(0.1f), Radius = 10 } };
 			}
 		}
 
 		internal override void SetBounds(Rectangle bounds)
 		{
 			Bounds = bounds;
-			//A row container will arrange its children in a horizontal row.
-			//It will ignore its childrens horizontal anchors
+			//A row container will arrange its children in a horizontal (or vertical) row.
+			//It will ignore its childrens horizontal (or vertical) anchors			
 
 			if (LayoutRule == LayoutRules.LeftToRight)
 			{
@@ -39,12 +33,20 @@ namespace Neo.Controls
 				{
 					Rectangle childBounds = CalculateChildBounds(Bounds, child, false, true);
 
-					childBounds.X = Bounds.X + x + child.Margins.Left;
-					childBounds.Width = child.Size.Width;
+					//Check if child is inside bounds of this row
+					if ((x + child.Size.Width + child.Margins.Left + child.Margins.Right) < Bounds.Width)
+					{
+						child.IsClipped = false;
 
-					child.SetBounds(childBounds);
+						childBounds.X = Bounds.X + x + child.Margins.Left;
+						childBounds.Width = child.Size.Width;
 
-					x += child.Size.Width + child.Margins.Left + child.Margins.Right;
+						child.SetBounds(childBounds);
+
+						x += child.Size.Width + child.Margins.Left + child.Margins.Right;
+					}
+					else
+						child.IsClipped = true;					
 				}
 			}
 			else if (LayoutRule == LayoutRules.RightToLeft)
@@ -53,11 +55,20 @@ namespace Neo.Controls
 				foreach (Control child in this)
 				{
 					Rectangle childBounds = CalculateChildBounds(Bounds, child, false, true);
-					x -= child.Size.Width + child.Margins.Left + child.Margins.Right;
-					childBounds.X = Bounds.X + x + child.Margins.Right;
-					childBounds.Width = child.Size.Width;
 
-					child.SetBounds(childBounds);
+					//Check if child is inside bounds of this row
+					if ((x - (child.Size.Width + child.Margins.Left + child.Margins.Right)) > 0)
+					{
+						child.IsClipped = false;
+
+						x -= child.Size.Width + child.Margins.Left + child.Margins.Right;
+						childBounds.X = Bounds.X + x + child.Margins.Right;
+						childBounds.Width = child.Size.Width;
+
+						child.SetBounds(childBounds);
+					}
+					else
+						child.IsClipped = true;
 				}
 			}
 			else if (LayoutRule == LayoutRules.ShareEqually)

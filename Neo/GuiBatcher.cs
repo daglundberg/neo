@@ -1,264 +1,152 @@
-﻿// MonoGame - Copyright (C) The MonoGame Team
-// This file is subject to the terms and conditions defined in
-// file 'LICENSE.txt', which is part of this source code package.
-
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
 
 namespace Neo
 {
-    /// <summary>
-    /// This class handles the queueing of batch items into the GPU by creating the triangle tesselations
-    /// that are used to draw the sprite textures. This class supports int.MaxValue number of sprites to be
-    /// batched and will process them into short.MaxValue groups (strided by 6 for the number of vertices
-    /// sent to the GPU). 
-    /// </summary>
 	internal class GuiBatcher
-    {
-        /*
-         * Note that this class is fundamental to high performance for SpriteBatch games. Please exercise
-         * caution when making changes to this class.
-         */
+	{
+		private GuiBatchItem[] _batchItemArray;
+		private Block[] _instances;
 
-        // Initialization size for the batch item list and queue.
-        private const int InitialBatchSize = 256;
+		private VertexBufferBinding[] _bindings;
+		private VertexBuffer _instanceBuffer, _commonGeometry;
+		private IndexBuffer _indexBuffer;
 
-        // The maximum number of batch items that can be processed per iteration
-        private const int MaxBatchSize = short.MaxValue / 6; // 6 = 4 vertices unique and 2 shared, per quad
+		private int _totalNumBatchItems;
 
-        // Initialization size for the vertex array, in batch units.
-		private const int InitialVertexArraySize = 256;
+		private readonly GraphicsDevice _device;
+		private Effect _effectInstanced;
 
-        // The list of batch items to process.
-	    private GuiBatchItem[] _batchItemList;
+		public GuiBatcher(GraphicsDevice device, Effect effect, Effect effectInstanced, int capacity = 0)
+		{
+			_device = device;
+			_effectInstanced = effectInstanced;
 
-        // Index pointer to the next available SpriteBatchItem in _batchItemList.
-        private int _batchItemCount;
+			if (capacity <= 0)
+				capacity = 256;
+			else
+				capacity = (capacity + 63) & (~63); // ensure chunks of 64.
 
-        // The target graphics device.
-        private readonly GraphicsDevice _device;
+			_batchItemArray = new GuiBatchItem[capacity];
+			_instances = new Block[capacity];
 
+			_totalNumBatchItems = 0;
 
-        // Vertex index array. The values in this array never change.
-        private short[] _index;
+			for (int i = 0; i < capacity; i++)
+				_batchItemArray[i] = new GuiBatchItem();
 
-        private VertexPositionColorTexture[] _vertexArray;
+			VertexPositionTexture[] _vertices = new VertexPositionTexture[4];
+			_vertices[0].Position = new Vector3(0, 0, 0);
+			_vertices[1].Position = new Vector3(0, 1, 0);
+			_vertices[2].Position = new Vector3(1, 0, 0);
+			_vertices[3].Position = new Vector3(1, 1, 0);
 
-        public GuiBatcher(GraphicsDevice device, int capacity = 0)
-        {
-            _device = device;
+			_vertices[0].TextureCoordinate = new Vector2(0, 0);
+			_vertices[1].TextureCoordinate = new Vector2(0, 1);
+			_vertices[2].TextureCoordinate = new Vector2(1, 0);
+			_vertices[3].TextureCoordinate = new Vector2(1, 1);
 
-            if (capacity <= 0)
-                capacity = InitialBatchSize;
-            else
-                capacity = (capacity + 63) & (~63); // ensure chunks of 64.
+			_commonGeometry = new VertexBuffer(_device, VertexPositionTexture.VertexDeclaration, 4, BufferUsage.WriteOnly);
+			_commonGeometry.SetData(_vertices);
 
-            _batchItemList = new GuiBatchItem[capacity];
-            _batchItemCount = 0;
+			_indexBuffer = new IndexBuffer(_device, typeof(short), 6, BufferUsage.WriteOnly);
+			_indexBuffer.SetData(new short[] { 2, 3, 1, 2, 1, 0 });
 
-            for (int i = 0; i < capacity; i++)
-                _batchItemList[i] = new GuiBatchItem();
+			_instanceBuffer = new VertexBuffer(_device, RectDeclaration, _instances.Length, BufferUsage.WriteOnly);
 
-            EnsureArrayCapacity(capacity);
-        }
+			// Creates the binding between the geometry and the instances.
+			_bindings = new VertexBufferBinding[2];
+			_bindings[0] = new VertexBufferBinding(_commonGeometry);
+			_bindings[1] = new VertexBufferBinding(_instanceBuffer, 0, 1);
+			_device.Indices = _indexBuffer;
+			_device.SetVertexBuffers(_bindings);
+		}
 
+		public GuiBatchItem CreateBatchItem()
+		{
+			if (_totalNumBatchItems >= _batchItemArray.Length)
+			{
+				int oldSize = _batchItemArray.Length;
+				int newSize = oldSize + oldSize / 2; // grow by x1.5
+				newSize = (newSize + 63) & (~63); // grow in chunks of 64.
+				Array.Resize(ref _batchItemArray, newSize);
 
-        // Reuse a previously allocated SpriteBatchItem from the item pool. 
-        // if there is none available grow the pool and initialize new items.
-        public GuiBatchItem CreateBatchItem()
-        {
-            if (_batchItemCount >= _batchItemList.Length)
-            {
-                var oldSize = _batchItemList.Length;
-                var newSize = oldSize + oldSize / 2; // grow by x1.5
-                newSize = (newSize + 63) & (~63); // grow in chunks of 64.
-                Array.Resize(ref _batchItemList, newSize);
-                for (int i = oldSize; i < newSize; i++)
-                    _batchItemList[i] = new GuiBatchItem();
+				//Initilize all new batch items in the array
+				for (int i = oldSize; i < newSize; i++)
+				{
+					_batchItemArray[i] = new GuiBatchItem();
+					_instances[i] = new Block();
+				}
+			}
 
-                EnsureArrayCapacity(Math.Min(newSize, MaxBatchSize));
-            }
-            var item = _batchItemList[_batchItemCount++];
-            return item;
-        }
+			GuiBatchItem item = _batchItemArray[_totalNumBatchItems++];
+			return item;
+		}
 
-        // Resize and recreate the missing indices for the index and vertex position color buffers.
-        private unsafe void EnsureArrayCapacity(int numBatchItems)
-        {
-            int neededCapacity = 6 * numBatchItems;
-            if (_index != null && neededCapacity <= _index.Length)
-            {
-                // Short circuit out of here because we have enough capacity.
-                return;
-            }
-            short[] newIndex = new short[6 * numBatchItems];
-            int start = 0;
-            if (_index != null)
-            {
-                _index.CopyTo(newIndex, 0);
-                start = _index.Length / 6;
-            }
-            fixed (short* indexFixedPtr = newIndex)
-            {
-                var indexPtr = indexFixedPtr + (start * 6);
-                for (var i = start; i < numBatchItems; i++, indexPtr += 6)
-                {
-                    /*
-                     *  TL    TR
-                     *   0----1 0,1,2,3 = index offsets for vertex indices
-                     *   |   /| TL,TR,BL,BR are vertex references in SpriteBatchItem.
-                     *   |  / |
-                     *   | /  |
-                     *   |/   |
-                     *   2----3
-                     *  BL    BR
-                     */
-                    // Triangle 1
-                    *(indexPtr + 0) = (short)(i * 4);
-                    *(indexPtr + 1) = (short)(i * 4 + 1);
-                    *(indexPtr + 2) = (short)(i * 4 + 2);
-                    // Triangle 2
-                    *(indexPtr + 3) = (short)(i * 4 + 1);
-                    *(indexPtr + 4) = (short)(i * 4 + 3);
-                    *(indexPtr + 5) = (short)(i * 4 + 2);
-                }
-            }
-            _index = newIndex;
+		GuiBatchItem.Types _lastType = GuiBatchItem.Types.None;
 
-            _vertexArray = new VertexPositionColorTexture[4 * numBatchItems];
-        }
+		public void DrawBatches()
+		{
+			int i = 0;
+			while(i < _totalNumBatchItems)
+			{
+				GuiBatchItem item = _batchItemArray[i];
+				var batchType = item.Type;
 
-        /// <summary>
-        /// Sorts the batch items and then groups batch drawing into maximal allowed batch sets that do not
-        /// overflow the 16 bit array indices for vertices.
-        /// </summary>
-        /// <param name="sortMode">The type of depth sorting desired for the rendering.</param>
-        public unsafe void DrawBatch(SpriteSortMode sortMode)
-        {
-            // nothing to do
-            if (_batchItemCount == 0)
-                return;
+				int index = 0;
 
-            // sort the batch items
-            switch (sortMode)
-            {
-                case SpriteSortMode.Texture:
-                case SpriteSortMode.FrontToBack:
-                case SpriteSortMode.BackToFront:
-                    Array.Sort(_batchItemList, 0, _batchItemCount);
-                    break;
-            }
+				do
+				{
+					_instances[index].Position = item.Position;
+					_instances[index].Size = item.Size;
+					_instances[index].Color = item.Color;
+					_instances[index].Radius = item.Radius;
 
-            // Determine how many iterations through the drawing code we need to make
-            int batchIndex = 0;
-            int batchCount = _batchItemCount;
+					if (i < _totalNumBatchItems)
+						i++;
+					else
+						break;
 
-            // Iterate through the batches, doing short.MaxValue sets of vertices only.
-            while (batchCount > 0)
-            {
-                // setup the vertexArray array
-                var startIndex = 0;
-                var index = 0;
-                Texture2D tex = null;
+					index++;
+					_lastType = item.Type;
+					item = _batchItemArray[i];
+				}
+				while (_lastType == item.Type);
 
-                int numBatchesToProcess = batchCount;
-                if (numBatchesToProcess > MaxBatchSize)
-                {
-                    numBatchesToProcess = MaxBatchSize;
-                }
-                // Avoid the array checking overhead by using pointer indexing!
-                fixed (VertexPositionColorTexture* vertexArrayFixedPtr = _vertexArray)
-                {
-                    var vertexArrayPtr = vertexArrayFixedPtr;
+				if (batchType == GuiBatchItem.Types.Rectangle)
+					DrawBlockBatch(index);
+				else if (batchType == GuiBatchItem.Types.Texture)
+					DrawTextureBatch(index, _batchItemArray[i - 1].Texture);
 
-                    // Draw the batches
-                    for (int i = 0; i < numBatchesToProcess; i++, batchIndex++, index += 4, vertexArrayPtr += 4)
-                    {
-                        GuiBatchItem item = _batchItemList[batchIndex];
-                        // if the texture changed, we need to flush and bind the new texture
-                        var shouldFlush = !ReferenceEquals(item.Texture, tex);
-                        if (shouldFlush)
-                        {
-                            FlushVertexArray(startIndex, index, effect, tex);
+				//item.Texture = null;
+				_lastType = item.Type;
+			}
+			_totalNumBatchItems = 0;
+			_lastType = GuiBatchItem.Types.None;
+		}
 
-                            tex = item.Texture;
-                            startIndex = index = 0;
-                            vertexArrayPtr = vertexArrayFixedPtr;
-                            _device.Textures[0] = tex;
-                        }
+		private void DrawTextureBatch(int count, Texture2D texture)
+		{
+			_effectInstanced.Techniques[1].Passes[0].Apply();
+			_effectInstanced.Parameters["tex"].SetValue(texture);
+			_instanceBuffer.SetData(_instances);
+			_device.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0, 2, count);
+		}
 
-                        // store the SpriteBatchItem data in our vertexArray
-                        *(vertexArrayPtr + 0) = item.vertexTL;
-                        *(vertexArrayPtr + 1) = item.vertexTR;
-                        *(vertexArrayPtr + 2) = item.vertexBL;
-                        *(vertexArrayPtr + 3) = item.vertexBR;
+		private void DrawBlockBatch(int count)
+		{
+			_effectInstanced.Techniques[0].Passes[0].Apply();
+			_instanceBuffer.SetData(_instances);
+			_device.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0, 2, count);
+		}
 
-                        // Release the texture.
-                        item.Texture = null;
-                    }
-                }
-                // flush the remaining vertexArray data
-                FlushVertexArray(startIndex, index, effect, tex);
-                // Update our batch count to continue the process of culling down
-                // large batches
-                batchCount -= numBatchesToProcess;
-            }
-            // return items to the pool.  
-            _batchItemCount = 0;
-        }
-
-        /// <summary>
-        /// Sends the triangle list to the graphics device. Here is where the actual drawing starts.
-        /// </summary>
-        /// <param name="start">Start index of vertices to draw. Not used except to compute the count of vertices to draw.</param>
-        /// <param name="end">End index of vertices to draw. Not used except to compute the count of vertices to draw.</param>
-        /// <param name="effect">The custom effect to apply to the geometry</param>
-        /// <param name="texture">The texture to draw.</param>
-        private void FlushVertexArray(int start, int end, Effect effect, Texture texture)
-        {
-            if (start == end)
-                return;
-
-            var vertexCount = end - start;
-
-            // If the effect is not null, then apply each pass and render the geometry
-            if (effect != null)
-            {
-                var passes = effect.CurrentTechnique.Passes;
-                foreach (var pass in passes)
-                {
-                    pass.Apply();
-
-                    // Whatever happens in pass.Apply, make sure the texture being drawn
-                    // ends up in Textures[0].
-                    _device.Textures[0] = texture;
-
-                    _device.DrawUserIndexedPrimitives(
-                        PrimitiveType.TriangleList,
-                        _vertexArray,
-                        0,
-                        vertexCount,
-                        _index,
-                        0,
-                        (vertexCount / 4) * 2,
-                        VertexPositionColorTexture.VertexDeclaration);
-                }
-            }
-            else
-            {
-                // If no custom effect is defined, then simply render.
-                _device.DrawUserIndexedPrimitives(
-                    PrimitiveType.TriangleList,
-                    _vertexArray,
-                    0,
-                    vertexCount,
-                    _index,
-                    0,
-                    (vertexCount / 4) * 2,
-                    VertexPositionColorTexture.VertexDeclaration);
-            }
-        }
-    }
+		public static readonly VertexDeclaration RectDeclaration = new VertexDeclaration(
+			new VertexElement(0, VertexElementFormat.Vector2, VertexElementUsage.Position, 1),
+			new VertexElement(sizeof(float) * 2, VertexElementFormat.Vector4, VertexElementUsage.Color, 0),
+			new VertexElement(sizeof(float) * 6, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, 2),
+			new VertexElement(sizeof(float) * 8, VertexElementFormat.Single, VertexElementUsage.TextureCoordinate, 3)
+		);
+	}
 }
 

@@ -1,9 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Neo
 {
@@ -13,7 +10,7 @@ namespace Neo
 
 		public Texture2D ButtonBg, SwitchBg;
 
-		public SpriteFont Font;
+		public GuiFont Font;
 		public Style(ContentManager content)
 		{
 

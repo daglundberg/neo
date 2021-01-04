@@ -11,7 +11,8 @@ namespace Neo.Controls
 		public Margins Margins { get; set; }
 		public Anchors Anchors { get; set; }
 
-		internal bool HasChanged { get; set; }
+		internal bool IsClipped { get; set; }
+		//internal bool HasChanged { get; set; }
 
 		#region Children
 		private List<Control> _children;
@@ -23,12 +24,8 @@ namespace Neo.Controls
 		public IEnumerator GetEnumerator() { return _children.GetEnumerator(); }
 		public Control this[int index] { get { return _children[index]; } }
 		#endregion
-		public Control()
-		{
-			_children = new List<Control>();
-			Size = new Size(10, 10);
-		}
 
+		public Control() : this(true){}
 		public Control(bool CanHaveChildren)
 		{
 			if (CanHaveChildren)
@@ -45,11 +42,23 @@ namespace Neo.Controls
 
 		internal Rectangle Bounds { get; set; }
 
-		internal virtual Block Block
+		internal virtual Block[] Blocks
 		{
 			get
 			{
-				return new Block() { Position = Bounds.Location.ToVector2(), Size = Bounds.Size.ToVector2(), Color = new Color(0.3f, 0.2f, 0.5f, 0.3f).ToVector4(), Radius = 10 };
+				return new Block[] { new Block { Position = Bounds.Location.ToVector2(), Size = Bounds.Size.ToVector2(), Color = new Color(0.3f, 0.2f, 0.5f, 0.3f).ToVector4(), Radius = 10 } };
+			}
+		}
+
+		internal virtual void Draw(GameTime gameTime, GuiBatch guiBatch)
+		{
+			if (IsClipped != true)
+			{
+				foreach (Block b in Blocks)
+					guiBatch.DrawBlock(b);
+
+				foreach (Control c in this)
+					c.Draw(gameTime, guiBatch);
 			}
 		}
 

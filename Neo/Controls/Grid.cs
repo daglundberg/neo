@@ -2,20 +2,12 @@
 using System;
 
 namespace Neo.Controls
-{
-	
+{	
 	public class Grid : Control
 	{
-		public Grid()
-		{
+		public Grid() { }
 
-		}
-
-
-		internal override void Initialize(Neo neo)
-		{
-
-		}
+		internal override void Initialize(Neo neo) { }
 
 		internal override void SetBounds(Rectangle bounds)
 		{

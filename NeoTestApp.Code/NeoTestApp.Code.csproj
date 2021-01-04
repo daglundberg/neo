@@ -20,5 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Neo\Neo.csproj" />
+    <ProjectReference Include="..\QuadFontContentPipelineExtension\QuadFontContentPipelineExtension.csproj" />
   </ItemGroup>
 </Project>
