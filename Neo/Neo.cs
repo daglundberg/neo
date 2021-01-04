@@ -65,6 +65,15 @@ namespace Neo
 			_guiBatch.End();
 		}
 
+		public new bool ListensForMouseOrTouchAt(Point mouseOrTouchPosition)
+		{
+			foreach (Control c in this)
+				if (c.ListensForMouseOrTouchAt(mouseOrTouchPosition))
+					return true;
+
+			return false;
+		}
+
 
 		#region Old code
 		/*		public void Calculate(bool force)

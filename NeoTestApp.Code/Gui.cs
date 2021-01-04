@@ -1,6 +1,8 @@
 ﻿using Neo;
 using Neo.Controls;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Input.Touch;
 
 namespace NeoTestApp.Code
 {
@@ -43,27 +45,6 @@ namespace NeoTestApp.Code
 								Size = new Size(50),
 								Margins = new Margins(16, 4,4,4)
 							},
-							new Grid()
-							{
-								Size = new Size(50),
-								Margins = new Margins(4)
-							},
-							new Grid()
-							{
-								Size = new Size(50),
-								Margins = new Margins(4)
-							},
-
-							new Grid()
-							{
-								Size = new Size(50),
-								Margins = new Margins(4)
-							},
-							new Grid()
-							{
-								Size = new Size(50),
-								Margins = new Margins(4)
-							},
 							new Button()
 							{
 								Size = new Size(50),
@@ -103,9 +84,57 @@ namespace NeoTestApp.Code
 			_neo.Draw(gameTime);
 		}
 
+		public override void Update(GameTime gameTime)
+		{
+			CheckMouse();
+			CheckTouch();
+
+			base.Update(gameTime);
+		}
+
 		public void Init()
 		{
 			_neo.Init();
+		}
+
+		MouseState _oldMouseState, _newMouseState;
+		private void CheckMouse()
+		{
+			_oldMouseState = _newMouseState;
+			_newMouseState = Mouse.GetState();
+
+			//Check if a mouse click occured
+			if (_oldMouseState.LeftButton == ButtonState.Pressed && _newMouseState.LeftButton == ButtonState.Released)
+			{
+				//Handle click
+				if (_neo.ListensForMouseOrTouchAt(_newMouseState.Position))
+				{
+					_neo.Click(_newMouseState.Position);
+					return;
+				}
+			}
+
+
+		}
+
+		private void CheckTouch()
+		{
+			TouchCollection tc = TouchPanel.GetState();
+			foreach (TouchLocation tl in tc)
+			{
+				if (tl.State == TouchLocationState.Pressed)
+				{
+					// Execute your domain-specific code here
+					Point pos = tl.Position.ToPoint();
+
+					//Handle click
+					if (_neo.ListensForMouseOrTouchAt(pos))
+					{
+						_neo.Click(pos);
+						return;
+					}
+				}
+			}
 		}
 	}
 }

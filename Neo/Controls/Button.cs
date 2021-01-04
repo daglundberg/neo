@@ -13,11 +13,21 @@ namespace Neo.Controls
 		public Button() : base (false)
 		{
 			Text = " ";
+			WantsMouse = true;
+			Clicked += Button_Clicked;
 		}
 
 		public Button(string text) : base(false)
 		{
 			Text = text;
+			WantsMouse = true;
+			Clicked += Button_Clicked;
+		}
+
+		float anim = 0;
+		private void Button_Clicked(object sender, EventArgs e)
+		{
+			anim = 0;
 		}
 
 		internal override void Initialize(Neo neo) { }
@@ -29,10 +39,13 @@ namespace Neo.Controls
 
 		internal override void Draw(GameTime gameTime, GuiBatch guiBatch)
 		{
+			if (anim < 1f)
+				anim += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
 			if (IsClipped != true)
 			{
-				Vector4 c = new Vector4(0.9f, 0.3f, (float)(Math.Abs(Math.Sin(2 * gameTime.TotalGameTime.TotalSeconds))), 1f);
-				guiBatch.DrawBlock(new Block { Position = Bounds.Location.ToVector2(), Size = Bounds.Size.ToVector2(), Color = c, Radius = 8 });
+				Vector4 c = new Vector4(0.9f, 0.3f, 1-anim, 1f);
+				guiBatch.DrawBlock(new Block { Position = Bounds.Location.ToVector2() + new Vector2(0, 10 - 10 * anim), Size = Bounds.Size.ToVector2(), Color = c, Radius = 4 + ((1-anim)*10) });
 			}
 		}
 	}

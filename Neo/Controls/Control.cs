@@ -10,6 +10,7 @@ namespace Neo.Controls
 		public Size Size { get; set; }
 		public Margins Margins { get; set; }
 		public Anchors Anchors { get; set; }
+		public bool WantsMouse = false;
 
 		internal bool IsClipped { get; set; }
 		//internal bool HasChanged { get; set; }
@@ -62,11 +63,36 @@ namespace Neo.Controls
 			}
 		}
 
-		public event EventHandler Clicked;
-		public void Click()
+		internal bool ListensForMouseOrTouchAt(Point mousePosition)
 		{
-			Clicked?.Invoke(this, new EventArgs());
+			foreach (Control c in this)
+				if (c.ListensForMouseOrTouchAt(mousePosition))
+					return true;
+
+			return WantsMouse;
 		}
+
+		//Returns true if the click was consumed
+		public bool Click(Point mousePosition)
+		{
+			foreach (Control c in this)
+				if (c.ListensForMouseOrTouchAt(mousePosition))
+				{
+					if (c.Click(mousePosition))
+						return true;					
+				}
+
+			if (Bounds.Contains(mousePosition) && WantsMouse)
+			{
+				Clicked?.Invoke(this, new EventArgs());
+				return true;
+			}
+			else
+				return false;
+		}
+
+		public event EventHandler Clicked;
+
 
 		internal Rectangle CalculateChildBounds(Rectangle parentBounds, Control child, bool calculateHorizontal, bool calculateVertical)
 		{
