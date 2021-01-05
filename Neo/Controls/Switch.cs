@@ -23,7 +23,6 @@ namespace Neo.Controls
 
 		private void Switch_Clicked(object sender, EventArgs e)
 		{
-			Size = new Size(100, 50);
 			Checked = !Checked;
 			anim = 0;
 		}

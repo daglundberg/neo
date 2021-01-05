@@ -67,7 +67,7 @@ float4 RoundedBlockPS(InstancingVSoutput input) : COLOR0
 	// Smooth the result (free antialiasing).
 	// How soft the edges should be (in pixels). Higher values could be used to simulate a drop shadow.
 
-	return input.Color * smoothstep(1.2, 0, distance);
+	return input.Color * smoothstep(1, 0, distance);
    // return input.Color;
 }
 

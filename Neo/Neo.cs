@@ -3,9 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Framework.Utilities;
 using Neo.Controls;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-
 
 namespace Neo
 {
@@ -30,7 +27,7 @@ namespace Neo
 			_game.Window.ClientSizeChanged += OnResize;		
 
 			if (_currentPlatform == MonoGamePlatform.Android)
-				Scale = 2.2f;
+				Scale = 2.5f;
 			else
 				Scale = 1f;
 		}
@@ -89,7 +86,6 @@ namespace Neo
 
 				return false;
 		}
-
 
 		#region Old code
 		/*		public void Calculate(bool force)

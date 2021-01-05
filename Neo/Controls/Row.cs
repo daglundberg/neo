@@ -10,13 +10,15 @@ namespace Neo.Controls
 
 		public Row() { }
 
+		public Color BackgroundColor { get; set; } = new Color(0.1f, 0.1f, 0.1f, 0.1f);
+
 		internal override void Initialize(Neo neo) { }
 
 		internal override Block[] Blocks
 		{
 			get
 			{
-				return new Block[] { new Block { Position = Bounds.Location.ToVector2(), Size = Bounds.Size.ToVector2(), Color = new Vector4(0.1f), Radius = 10 } };
+				return new Block[] { new Block { Position = Bounds.Location.ToVector2(), Size = Bounds.Size.ToVector2(), Color = BackgroundColor.ToVector4(), Radius = 10 } };
 			}
 		}
 
@@ -71,7 +73,7 @@ namespace Neo.Controls
 						child.IsClipped = true;
 				}
 			}
-			else if (LayoutRule == LayoutRules.ShareEqually)
+			else if (LayoutRule == LayoutRules.ShareHorizontally)
 			{
 				int x = 0;
 				int w = 0;
@@ -96,13 +98,20 @@ namespace Neo.Controls
 				foreach (Control child in this)
 				{
 					Rectangle childBounds = CalculateChildBounds(Bounds, child, true, false);
+					//Check if child is inside bounds of this row
+					if ((y + child.Size.Height + child.Margins.Top + child.Margins.Bottom) < Bounds.Height)
+					{
+						child.IsClipped = false;
 
-					childBounds.Y = Bounds.Y + y + child.Margins.Top;
-					childBounds.Height = child.Size.Height;
+						childBounds.Y = Bounds.Y + y + child.Margins.Top;
+						childBounds.Height = child.Size.Height;
 
-					child.SetBounds(childBounds);
+						child.SetBounds(childBounds);
 
-					y += child.Size.Height + child.Margins.Top + child.Margins.Bottom;
+						y += child.Size.Height + child.Margins.Top + child.Margins.Bottom;
+					}
+					else
+						child.IsClipped = true;
 				}
 			}
 		}
@@ -111,7 +120,7 @@ namespace Neo.Controls
 		{
 			LeftToRight,
 			RightToLeft,
-			ShareEqually,
+			ShareHorizontally,
 			TopToBottom,
 		}
 	}

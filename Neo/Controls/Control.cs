@@ -13,7 +13,6 @@ namespace Neo.Controls
 		public bool WantsMouse = false;
 
 		internal bool IsClipped { get; set; }
-		//internal bool HasChanged { get; set; }
 
 		#region Children
 		private List<Control> _children;
@@ -47,7 +46,7 @@ namespace Neo.Controls
 		{
 			get
 			{
-				return new Block[] { new Block { Position = Bounds.Location.ToVector2(), Size = Bounds.Size.ToVector2(), Color = new Color(0.3f, 0.2f, 0.5f, 0.3f).ToVector4(), Radius = 10 } };
+				return new Block[] { new Block { Position = Bounds.Location.ToVector2(), Size = Bounds.Size.ToVector2(), Color = new Color(0.2f, 0.2f, 0.2f, 0.2f).ToVector4(), Radius = 4 } };
 			}
 		}
 

@@ -79,7 +79,16 @@ namespace Neo
 
 		public void ForceRefresh()
 		{
-			_matrix = Matrix.CreateOrthographicOffCenter(0, _graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height, 0, 0, 1);
+			var vp = _graphicsDevice.Viewport;
+			Matrix.CreateOrthographicOffCenter(0, vp.Width / _neo.Scale, vp.Height / _neo.Scale, 0, 0, 1, out _matrix);
+			if (_graphicsDevice.UseHalfPixelOffset)
+			{
+				_matrix.M41 += -0.5f * _matrix.M11;
+				_matrix.M42 += -0.5f * _matrix.M22;
+			}
+
+			_lastViewport = vp;
+			_lastScale = _neo.Scale;
 			_effectInstanced.Parameters["MatrixTransform"].SetValue(_matrix);
 		}
 
