@@ -16,12 +16,14 @@ namespace Neo
 		private GuiBatch _guiBatch;
 		private Texture2D _texture;
 		private SpriteFont _guiFont;
+		private Texture2D _t;
 
 		public Neo(Game game, Style style, MonoGamePlatform platform)
 		{
 			_game = game;
 			_currentPlatform = platform;
 			_guiFont = game.Content.Load<SpriteFont>("patuaone-med");
+			_t = game.Content.Load<Texture2D>("yup");
 			Style = style;
 
 			_game.Window.ClientSizeChanged += OnResize;		
@@ -58,6 +60,8 @@ namespace Neo
 
 			foreach (Control c in this)
 				c.Draw(gameTime, _guiBatch);
+
+			_guiBatch.Draw(_t, new Rectangle(14, 35, 100, 100), Color.White);
 
 			_guiBatch.End();
 		}

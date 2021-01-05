@@ -56,12 +56,12 @@ namespace NeoTestApp.Code
 
 		//	_gui.Calculate();
 		}
-
+		Texture2D s;
 		protected override void LoadContent()
 		{
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
 			//	_fpsFont = Content.Load<SpriteFont>("patuaone-med");
-			Texture2D s = Content.Load<Texture2D>("yup");
+			s = Content.Load<Texture2D>("yup");
 
 		}
 
