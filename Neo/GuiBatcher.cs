@@ -4,24 +4,26 @@ using System;
 
 namespace Neo
 {
-	internal class GuiBatcher
+	internal partial class GuiBatcher
 	{
 		private GuiBatchItem[] _batchItemArray;
 		private Block[] _instances;
 
 		private VertexBufferBinding[] _bindings;
 		private VertexBuffer _instanceBuffer, _commonGeometry;
+
 		private IndexBuffer _indexBuffer;
 
 		private int _totalNumBatchItems;
 
 		private readonly GraphicsDevice _device;
-		private Effect _effectInstanced;
+		private Effect _neoEffect;
+
 
 		public GuiBatcher(GraphicsDevice device, Effect effect, Effect effectInstanced, int capacity = 0)
 		{
 			_device = device;
-			_effectInstanced = effectInstanced;
+			_neoEffect = effectInstanced;
 
 			if (capacity <= 0)
 				capacity = 256;
@@ -61,6 +63,13 @@ namespace Neo
 			_bindings[1] = new VertexBufferBinding(_instanceBuffer, 0, 1);
 			_device.Indices = _indexBuffer;
 			_device.SetVertexBuffers(_bindings);
+
+			//---
+			_batchItemCount = 0;
+
+
+			EnsureArrayCapacity(capacity);
+			//---
 		}
 
 		public GuiBatchItem CreateBatchItem()
@@ -78,6 +87,8 @@ namespace Neo
 					_batchItemArray[i] = new GuiBatchItem();
 					_instances[i] = new Block();
 				}
+
+				EnsureArrayCapacity(Math.Min(newSize, MaxBatchSize));
 			}
 
 			GuiBatchItem item = _batchItemArray[_totalNumBatchItems++];
@@ -86,41 +97,64 @@ namespace Neo
 
 		GuiBatchItem.Types _lastType = GuiBatchItem.Types.None;
 
-		public void DrawBatches()
+		public unsafe void DrawBatches()
 		{
 			int i = 0;
-			while(i < _totalNumBatchItems)
+			while (i < _totalNumBatchItems)
 			{
 				GuiBatchItem item = _batchItemArray[i];
 				var batchType = item.Type;
 
 				int index = 0;
 
-				do
+				if (item.Type == GuiBatchItem.Types.Rectangle)
 				{
-					_instances[index].Position = item.Position;
-					_instances[index].Size = item.Size;
-					_instances[index].Color = item.Color;
-					_instances[index].Radius = item.Radius;
+					do
+					{
+						_instances[index].Position = item.Position;
+						_instances[index].Size = item.Size;
+						_instances[index].Color = item.Color;
+						_instances[index].Radius = item.Radius;
 
-					if (i < _totalNumBatchItems)
-						i++;
-					else
-						break;
+						if (i < _totalNumBatchItems)
+							i++;
+						else
+							break;
 
-					index++;
-					_lastType = item.Type;
-					item = _batchItemArray[i];
-				}
-				while (_lastType == item.Type);
+						index++;
+						_lastType = item.Type;
+						item = _batchItemArray[i];
+					}
+					while (_lastType == item.Type);
 
-				if (batchType == GuiBatchItem.Types.Rectangle)
 					DrawBlockBatch(index);
-				else if (batchType == GuiBatchItem.Types.Texture)
-					DrawTextureBatch(index, _batchItemArray[i - 1].Texture);
+				}
+				else if (item.Type == GuiBatchItem.Types.Texture)
+				{
+					int indic;
+					Texture2D tex = item.Texture;
+					do
+					{
+						indic = index * 4;
 
-				//item.Texture = null;
-				_lastType = item.Type;
+						_vertexArray[indic] = item.vertexTL;
+						_vertexArray[indic + 1] = item.vertexTR;
+						_vertexArray[indic + 2] = item.vertexBL;
+						_vertexArray[indic + 3] = item.vertexBR;
+
+						if (i < _totalNumBatchItems)
+							i++;
+						else
+							break;
+
+						index++;
+						_lastType = item.Type;
+						item = _batchItemArray[i];
+					}
+					while (_lastType == item.Type);
+
+					FlushVertexArray(0, indic, tex);
+				}					
 			}
 			_totalNumBatchItems = 0;
 			_lastType = GuiBatchItem.Types.None;
@@ -128,15 +162,15 @@ namespace Neo
 
 		private void DrawTextureBatch(int count, Texture2D texture)
 		{
-			_effectInstanced.Techniques[1].Passes[0].Apply();
-			_effectInstanced.Parameters["tex"].SetValue(texture);
+			_neoEffect.Techniques[1].Passes[0].Apply();
+			_neoEffect.Parameters["tex"].SetValue(texture);
 			_instanceBuffer.SetData(_instances);
 			_device.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0, 2, count);
 		}
 
 		private void DrawBlockBatch(int count)
 		{
-			_effectInstanced.Techniques[0].Passes[0].Apply();
+			_neoEffect.Techniques[0].Passes[0].Apply();
 			_instanceBuffer.SetData(_instances);
 			_device.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0, 2, count);
 		}

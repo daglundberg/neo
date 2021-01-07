@@ -9,28 +9,19 @@ namespace NeoTestApp.Code
 	class Gui : DrawableGameComponent
 	{
 		Neo.Neo _neo;
+		Row r;
 		public Gui(Game game) : base(game)
 		{
 			Style style = new Style(Game.Content);
 			_neo = new Neo.Neo(game, style, Game1.CurrentPlatform);
 
-			_neo.AddChildren(
-				new Control[]
-				{
-					new Grid()
-					{
-						Anchors = Anchors.Top | Anchors.Bottom | Anchors.Right,
-						Size = new Size(600, 400),
-						Margins = new Margins(135, 50, 135, 135)
-					},
+			r = new Row();
 
-					new Row()
-					{
-						Anchors = Anchors.Top | Anchors.Left | Anchors.Bottom,
-						Size = new Size(80),						
-						Margins = new Margins(25, 50, 0, 100),
-						LayoutRule = Row.LayoutRules.TopToBottom
-					}.AddChildren(
+			r.Anchors = Anchors.Top | Anchors.Left | Anchors.Bottom;
+			r.Size = new Size(80);
+			r.Margins = new Margins(25, 50, 0, 100);
+			r.LayoutRule = Row.LayoutRules.TopToBottom;
+			r.AddChildren(
 						new Control[]
 						{
 							new Grid()
@@ -66,7 +57,19 @@ namespace NeoTestApp.Code
 								Size = new Size(50),
 								Margins = new Margins(4,4,16,4)
 							},
-						}),
+						});
+			
+			_neo.AddChildren(
+				new Control[]
+				{
+					new Grid()
+					{
+						Anchors = Anchors.Top | Anchors.Bottom | Anchors.Right,
+						Size = new Size(600, 400),
+						Margins = new Margins(135, 50, 135, 135)
+					},
+
+					r,
 
 					new Button()
 					{
@@ -82,7 +85,7 @@ namespace NeoTestApp.Code
 						Margins = new Margins(30),
 						Color = Color.Blue
 					},
-				}) ;
+				});
 		}
 
 		public override void Draw(GameTime gameTime)
@@ -90,11 +93,13 @@ namespace NeoTestApp.Code
 			_neo.Draw(gameTime);
 		}
 
+		//float x = 0;
 		public override void Update(GameTime gameTime)
 		{
 			CheckMouse();
 			CheckTouch();
-
+		//	r.Margins = new Margins((int)x);
+		//	x += 0.2f;
 			base.Update(gameTime);
 		}
 

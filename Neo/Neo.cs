@@ -15,15 +15,12 @@ namespace Neo
 		public float Scale;
 		private GuiBatch _guiBatch;
 		private Texture2D _texture;
-		private SpriteFont _guiFont;
-		private Texture2D _t;
 
 		public Neo(Game game, Style style, MonoGamePlatform platform)
 		{
 			_game = game;
 			_currentPlatform = platform;
-			_guiFont = game.Content.Load<SpriteFont>("patuaone-med");
-			_t = game.Content.Load<Texture2D>("yup");
+
 			Style = style;
 
 			_game.Window.ClientSizeChanged += OnResize;		
@@ -40,7 +37,7 @@ namespace Neo
 		{
 			Initialize(this);
 			_guiBatch = new GuiBatch(_game.GraphicsDevice, _game.Content.Load<Effect>("effecty"), _game.Content.Load<Effect>("InstancingRectangleShader"), this);
-			_texture = _game.Content.Load<Texture2D>("yup");
+			_texture = _game.Content.Load<Texture2D>("atlas");
 		}
 
 		internal override void Initialize(Neo neo)
@@ -61,7 +58,14 @@ namespace Neo
 			foreach (Control c in this)
 				c.Draw(gameTime, _guiBatch);
 
-			_guiBatch.Draw(_t, new Rectangle(14, 35, 100, 100), Color.White);
+			//_guiBatch.Draw(_texture, new Rectangle(0, 0, 60, 100), new Rectangle(0, 0, 22, 26), Color.White);
+			_guiBatch.DrawGlyph(_texture, new Rectangle(0, 0, 60, 100), left: 0.5f, bottom: 26.5f, right: 22.5f, top: 51.5f, Color.White);
+
+
+			//_guiBatch.DrawGlyph(_texture, new Rectangle(0	, 0, 60, 100), 0, 25, 20, 25, Color.White);
+
+			_guiBatch.Draw(_texture, new Rectangle(130	, 0, 60, 100), new Rectangle(25, 0, 20, 25), Color.White);
+			_guiBatch.Draw(_texture, new Rectangle(195	, 0, 60, 100), new Rectangle(25, 0, 20, 25), Color.White);
 
 			_guiBatch.End();
 		}
