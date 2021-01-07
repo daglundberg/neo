@@ -14,7 +14,8 @@ namespace Neo
 		private Game _game;
 		public float Scale;
 		private GuiBatch _guiBatch;
-		private Texture2D _texture;
+
+		public NeoFont DefaultFont { get; private set; }
 
 		public Neo(Game game, Style style, MonoGamePlatform platform)
 		{
@@ -29,20 +30,26 @@ namespace Neo
 				Scale = 2.5f;
 			else
 				Scale = 1f;
+
+			DefaultFont = new NeoFont(game.Content.Load<Texture2D>("atlas"), @"C:\Users\Dag\Downloads\msdf-atlas-gen-1.1-win64\msdf-atlas-gen\output.csv");
+			Console.WriteLine("Loaded neo");
 		}
 
 		private void OnResize(object sender, EventArgs e) { ForceRefresh(); }
 
-		public void Init()
+		public void Ready()
 		{
 			Initialize(this);
-			_guiBatch = new GuiBatch(_game.GraphicsDevice, _game.Content.Load<Effect>("effecty"), _game.Content.Load<Effect>("InstancingRectangleShader"), this);
-			_texture = _game.Content.Load<Texture2D>("atlas");
 		}
 
 		internal override void Initialize(Neo neo)
 		{
+			_guiBatch = new GuiBatch(_game.GraphicsDevice, _game.Content.Load<Effect>("InstancingRectangleShader"), this);
 			SetBounds(new Rectangle(0, 0, (int)(_game.GraphicsDevice.Viewport.Width / Scale), (int)(_game.GraphicsDevice.Viewport.Height / Scale)));
+
+			base.Initialize(neo);
+			foreach (Control child in this)
+				child.Initialize(neo);
 		}
 
 		public void ForceRefresh()
@@ -57,15 +64,6 @@ namespace Neo
 
 			foreach (Control c in this)
 				c.Draw(gameTime, _guiBatch);
-
-			//_guiBatch.Draw(_texture, new Rectangle(0, 0, 60, 100), new Rectangle(0, 0, 22, 26), Color.White);
-			_guiBatch.DrawGlyph(_texture, new Rectangle(0, 0, 60, 100), left: 0.5f, bottom: 26.5f, right: 22.5f, top: 51.5f, Color.White);
-
-
-			//_guiBatch.DrawGlyph(_texture, new Rectangle(0	, 0, 60, 100), 0, 25, 20, 25, Color.White);
-
-			_guiBatch.Draw(_texture, new Rectangle(130	, 0, 60, 100), new Rectangle(25, 0, 20, 25), Color.White);
-			_guiBatch.Draw(_texture, new Rectangle(195	, 0, 60, 100), new Rectangle(25, 0, 20, 25), Color.White);
 
 			_guiBatch.End();
 		}

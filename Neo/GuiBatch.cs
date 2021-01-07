@@ -22,14 +22,14 @@ namespace Neo
 		GraphicsDevice _graphicsDevice;
 		Neo _neo;
 
-		public GuiBatch(GraphicsDevice graphicsDevice, Effect effect, Effect effectInstanced, Neo neo, int capacity = 0)
+		public GuiBatch(GraphicsDevice graphicsDevice, Effect neoEffect, Neo neo)
 		{
 			_neo = neo;
 			_graphicsDevice = graphicsDevice;
 
-			_effectInstanced = effectInstanced;
+			_effectInstanced = neoEffect;
 
-			_batcher = new GuiBatcher(graphicsDevice, effect, effectInstanced, capacity);
+			_batcher = new GuiBatcher(graphicsDevice, neoEffect);
 
 			//_matrix = Matrix.CreateOrthographicOffCenter(0, _graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height, 0, 0, 1);
 		//	effectInstanced.Parameters["MatrixTransform"].SetValue(_matrix);
@@ -90,21 +90,6 @@ namespace Neo
 			_lastViewport = vp;
 			_lastScale = _neo.Scale;
 			_effectInstanced.Parameters["MatrixTransform"].SetValue(_matrix);
-		}
-
-		void CheckValid(GuiFont spriteFont, string text)
-		{
-			if (spriteFont == null)
-				throw new ArgumentNullException("spriteFont");
-			if (text == null)
-				throw new ArgumentNullException("text");
-		}
-		void CheckValid(GuiFont spriteFont, StringBuilder text)
-		{
-			if (spriteFont == null)
-				throw new ArgumentNullException("spriteFont");
-			if (text == null)
-				throw new ArgumentNullException("text");
 		}
 
 		/// <summary>
@@ -189,6 +174,28 @@ namespace Neo
 					 0, 0);
 		}
 
+		public void DrawString(NeoFont font, string text, Vector2 position, float scale, Color color)
+		{
+			if (text != null)
+			{
+				float advance = 0;
+				for (var i = 0; i < text.Length; ++i)
+				{
+					NeoGlyph g;
+					char c = text[i];
+					font.Glyphs.TryGetValue(c, out g);
+					Bounds gg = g.PlaneBounds * scale;
+					if (g != null)
+					{
+						DrawGlyph(font.Atlas, new Rectangle((int)(gg.Left + (advance * scale + position.X)), (int)(scale - gg.Top + position.Y), (int)(gg.Right - gg.Left), (int)(gg.Top - gg.Bottom)),
+							g.AtlasBounds.Left, g.AtlasBounds.Bottom, g.AtlasBounds.Right, g.AtlasBounds.Top,
+							color);
+						advance += g.Advance;
+
+					}
+				}
+			}
+		}
 
 		public void DrawBlock(Block block)
 		{
@@ -214,7 +221,6 @@ namespace Neo
 				/// <param name="color">A color mask.</param>
 				public unsafe void DrawString(GuiFont spriteFont, string text, Vector2 position, Color color)
 				{
-					CheckValid(spriteFont, text);
 
 					var offset = Vector2.Zero;
 					var firstGlyphOfLine = true;

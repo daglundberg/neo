@@ -7,8 +7,6 @@ namespace Neo.Controls
 	{
 		public Grid() { }
 
-		internal override void Initialize(Neo neo) { }
-
 		internal override void SetBounds(Rectangle bounds)
 		{
 			Bounds = bounds;

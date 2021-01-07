@@ -17,9 +17,10 @@ namespace Neo.Controls
 			Clicked += Button_Clicked;
 		}
 
-		public Button(string text) : base(false)
+
+		public Button(Neo neo) : base(false)
 		{
-			Text = text;
+			_neo = neo;
 			WantsMouse = true;
 			Clicked += Button_Clicked;
 		}
@@ -30,11 +31,9 @@ namespace Neo.Controls
 			anim = 0;
 		}
 
-		internal override void Initialize(Neo neo) { }
-
 		internal override void SetBounds(Rectangle bounds)
 		{
-			Bounds = bounds;
+			Bounds = bounds;			
 		}
 
 		internal override void Draw(GameTime gameTime, GuiBatch guiBatch)
@@ -43,11 +42,18 @@ namespace Neo.Controls
 				anim += (float)gameTime.ElapsedGameTime.TotalSeconds*8;
 
 			if (IsClipped != true)
-				guiBatch.DrawBlock(new Block {
+			{
+				guiBatch.DrawBlock(new Block
+				{
 					Position = Bounds.Location.ToVector2() + new Vector2(0, 10 - 10 * anim),
 					Size = Bounds.Size.ToVector2(),
 					Color = Vector4.Lerp(Color.Gray.ToVector4(), new Vector4(0.9f, 0.3f, 0.0f, 1f), anim),
-					Radius = 4 + ((1-anim)*10) });
+					Radius = 4 + ((1 - anim) * 10)
+				});
+
+				if (_neo != null)
+					guiBatch.DrawString(_neo.DefaultFont, Text, Bounds.Location.ToVector2() + new Vector2(10, 5+(10 - 10 * anim)), 22f, Color.White);
+			}
 
 		}
 	}

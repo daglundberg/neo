@@ -16,14 +16,6 @@ namespace Neo.Controls
 			Text = text;
 		}
 
-		//Neo-init
-		Neo _neo;
-		internal override void Initialize(Neo neo)
-		{
-			_neo = neo;
-			Size = _neo.Style.Font.MeasureString(Text).ToSize() + new Size(20, 10);
-		}
-
 		internal override void SetBounds(Rectangle bounds)
 		{
 			Bounds = bounds;

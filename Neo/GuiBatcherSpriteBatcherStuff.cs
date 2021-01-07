@@ -18,11 +18,6 @@ namespace Neo
 
 
         /// <summary>
-        /// Index pointer to the next available SpriteBatchItem in _batchItemList.
-        /// </summary>
-        private int _batchItemCount;
-
-        /// <summary>
         /// Resize and recreate the missing indices for the index and vertex position color buffers.
         /// </summary>
         /// <param name="numBatchItems"></param>
@@ -155,9 +150,6 @@ namespace Neo
             _neoEffect.Techniques[2].Passes[0].Apply();
             _neoEffect.Parameters["tex"].SetValue(texture);
           //  _device.Textures[0] = texture;
-          //  RasterizerState rasterizerState = new RasterizerState();
-           // rasterizerState.CullMode = CullMode.None;
-          //  _device.RasterizerState = rasterizerState;
 
             _device.DrawUserIndexedPrimitives(
                         PrimitiveType.TriangleList,

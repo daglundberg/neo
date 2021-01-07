@@ -16,7 +16,6 @@ namespace NeoTestApp.Code
 			_neo = new Neo.Neo(game, style, Game1.CurrentPlatform);
 
 			r = new Row();
-
 			r.Anchors = Anchors.Top | Anchors.Left | Anchors.Bottom;
 			r.Size = new Size(80);
 			r.Margins = new Margins(25, 50, 0, 100);
@@ -38,7 +37,8 @@ namespace NeoTestApp.Code
 							new Button()
 							{
 								Size = new Size(50),
-								Margins = new Margins(4)
+								Margins = new Margins(4),
+								Text = "Haaaay!",
 							},
 							new Switch()
 							{
@@ -57,8 +57,8 @@ namespace NeoTestApp.Code
 								Size = new Size(50),
 								Margins = new Margins(4,4,16,4)
 							},
-						});
-			
+						}); ;
+
 			_neo.AddChildren(
 				new Control[]
 				{
@@ -71,21 +71,26 @@ namespace NeoTestApp.Code
 
 					r,
 
-					new Button()
+					new Button(_neo)
 					{
 						Anchors = Anchors.Right | Anchors.Bottom,
 						Size = new Size(110, 40),
-						Margins = new Margins(30)
+						Margins = new Margins(30),
+						Text = "Commit"
 					},
+
 
 					new Button()
 					{
 						Anchors = Anchors.Left | Anchors.Bottom,
 						Size = new Size(110, 40),
 						Margins = new Margins(30),
-						Color = Color.Blue
+						Color = Color.Blue,
+
 					},
-				});
+				}); ;
+
+			_neo.Ready();
 		}
 
 		public override void Draw(GameTime gameTime)
@@ -103,10 +108,10 @@ namespace NeoTestApp.Code
 			base.Update(gameTime);
 		}
 
-		public void Init()
+/*		public void Init()
 		{
 			_neo.Init();
-		}
+		}*/
 
 		MouseState _oldMouseState, _newMouseState;
 		private void CheckMouse()

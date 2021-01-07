@@ -12,8 +12,6 @@ namespace Neo.Controls
 
 		public Color BackgroundColor { get; set; } = new Color(0.1f, 0.1f, 0.1f, 0.1f);
 
-		internal override void Initialize(Neo neo) { }
-
 		internal override Block[] Blocks
 		{
 			get

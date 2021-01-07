@@ -11,6 +11,7 @@ namespace Neo.Controls
 		public Margins Margins { get; set; }
 		public Anchors Anchors { get; set; }
 		public bool WantsMouse = false;
+		public Neo _neo;
 
 		internal bool IsClipped { get; set; }
 
@@ -36,7 +37,14 @@ namespace Neo.Controls
 			Size = new Size(10, 10);
 		}
 
-		internal abstract void Initialize(Neo neo);
+		internal virtual void Initialize(Neo neo)
+		{
+			foreach (Control child in this)
+			{
+				_neo = neo;
+				child.Initialize(neo);
+			}
+		}
 
 		internal abstract void SetBounds(Rectangle bounds);
 
@@ -67,6 +75,9 @@ namespace Neo.Controls
 			foreach (Control c in this)
 				if (c.ListensForMouseOrTouchAt(mousePosition))
 					return true;
+
+			if (IsClipped)
+				return false;
 
 			return WantsMouse;
 		}

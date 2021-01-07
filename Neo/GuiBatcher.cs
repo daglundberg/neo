@@ -20,15 +20,13 @@ namespace Neo
 		private Effect _neoEffect;
 
 
-		public GuiBatcher(GraphicsDevice device, Effect effect, Effect effectInstanced, int capacity = 0)
+		public GuiBatcher(GraphicsDevice device, Effect neoEffect)
 		{
 			_device = device;
-			_neoEffect = effectInstanced;
+			_neoEffect = neoEffect;
 
-			if (capacity <= 0)
-				capacity = 256;
-			else
-				capacity = (capacity + 63) & (~63); // ensure chunks of 64.
+			int capacity = 256; // should be chunks of 64.
+
 
 			_batchItemArray = new GuiBatchItem[capacity];
 			_instances = new Block[capacity];
@@ -65,9 +63,6 @@ namespace Neo
 			_device.SetVertexBuffers(_bindings);
 
 			//---
-			_batchItemCount = 0;
-
-
 			EnsureArrayCapacity(capacity);
 			//---
 		}
@@ -103,7 +98,6 @@ namespace Neo
 			while (i < _totalNumBatchItems)
 			{
 				GuiBatchItem item = _batchItemArray[i];
-				var batchType = item.Type;
 
 				int index = 0;
 

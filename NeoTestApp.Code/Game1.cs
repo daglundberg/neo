@@ -42,7 +42,7 @@ namespace NeoTestApp.Code
 			base.Initialize();
 
 			_gui = new Gui(this);
-			_gui.Init();
+			//_gui.Init();
 		}
 
 		public void OnResize(Object sender, EventArgs e)
