@@ -10,7 +10,6 @@ namespace Neo
 
 		public Texture2D ButtonBg, SwitchBg;
 
-		public GuiFont Font;
 		public Style(ContentManager content)
 		{
 

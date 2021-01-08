@@ -14,7 +14,7 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin atlas.png
+#begin ../../../../../../Downloads/msdf-atlas-gen-1.1-win64/msdf-atlas-gen/atlas.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -24,7 +24,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:atlas.png
+/build:../../../../../../Downloads/msdf-atlas-gen-1.1-win64/msdf-atlas-gen/atlas.png;atlas.png
 
 #begin effecty.fx
 /importer:EffectImporter

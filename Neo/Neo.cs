@@ -64,6 +64,31 @@ namespace Neo
 
 			foreach (Control c in this)
 				c.Draw(gameTime, _guiBatch);
+/*
+		_guiBatch.DrawString(DefaultFont,
+				"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur condimentum leo lacus, quis sodales nunc congue sit amet.\n" +
+				"Vivamus vehicula mi id metus scelerisque ullamcorper. Integer quis tempor est. Maecenas eu molestie enim. Morbi sodales,\n" +
+								"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur condimentum leo lacus, quis sodales nunc congue sit amet.\n" +
+				"Vivamus vehicula mi id metus scelerisque ullamcorper. Integer quis tempor est. Maecenas eu molestie enim. Morbi sodales,\n" +
+								"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur condimentum leo lacus, quis sodales nunc congue sit amet.\n" +
+				"Vivamus vehicula mi id metus scelerisque ullamcorper. Integer quis tempor est. Maecenas eu molestie enim. Morbi sodales,\n" +
+								"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur condimentum leo lacus, quis sodales nunc congue sit amet.\n" +
+				"Vivamus vehicula mi id metus scelerisque ullamcorper. Integer quis tempor est. Maecenas eu molestie enim. Morbi sodales,\n" +
+								"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur condimentum leo lacus, quis sodales nunc congue sit amet.\n" +
+				"Vivamus vehicula mi id metus scelerisque ullamcorper. Integer quis tempor est. Maecenas eu molestie enim. Morbi sodales,\n" +
+								"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur condimentum leo lacus, quis sodales nunc congue sit amet.\n" +
+				"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur condimentum leo lacus, quis sodales nunc congue sit amet.\n" +
+				"Vivamus vehicula mi id metus scelerisque ullamcorper. Integer quis tempor est. Maecenas eu molestie enim. Morbi sodales,\n" +
+								"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur condimentum leo lacus, quis sodales nunc congue sit amet.\n" +
+				"Vivamus vehicula mi id metus scelerisque ullamcorper. Integer quis tempor est. Maecenas eu molestie enim. Morbi sodales,\n" +
+								"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur condimentum leo lacus, quis sodales nunc congue sit amet.\n" +
+				"Vivamus vehicula mi id metus scelerisque ullamcorper. Integer quis tempor est. Maecenas eu molestie enim. Morbi sodales,\n" +
+								"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur condimentum leo lacus, quis sodales nunc congue sit amet.\n" +
+				"Vivamus vehicula mi id metus scelerisque ullamcorper. Integer quis tempor est. Maecenas eu molestie enim. Morbi sodales,\n" +
+				"Vivamus vehicula mi id metus scelerisque ullamcorper. Integer quis tempor est. Maecenas eu molestie enim. Morbi sodales,\n" +
+				"elit consequat.",
+							Vector2.One, 18f, Color.White) ;
+*/
 
 			_guiBatch.End();
 		}
@@ -92,95 +117,5 @@ namespace Neo
 
 				return false;
 		}
-
-		#region Old code
-		/*		public void Calculate(bool force)
-				{
-					CalculateScale();
-					foreach (Control control in _controls)
-						if (control.HasChanged || force)
-							ComputeControl(control, new Rectangle(0, 0, _screenSize.X, _screenSize.Y), _controls.Count-1, 0);
-				}*/
-
-		/*		public void Update(GameTime gameTime)
-				{
-					if (_currentPlatform == MonoGamePlatform.DesktopGL)
-						CheckMouse();
-					else if (_currentPlatform == MonoGamePlatform.Android)
-						CheckTouch();
-				}*/
-		/*
-				MouseState _mouseStateOld, _mouseStateNew;
-				private void CheckMouse()
-				{
-					_mouseStateOld = _mouseStateNew;
-					_mouseStateNew = Mouse.GetState();
-
-					//Check if a mouse click occured
-					if (_mouseStateOld.LeftButton == ButtonState.Pressed && _mouseStateNew.LeftButton == ButtonState.Released)
-					{
-						Control c = GetControlWithMouse(_mouseStateNew.Position);
-						if (c != null)
-							if (c.WantsMouse)
-								c.Click();
-
-						return;
-					}
-				}
-		*/
-		/*		private void CheckTouch()
-				{
-					TouchCollection tc = TouchPanel.GetState();
-					foreach (TouchLocation tl in tc)
-					{
-						if (tl.State == TouchLocationState.Pressed)
-						{
-							Point pos = tl.Position.ToPoint();
-							Control c = GetControlWithMouse(pos);
-							if (c != null)
-								if (c.WantsMouse)
-									c.Click();
-						}
-					}
-				}*/
-
-		/*		Control moused = null;
-				public Control GetControlWithMouse(Point point)
-				{
-					moused = null;
-					foreach (Control control in _controls)
-						if (control.Bounds.Contains(point))
-							ControlHasMouse(control, point);
-
-					if (moused != null)
-						return moused;
-
-					return null;
-				}*/
-
-		/*		public void Click(Point point)
-				{
-					moused.Click();
-				}*/
-
-		/*		private void ComputeControl(Control control, Rectangle parentBounds, int numSiblings, int siblingIndex)
-				{
-					control.Initialize(this);
-
-					for (int i = 0; i < control.ChildCount; i++)
-						ComputeControl(control[i], control.Bounds, control.ChildCount-1, i);
-				}*/
-
-		/*		private void ControlHasMouse(Control control, Point point)
-				{
-					if (control.Bounds.Contains(point))
-					{
-						moused = control;
-						foreach (Control child in control)
-							ControlHasMouse(child, point);
-					}
-				}*/
-
-		#endregion
 	}
 }

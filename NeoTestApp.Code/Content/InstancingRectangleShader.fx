@@ -117,7 +117,7 @@ float Median(float a, float b, float c)
 float4 msdfPS(BasicVSoutput input) : COLOR
 {
 	// Convert normalized texture coordinates to absolute texture coordinates
-    float2 uv = input.UV * 52;
+    float2 uv = input.UV * 50;
 
 	// Calculate derivatives
     float2 Jdx = ddx(uv);
@@ -135,7 +135,7 @@ float4 msdfPS(BasicVSoutput input) : COLOR
     float2 grad = float2(gradDist.x * Jdx.x + gradDist.y * Jdy.x, gradDist.x * Jdx.y + gradDist.y * Jdy.y);
 
 	// Apply anti-aliasing
-    const float thickness = 0.256f;
+    const float thickness = 0.9f;
     const float normalization = thickness * 0.5f * sqrt(2.0f);
 
     float afWidth = min(normalization * length(grad), 0.5f);

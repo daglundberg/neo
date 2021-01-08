@@ -1,7 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Text;
 
 namespace Neo
 {
@@ -179,20 +177,35 @@ namespace Neo
 			if (text != null)
 			{
 				float advance = 0;
+				float row = 0;
 				for (var i = 0; i < text.Length; ++i)
 				{
-					NeoGlyph g;
 					char c = text[i];
-					font.Glyphs.TryGetValue(c, out g);
-					Bounds gg = g.PlaneBounds * scale;
-					if (g != null)
-					{
-						DrawGlyph(font.Atlas, new Rectangle((int)(gg.Left + (advance * scale + position.X)), (int)(scale - gg.Top + position.Y), (int)(gg.Right - gg.Left), (int)(gg.Top - gg.Bottom)),
-							g.AtlasBounds.Left, g.AtlasBounds.Bottom, g.AtlasBounds.Right, g.AtlasBounds.Top,
-							color);
-						advance += g.Advance;
 
+					if (c == ' ')
+					{
+						advance += 0.35f;
+						continue;
 					}
+
+					if (c == '\n')
+					{
+						row++;
+						advance = 0;
+						continue;
+					}
+
+					NeoGlyph g;
+						font.Glyphs.TryGetValue(c, out g);
+						Bounds gg = g.PlaneBounds * scale;
+						if (g != null)
+						{
+							DrawGlyph(font.Atlas, new Rectangle((int)(gg.Left + (advance * scale + position.X)), (int)(scale - gg.Top + position.Y + (row * 1 * scale)), (int)(gg.Right - gg.Left), (int)(gg.Top - gg.Bottom)),
+								g.AtlasBounds.Left, g.AtlasBounds.Bottom, g.AtlasBounds.Right, g.AtlasBounds.Top,
+								color);
+							advance += g.Advance;
+
+						}
 				}
 			}
 		}
@@ -211,77 +224,6 @@ namespace Neo
 					 Vector2.One,
 					 0, block.Radius);
 		}
-
-			/// <summary>
-				/// Submit a text string of sprites for drawing in the current batch.
-				/// </summary>
-				/// <param name="spriteFont">A font.</param>
-				/// <param name="text">The text which will be drawn.</param>
-				/// <param name="position">The drawing location on screen.</param>
-				/// <param name="color">A color mask.</param>
-				public unsafe void DrawString(GuiFont spriteFont, string text, Vector2 position, Color color)
-				{
-
-					var offset = Vector2.Zero;
-					var firstGlyphOfLine = true;
-
-					fixed (GuiFont.Glyph* pGlyphs = spriteFont.Glyphs)
-						for (var i = 0; i < text.Length; ++i)
-						{
-							var c = text[i];
-
-							if (c == '\r')
-								continue;
-
-							if (c == '\n')
-							{
-								offset.X = 0;
-								offset.Y += spriteFont.LineSpacing;
-								firstGlyphOfLine = true;
-								continue;
-							}
-
-							var currentGlyphIndex = spriteFont.GetGlyphIndexOrDefault(c);
-							var pCurrentGlyph = pGlyphs + currentGlyphIndex;
-
-							// The first character on a line might have a negative left side bearing.
-							// In this scenario, SpriteBatch/SpriteFont normally offset the text to the right,
-							//  so that text does not hang off the left side of its rectangle.
-							if (firstGlyphOfLine)
-							{
-								offset.X = Math.Max(pCurrentGlyph->LeftSideBearing, 0);
-								firstGlyphOfLine = false;
-							}
-							else
-							{
-								offset.X += spriteFont.Spacing + pCurrentGlyph->LeftSideBearing;
-							}
-
-							var p = offset;
-							p.X += pCurrentGlyph->Cropping.X;
-							p.Y += pCurrentGlyph->Cropping.Y;
-							p += position;
-
-							var item = _batcher.CreateBatchItem();
-							item.Texture = spriteFont.Texture;
-
-							_texCoordTL.X = pCurrentGlyph->BoundsInTexture.X * (1f/(float)spriteFont.Texture.Width);
-							_texCoordTL.Y = pCurrentGlyph->BoundsInTexture.Y * (1f / (float)spriteFont.Texture.Height);
-							_texCoordBR.X = (pCurrentGlyph->BoundsInTexture.X + pCurrentGlyph->BoundsInTexture.Width) * (1f / (float)spriteFont.Texture.Width);
-							_texCoordBR.Y = (pCurrentGlyph->BoundsInTexture.Y + pCurrentGlyph->BoundsInTexture.Height) * (1f / (float)spriteFont.Texture.Height);
-
-							item.Set(p.X,
-									 p.Y,
-									 pCurrentGlyph->BoundsInTexture.Width,
-									 pCurrentGlyph->BoundsInTexture.Height,
-									 color.ToVector4(),
-									 _texCoordTL,
-									 _texCoordBR,
-									 0, 0);
-
-							offset.X += pCurrentGlyph->Width + pCurrentGlyph->RightSideBearing;
-						}
-				}
 	}
 }
 

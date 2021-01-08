@@ -49,6 +49,9 @@ namespace Neo
 			Glyphs = new Dictionary<char, NeoGlyph>(glyphs.Count);
 			foreach (NeoGlyph ng in glyphs)
 				Glyphs.Add(ng.Character, ng);
+
+			streamReader.Close();
+			streamReader.Dispose();
 		}
 
 	}

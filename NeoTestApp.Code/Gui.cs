@@ -38,7 +38,7 @@ namespace NeoTestApp.Code
 							{
 								Size = new Size(50),
 								Margins = new Margins(4),
-								Text = "Haaaay!",
+							
 							},
 							new Switch()
 							{
@@ -62,33 +62,37 @@ namespace NeoTestApp.Code
 			_neo.AddChildren(
 				new Control[]
 				{
-					new Grid()
+				new Grid()
 					{
 						Anchors = Anchors.Top | Anchors.Bottom | Anchors.Right,
 						Size = new Size(600, 400),
 						Margins = new Margins(135, 50, 135, 135)
 					},
 
-					r,
+					new Label(_neo, "Daggegagge's turn!")
+					{
+						Anchors = Anchors.Top,
+						Margins = new Margins(50)
+					},
 
 					new Button(_neo)
 					{
 						Anchors = Anchors.Right | Anchors.Bottom,
 						Size = new Size(110, 40),
 						Margins = new Margins(30),
-						Text = "Commit"
+						Text = "Commit!"
 					},
 
-
-					new Button()
+					r,
+					new Button(_neo)
 					{
 						Anchors = Anchors.Left | Anchors.Bottom,
 						Size = new Size(110, 40),
 						Margins = new Margins(30),
 						Color = Color.Blue,
-
+						Text = "A."
 					},
-				}); ;
+				}) ;
 
 			_neo.Ready();
 		}

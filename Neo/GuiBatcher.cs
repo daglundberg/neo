@@ -75,6 +75,16 @@ namespace Neo
 				int newSize = oldSize + oldSize / 2; // grow by x1.5
 				newSize = (newSize + 63) & (~63); // grow in chunks of 64.
 				Array.Resize(ref _batchItemArray, newSize);
+				Array.Resize(ref _instances, newSize);
+
+				_instanceBuffer = new VertexBuffer(_device, RectDeclaration, _instances.Length, BufferUsage.WriteOnly);
+
+				// Creates the binding between the geometry and the instances.
+				_bindings = new VertexBufferBinding[2];
+				_bindings[0] = new VertexBufferBinding(_commonGeometry);
+				_bindings[1] = new VertexBufferBinding(_instanceBuffer, 0, 1);
+				_device.Indices = _indexBuffer;
+				_device.SetVertexBuffers(_bindings);
 
 				//Initilize all new batch items in the array
 				for (int i = oldSize; i < newSize; i++)
@@ -147,20 +157,20 @@ namespace Neo
 					}
 					while (_lastType == item.Type);
 
-					FlushVertexArray(0, indic, tex);
+					FlushVertexArray(0, indic+4, tex);
 				}					
 			}
 			_totalNumBatchItems = 0;
 			_lastType = GuiBatchItem.Types.None;
 		}
 
-		private void DrawTextureBatch(int count, Texture2D texture)
+/*		private void DrawTextureBatch(int count, Texture2D texture)
 		{
 			_neoEffect.Techniques[1].Passes[0].Apply();
 			_neoEffect.Parameters["tex"].SetValue(texture);
 			_instanceBuffer.SetData(_instances);
 			_device.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0, 2, count);
-		}
+		}*/
 
 		private void DrawBlockBatch(int count)
 		{
