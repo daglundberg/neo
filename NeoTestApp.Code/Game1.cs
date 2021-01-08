@@ -66,10 +66,11 @@ namespace NeoTestApp.Code
 
 		protected override void Draw(GameTime gameTime)
 		{
-			GraphicsDevice.Clear(new Color(40,20,50));
+			//GraphicsDevice.Clear(new Color(40,20,50));
 			GraphicsDevice.BlendState = BlendState.AlphaBlend;
-			_gui.Draw(gameTime);
 			base.Draw(gameTime);
+
+			_gui.Draw(gameTime);
 		
 			//	DrawFPSCounter(gameTime);
 		}

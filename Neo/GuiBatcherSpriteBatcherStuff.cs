@@ -149,7 +149,7 @@ namespace Neo
 
             _neoEffect.Techniques[2].Passes[0].Apply();
             _neoEffect.Parameters["tex"].SetValue(texture);
-          //  _device.Textures[0] = texture;
+            _device.Textures[0] = texture;
 
             _device.DrawUserIndexedPrimitives(
                         PrimitiveType.TriangleList,

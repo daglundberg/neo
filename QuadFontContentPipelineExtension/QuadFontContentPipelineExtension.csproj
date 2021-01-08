@@ -24,4 +24,7 @@
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Neo\Neo.csproj" />
+  </ItemGroup>
 </Project>

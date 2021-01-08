@@ -30,7 +30,7 @@ namespace Neo.Controls
 		internal override void Draw(GameTime gameTime, GuiBatch guiBatch)
 		{
 			if (_neo != null)
-				guiBatch.DrawString(_neo.DefaultFont, Text, Bounds.Location.ToVector2() + new Vector2(10, 10), 22f, Color.White);
+				guiBatch.DrawString(_neo.DefaultFont, Text, Bounds.Location.ToVector2() + new Vector2(10, 10), 30f, Color.White);
 		}
 	}
 }

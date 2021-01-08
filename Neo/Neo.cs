@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Framework.Utilities;
 using Neo.Controls;
 using System;
+using System.Collections;
 
 namespace Neo
 {
@@ -31,8 +32,8 @@ namespace Neo
 			else
 				Scale = 1f;
 
-			DefaultFont = new NeoFont(game.Content.Load<Texture2D>("atlas"), @"C:\Users\Dag\Downloads\msdf-atlas-gen-1.1-win64\msdf-atlas-gen\output.csv");
-			Console.WriteLine("Loaded neo");
+			DefaultFont = game.Content.Load<NeoFont>("output");
+			DefaultFont.Atlas = game.Content.Load<Texture2D>("atlas");
 		}
 
 		private void OnResize(object sender, EventArgs e) { ForceRefresh(); }
@@ -62,33 +63,12 @@ namespace Neo
 		{
 			_guiBatch.Begin();
 
-			foreach (Control c in this)
-				c.Draw(gameTime, _guiBatch);
-/*
-		_guiBatch.DrawString(DefaultFont,
-				"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur condimentum leo lacus, quis sodales nunc congue sit amet.\n" +
-				"Vivamus vehicula mi id metus scelerisque ullamcorper. Integer quis tempor est. Maecenas eu molestie enim. Morbi sodales,\n" +
-								"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur condimentum leo lacus, quis sodales nunc congue sit amet.\n" +
-				"Vivamus vehicula mi id metus scelerisque ullamcorper. Integer quis tempor est. Maecenas eu molestie enim. Morbi sodales,\n" +
-								"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur condimentum leo lacus, quis sodales nunc congue sit amet.\n" +
-				"Vivamus vehicula mi id metus scelerisque ullamcorper. Integer quis tempor est. Maecenas eu molestie enim. Morbi sodales,\n" +
-								"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur condimentum leo lacus, quis sodales nunc congue sit amet.\n" +
-				"Vivamus vehicula mi id metus scelerisque ullamcorper. Integer quis tempor est. Maecenas eu molestie enim. Morbi sodales,\n" +
-								"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur condimentum leo lacus, quis sodales nunc congue sit amet.\n" +
-				"Vivamus vehicula mi id metus scelerisque ullamcorper. Integer quis tempor est. Maecenas eu molestie enim. Morbi sodales,\n" +
-								"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur condimentum leo lacus, quis sodales nunc congue sit amet.\n" +
-				"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur condimentum leo lacus, quis sodales nunc congue sit amet.\n" +
-				"Vivamus vehicula mi id metus scelerisque ullamcorper. Integer quis tempor est. Maecenas eu molestie enim. Morbi sodales,\n" +
-								"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur condimentum leo lacus, quis sodales nunc congue sit amet.\n" +
-				"Vivamus vehicula mi id metus scelerisque ullamcorper. Integer quis tempor est. Maecenas eu molestie enim. Morbi sodales,\n" +
-								"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur condimentum leo lacus, quis sodales nunc congue sit amet.\n" +
-				"Vivamus vehicula mi id metus scelerisque ullamcorper. Integer quis tempor est. Maecenas eu molestie enim. Morbi sodales,\n" +
-								"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur condimentum leo lacus, quis sodales nunc congue sit amet.\n" +
-				"Vivamus vehicula mi id metus scelerisque ullamcorper. Integer quis tempor est. Maecenas eu molestie enim. Morbi sodales,\n" +
-				"Vivamus vehicula mi id metus scelerisque ullamcorper. Integer quis tempor est. Maecenas eu molestie enim. Morbi sodales,\n" +
-				"elit consequat.",
-							Vector2.One, 18f, Color.White) ;
-*/
+			/*			foreach (Control c in this)
+							c.Draw(gameTime, _guiBatch);*/
+
+			_guiBatch.DrawBlock(new Block() { Color = Color.Blue.ToVector4(), Position = new Vector2(25), Radius = 5, Size = new Vector2(50) });
+
+			_guiBatch.DrawString(DefaultFont, "A.", new Vector2(12), 40f, Color.White);
 
 			_guiBatch.End();
 		}

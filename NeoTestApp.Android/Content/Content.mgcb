@@ -10,14 +10,21 @@
 
 #-------------------------------- References --------------------------------#
 
+/reference:..\..\QuadFontContentPipelineExtension\bin\Release\netstandard2.0\QuadFontContentPipelineExtension.dll
 
 #---------------------------------- Content ---------------------------------#
 
-#begin effecty.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:effecty.fx
+#begin atlas.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=False
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:atlas.png
 
 #begin InstancingRectangleShader.fx
 /importer:EffectImporter
@@ -25,22 +32,8 @@
 /processorParam:DebugMode=Auto
 /build:InstancingRectangleShader.fx
 
-#begin patuaone-med.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:patuaone-med.spritefont
-
-#begin yup.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:yup.png
+#begin output.csv
+/importer:Importer1
+/processor:PassThroughProcessor
+/build:output.csv
 

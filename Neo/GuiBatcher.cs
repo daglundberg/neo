@@ -115,15 +115,17 @@ namespace Neo
 				{
 					do
 					{
+						if (i < _totalNumBatchItems)
+							i++;
+						else
+							break;
+
 						_instances[index].Position = item.Position;
 						_instances[index].Size = item.Size;
 						_instances[index].Color = item.Color;
 						_instances[index].Radius = item.Radius;
 
-						if (i < _totalNumBatchItems)
-							i++;
-						else
-							break;
+
 
 						index++;
 						_lastType = item.Type;
@@ -141,19 +143,21 @@ namespace Neo
 					{
 						indic = index * 4;
 
-						_vertexArray[indic] = item.vertexTL;
-						_vertexArray[indic + 1] = item.vertexTR;
-						_vertexArray[indic + 2] = item.vertexBL;
-						_vertexArray[indic + 3] = item.vertexBR;
-
 						if (i < _totalNumBatchItems)
 							i++;
 						else
 							break;
 
+						_vertexArray[indic] = item.vertexTL;
+						_vertexArray[indic + 1] = item.vertexTR;
+						_vertexArray[indic + 2] = item.vertexBL;
+						_vertexArray[indic + 3] = item.vertexBR;
+
+
 						index++;
 						_lastType = item.Type;
 						item = _batchItemArray[i];
+						
 					}
 					while (_lastType == item.Type);
 

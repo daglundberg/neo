@@ -14,7 +14,6 @@ namespace Neo
 		Effect  _effectInstanced;
 		Matrix _matrix;
 
-		Rectangle _tempRect = new Rectangle(0, 0, 0, 0);
 		Vector2 _texCoordTL = new Vector2(0, 0);
 		Vector2 _texCoordBR = new Vector2(0, 0);
 		GraphicsDevice _graphicsDevice;
@@ -29,9 +28,6 @@ namespace Neo
 
 			_batcher = new GuiBatcher(graphicsDevice, neoEffect);
 
-			//_matrix = Matrix.CreateOrthographicOffCenter(0, _graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height, 0, 0, 1);
-		//	effectInstanced.Parameters["MatrixTransform"].SetValue(_matrix);
-
 			_blendState = BlendState.AlphaBlend;
 			_samplerState = SamplerState.LinearClamp;
 			_depthStencilState = DepthStencilState.None;
@@ -45,7 +41,7 @@ namespace Neo
 
 		public void Begin()
 		{
-			
+
 		}
 
 		float _lastScale = 0;

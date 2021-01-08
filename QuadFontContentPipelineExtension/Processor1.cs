@@ -1,14 +1,14 @@
 ﻿using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 using TInput = System.String;
-using TOutput = QuadFontContentPipelineExtension.Coolio;
+/*using TOutput = QuadFontContentPipelineExtension.Coolio;
 using TWrite = QuadFontContentPipelineExtension.Coolio;
-using TRead = QuadFontContentPipelineExtension.Coolio;
+using TRead = QuadFontContentPipelineExtension.Coolio;*/
 using Microsoft.Xna.Framework.Content;
 
 namespace QuadFontContentPipelineExtension
 {
-    public class Coolio
+/*    public class Coolio
 	{
         public string Text;
         public Coolio(string text)
@@ -46,5 +46,5 @@ namespace QuadFontContentPipelineExtension
         {
             return new Coolio(input.ReadString());
         }
-    }
+    }*/
 }

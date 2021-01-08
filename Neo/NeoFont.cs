@@ -11,12 +11,13 @@ namespace Neo
 	{
 		public string Name { get; private set; }
 		public Dictionary<char, NeoGlyph> Glyphs;
-		public Texture2D Atlas { get; private set; }
+		public Texture2D Atlas { get; set; }
 
-		public NeoFont(Texture2D atlas, string fontInfoFilePath)
+		public NeoFont()
 		{
-			Atlas = atlas;
-
+			//Atlas = atlas;
+		//	Glyphs = dictionary.Glyphs;
+/*
 			StreamReader streamReader = new StreamReader(fontInfoFilePath);
 			List<NeoGlyph> glyphs = new List<NeoGlyph>();
 			while (!streamReader.EndOfStream)
@@ -51,13 +52,18 @@ namespace Neo
 				Glyphs.Add(ng.Character, ng);
 
 			streamReader.Close();
-			streamReader.Dispose();
+			streamReader.Dispose();*/
 		}
 
 	}
 
 	public class NeoGlyph
 	{
+		public NeoGlyph()
+		{
+
+		}
+
 		public NeoGlyph(char character, float advance, Bounds planeBounds, Bounds atlasBounds)
 		{
 			Character = character;
