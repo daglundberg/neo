@@ -66,7 +66,7 @@ namespace NeoTestApp.Code
 
 		protected override void Draw(GameTime gameTime)
 		{
-			//GraphicsDevice.Clear(new Color(40,20,50));
+			GraphicsDevice.Clear(new Color(40,20,50));
 			GraphicsDevice.BlendState = BlendState.AlphaBlend;
 			base.Draw(gameTime);
 

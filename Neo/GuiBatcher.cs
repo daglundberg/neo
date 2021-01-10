@@ -18,10 +18,11 @@ namespace Neo
 
 		private readonly GraphicsDevice _device;
 		private Effect _neoEffect;
+		private Neo _neo;
 
-
-		public GuiBatcher(GraphicsDevice device, Effect neoEffect)
+		public GuiBatcher(GraphicsDevice device, Effect neoEffect, Neo neo)
 		{
+			_neo = neo;
 			_device = device;
 			_neoEffect = neoEffect;
 
@@ -125,8 +126,6 @@ namespace Neo
 						_instances[index].Color = item.Color;
 						_instances[index].Radius = item.Radius;
 
-
-
 						index++;
 						_lastType = item.Type;
 						item = _batchItemArray[i];
@@ -168,19 +167,34 @@ namespace Neo
 			_lastType = GuiBatchItem.Types.None;
 		}
 
-/*		private void DrawTextureBatch(int count, Texture2D texture)
-		{
-			_neoEffect.Techniques[1].Passes[0].Apply();
-			_neoEffect.Parameters["tex"].SetValue(texture);
-			_instanceBuffer.SetData(_instances);
-			_device.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0, 2, count);
-		}*/
-
 		private void DrawBlockBatch(int count)
 		{
-			_neoEffect.Techniques[0].Passes[0].Apply();
 			_instanceBuffer.SetData(_instances);
+			_neoEffect.Parameters["Scale"].SetValue(_neo.Scale);
+			_neoEffect.Techniques[0].Passes[0].Apply();
 			_device.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0, 2, count);
+		}
+
+		private void FlushVertexArray(int start, int end, Texture texture)
+		{
+			if (start == end)
+				return;
+
+			var vertexCount = end - start;
+
+			_neoEffect.Techniques[2].Passes[0].Apply();
+			_neoEffect.Parameters["tex"].SetValue(texture);
+			_device.Textures[0] = texture;
+
+			_device.DrawUserIndexedPrimitives(
+						PrimitiveType.TriangleList,
+						_vertexArray,
+						0,
+						vertexCount,
+						_index,
+						0,
+						(vertexCount / 4) * 2,
+						VertexPositionTexture.VertexDeclaration);
 		}
 
 		public static readonly VertexDeclaration RectDeclaration = new VertexDeclaration(

@@ -1,5 +1,6 @@
 ﻿texture tex;
 float4x4 MatrixTransform;
+float Scale = 1;
 
 sampler2D colorMapSampler = sampler_state
 {
@@ -83,7 +84,8 @@ float4 RoundedBlockPS(InstancingVSoutput input) : COLOR0
 	// Smooth the result (free antialiasing).
 	// How soft the edges should be (in pixels). Higher values could be used to simulate a drop shadow.
 
-	return input.Color * smoothstep(1, 0, distance);
+    float smoothness = 1.2 - min((Scale / 6), 1.19);
+	return input.Color * smoothstep(smoothness, 0, distance);
    // return input.Color;
 }
 

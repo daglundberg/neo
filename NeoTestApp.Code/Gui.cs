@@ -3,6 +3,7 @@ using Neo.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
+using System;
 
 namespace NeoTestApp.Code
 {
@@ -10,6 +11,7 @@ namespace NeoTestApp.Code
 	{
 		Neo.Neo _neo;
 		Row r;
+		Label l;
 		public Gui(Game game) : base(game)
 		{
 			Style style = new Style(Game.Content);
@@ -57,40 +59,42 @@ namespace NeoTestApp.Code
 								Size = new Size(50),
 								Margins = new Margins(4,4,16,4)
 							},
-						}); ;
+						});
+
+			l = new Label(_neo, "Scale: ")
+			{
+				Anchors = Anchors.None,
+				Size = new Size(110)
+			};
+
 
 			_neo.AddChildren(
 				new Control[]
 				{
-				new Grid()
-					{
-						Anchors = Anchors.Top | Anchors.Bottom | Anchors.Right,
-						Size = new Size(600, 400),
-						Margins = new Margins(135, 50, 135, 135)
-					},
-
-					new Label(_neo, "Daggegagge's turn!")
+					new Label(_neo, "Here's a label..")
 					{
 						Anchors = Anchors.Top,
-						Margins = new Margins(50)
+						Margins = new Margins(20),
+						Size = new Size(160)
 					},
 
+					l,
 					new Button(_neo)
 					{
 						Anchors = Anchors.Right | Anchors.Bottom,
 						Size = new Size(110, 40),
 						Margins = new Margins(30),
-						Text = "Commit!"
+						Text = "Next..."
 					},
 
 					r,
 					new Button(_neo)
 					{
 						Anchors = Anchors.Left | Anchors.Bottom,
-						Size = new Size(110, 40),
+						Size = new Size(130, 40),
 						Margins = new Margins(30),
 						Color = Color.Blue,
-						Text = "A."
+						Text = "My Button.."
 					},
 				}) ;
 
@@ -102,20 +106,15 @@ namespace NeoTestApp.Code
 			_neo.Draw(gameTime);
 		}
 
-		//float x = 0;
 		public override void Update(GameTime gameTime)
 		{
 			CheckMouse();
 			CheckTouch();
-		//	r.Margins = new Margins((int)x);
-		//	x += 0.2f;
+			l.Text = $"Scale: {Math.Round(_neo.Scale, 2)}";
+
 			base.Update(gameTime);
 		}
 
-/*		public void Init()
-		{
-			_neo.Init();
-		}*/
 
 		MouseState _oldMouseState, _newMouseState;
 		private void CheckMouse()

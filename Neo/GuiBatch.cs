@@ -26,7 +26,7 @@ namespace Neo
 
 			_effectInstanced = neoEffect;
 
-			_batcher = new GuiBatcher(graphicsDevice, neoEffect);
+			_batcher = new GuiBatcher(graphicsDevice, neoEffect, neo);
 
 			_blendState = BlendState.AlphaBlend;
 			_samplerState = SamplerState.LinearClamp;

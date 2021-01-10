@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Framework.Utilities;
 using Neo.Controls;
 using System;
-using System.Collections;
 
 namespace Neo
 {
@@ -63,12 +62,8 @@ namespace Neo
 		{
 			_guiBatch.Begin();
 
-			/*			foreach (Control c in this)
-							c.Draw(gameTime, _guiBatch);*/
-
-			_guiBatch.DrawBlock(new Block() { Color = Color.Blue.ToVector4(), Position = new Vector2(25), Radius = 5, Size = new Vector2(50) });
-
-			_guiBatch.DrawString(DefaultFont, "A.", new Vector2(12), 40f, Color.White);
+			foreach (Control c in this)
+				c.Draw(gameTime, _guiBatch);
 
 			_guiBatch.End();
 		}
