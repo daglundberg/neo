@@ -32,6 +32,12 @@
 /processorParam:DebugMode=Auto
 /build:InstancingRectangleShader.fx
 
+#begin neo_shader.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:neo_shader.fx
+
 #begin output.csv
 /importer:Importer1
 /processor:PassThroughProcessor

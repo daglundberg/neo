@@ -44,7 +44,7 @@ namespace Neo
 
 		internal override void Initialize(Neo neo)
 		{
-			_neoBatch = new NeoBatch(_game.GraphicsDevice, _game.Content);
+			_neoBatch = new NeoBatch(_game.GraphicsDevice, _game.Content, this);
 			SetBounds(new Rectangle(0, 0, (int)(_game.GraphicsDevice.Viewport.Width / Scale), (int)(_game.GraphicsDevice.Viewport.Height / Scale)));
 
 			base.Initialize(neo);

@@ -15,14 +15,16 @@ namespace Neo
         Matrix _matrix;
         Vector2 _texCoordTL = new Vector2(0, 0);
         Vector2 _texCoordBR = new Vector2(0, 0);
+        Neo _neo;
 
         GraphicsDevice _graphicsDevice;
 
         /// <param name="graphicsDevice">The <see cref="GraphicsDevice"/>, which will be used for sprite rendering.</param>
         /// <param name="capacity">The initial capacity of the internal array holding batch items (the value will be rounded to the next multiple of 64).</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="graphicsDevice"/> is null.</exception>
-        public NeoBatch(GraphicsDevice graphicsDevice, ContentManager content)
+        public NeoBatch(GraphicsDevice graphicsDevice, ContentManager content, Neo neo)
         {
+            _neo = neo;
             if (graphicsDevice == null)
             {
                 throw new ArgumentNullException("graphicsDevice");
@@ -44,11 +46,11 @@ namespace Neo
 
         float _lastScale = 0;
         private Viewport _lastViewport;
-        float _neoScale = 1f;
+
         private void CheckScreenResolution()
         {
             var vp = _graphicsDevice.Viewport;
-            if ((vp.Width != _lastViewport.Width) || (vp.Height != _lastViewport.Height) || _lastScale != _neoScale)
+            if ((vp.Width != _lastViewport.Width) || (vp.Height != _lastViewport.Height) || _lastScale != _neo.Scale)
                 SetMatrix(vp);
         }
 
@@ -59,7 +61,7 @@ namespace Neo
 
         private void SetMatrix(Viewport vp)
         {
-            Matrix.CreateOrthographicOffCenter(0, vp.Width / _neoScale, vp.Height / _neoScale, 0, 0, 1, out _matrix);
+            Matrix.CreateOrthographicOffCenter(0, vp.Width / _neo.Scale, vp.Height / _neo.Scale, 0, 0, 1, out _matrix);
             if (_graphicsDevice.UseHalfPixelOffset)
             {
                 _matrix.M41 += -0.5f * _matrix.M11;
@@ -67,7 +69,7 @@ namespace Neo
             }
 
             _lastViewport = vp;
-            _lastScale = _neoScale;
+            _lastScale = _neo.Scale;
             _effect.Parameters["MatrixTransform"].SetValue(_matrix);
         }
 
