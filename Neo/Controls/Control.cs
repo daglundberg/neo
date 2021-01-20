@@ -43,21 +43,10 @@ namespace Neo.Controls
 
 		internal Rectangle Bounds { get; set; }
 
-		internal virtual Block[] Blocks
-		{
-			get
-			{
-				return new Block[] { new Block { Position = Bounds.Location.ToVector2(), Size = Bounds.Size.ToVector2(), Color = new Color(0.2f, 0.2f, 0.2f, 0.2f), Radius = 4 } };
-			}
-		}
-
 		internal virtual void Draw(GameTime gameTime, NeoBatch guiBatch)
 		{
 			if (IsClipped != true)
 			{
-				foreach (Block b in Blocks)
-					guiBatch.Draw(b);
-
 				foreach (Control c in this)
 					c.Draw(gameTime, guiBatch);
 			}

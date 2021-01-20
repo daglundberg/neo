@@ -52,8 +52,6 @@ namespace Neo
 			foreach (Control child in this)
 				child.Draw(gameTime, _neoBatch);
 
-			_neoBatch.DrawString(_neo.DefaultFont, "Test", Vector2.One, 21f, Color.Blue);
-
 			_neoBatch.End();
 		}
 

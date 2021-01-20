@@ -50,9 +50,8 @@ namespace Neo.Controls
 		{
 			if (IsClipped != true)
 			{
-				foreach (Block b in Blocks)
-					guiBatch.Draw(b);
-
+				guiBatch.Draw(new Block() { Color = Color.Aquamarine, Position = Bounds.Location.ToVector2(), Radius = 5, Size = Bounds.Size.ToVector2() });
+				
 				foreach (Control c in this)
 					c.Draw(gameTime, guiBatch);
 			}

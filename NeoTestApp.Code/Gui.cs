@@ -40,11 +40,12 @@ namespace NeoTestApp.Code
 			_neo.Create();
 		}
 
+
 		private void BtnClickMe_Clicked(object sender, System.EventArgs e)
 		{
 			btnClickMe.Text = "Clicked!";
 			row.Margins = new Margins(50,100,50,50);
-			MessageBox msg = new MessageBox(_neo, "yeah!", new Result[] { Result.Ok, Result.Cancel });
+			MessageBox msg = new MessageBox(_neo, $"yeah...", new Result[] { Result.Ok, Result.Cancel });
 			msg.Size = new Size(350, 240);
 			msg.Closed += Msg_Closed;
 			_neo.AddChild(msg);

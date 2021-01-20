@@ -10,16 +10,6 @@ namespace Neo.Controls
 
 		public Row(Neo neo) : base(neo, true) { WantsMouse = true; }
 
-		public Color BackgroundColor { get; set; } = new Color(0.1f, 0.1f, 0.1f, 0.1f);
-
-		internal override Block[] Blocks
-		{
-			get
-			{
-				return new Block[] {/* new Block { Position = Bounds.Location.ToVector2(), Size = Bounds.Size.ToVector2(), Color = BackgroundColor, Radius = 10 }*/ };
-			}
-		}
-
 		internal override void SetBounds(Rectangle bounds)
 		{
 			Bounds = bounds;
