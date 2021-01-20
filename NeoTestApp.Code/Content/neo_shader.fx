@@ -105,7 +105,7 @@ float4 msdfPS(BasicVSoutput input) : COLOR
 
     float4 color;
     color.a = pow(abs(1 * opacity), 1.0f / 2.2f);
-    color.rgb = float3(1, 1, 1) * color.a;
+    color.rgb = input.Color * color.a;
 
     return color;
 }
