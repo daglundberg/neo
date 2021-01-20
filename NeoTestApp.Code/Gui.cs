@@ -12,10 +12,21 @@ namespace NeoTestApp.Code
 		Neo.Neo _neo;
 		Row r;
 		Label l;
+		Button btn;
 		public Gui(Game game) : base(game)
 		{
 			Style style = new Style(Game.Content);
 			_neo = new Neo.Neo(game, style, Game1.CurrentPlatform);
+
+			btn = new Button(_neo)
+			{
+				Anchors = Anchors.Left | Anchors.Bottom,
+				Size = new Size(130, 40),
+				Margins = new Margins(30),
+				Color = Color.Blue,
+				Text = "My Button.."
+			};
+			btn.Clicked += Btn_Clicked;
 
 			r = new Row();
 			r.Anchors = Anchors.Top | Anchors.Left | Anchors.Bottom;
@@ -40,7 +51,6 @@ namespace NeoTestApp.Code
 							{
 								Size = new Size(50),
 								Margins = new Margins(4),
-							
 							},
 							new Switch()
 							{
@@ -67,7 +77,6 @@ namespace NeoTestApp.Code
 				Size = new Size(110)
 			};
 
-
 			_neo.AddChildren(
 				new Control[]
 				{
@@ -78,7 +87,7 @@ namespace NeoTestApp.Code
 						Size = new Size(160)
 					},
 
-					l,
+					
 					new Button(_neo)
 					{
 						Anchors = Anchors.Right | Anchors.Bottom,
@@ -86,19 +95,20 @@ namespace NeoTestApp.Code
 						Margins = new Margins(30),
 						Text = "Next..."
 					},
-
 					r,
-					new Button(_neo)
-					{
-						Anchors = Anchors.Left | Anchors.Bottom,
-						Size = new Size(130, 40),
-						Margins = new Margins(30),
-						Color = Color.Blue,
-						Text = "My Button.."
-					},
-				}) ;
+					btn,
+				});
 
-			_neo.Ready();
+		_neo.Ready();
+		}
+
+		private void Btn_Clicked(object sender, EventArgs e)
+		{
+			btn.Text = "Clicked";
+			MessageBox messageBox = new MessageBox(_neo, "Heyy", new MessageBox.Result[] { MessageBox.Result.Ok, MessageBox.Result.No });
+			messageBox.Size = new Size(210);
+			
+			_neo.AddChild(messageBox);
 		}
 
 		public override void Draw(GameTime gameTime)
@@ -114,7 +124,6 @@ namespace NeoTestApp.Code
 
 			base.Update(gameTime);
 		}
-
 
 		MouseState _oldMouseState, _newMouseState;
 		private void CheckMouse()

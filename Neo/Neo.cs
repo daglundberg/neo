@@ -13,7 +13,7 @@ namespace Neo
 
 		private Game _game;
 		public float Scale;
-		private GuiBatch _guiBatch;
+		private NeoBatch _neoBatch;
 
 		public NeoFont DefaultFont { get; private set; }
 
@@ -44,7 +44,7 @@ namespace Neo
 
 		internal override void Initialize(Neo neo)
 		{
-			_guiBatch = new GuiBatch(_game.GraphicsDevice, _game.Content.Load<Effect>("InstancingRectangleShader"), this);
+			_neoBatch = new NeoBatch(_game.GraphicsDevice, _game.Content);
 			SetBounds(new Rectangle(0, 0, (int)(_game.GraphicsDevice.Viewport.Width / Scale), (int)(_game.GraphicsDevice.Viewport.Height / Scale)));
 
 			base.Initialize(neo);
@@ -55,17 +55,15 @@ namespace Neo
 		public void ForceRefresh()
 		{
 			SetBounds(new Rectangle(0, 0, (int)(_game.GraphicsDevice.Viewport.Width / Scale), (int)(_game.GraphicsDevice.Viewport.Height / Scale)));
-			_guiBatch.ForceRefresh();
+			_neoBatch.ForceRefresh();
 		}
 
 		public void Draw(GameTime gameTime)
 		{
-			_guiBatch.Begin();
-
 			foreach (Control c in this)
-				c.Draw(gameTime, _guiBatch);
+				c.Draw(gameTime, _neoBatch);
 
-			_guiBatch.End();
+			_neoBatch.Flush();
 		}
 
 		public new bool ListensForMouseOrTouchAt(Point mouseOrTouchPosition)

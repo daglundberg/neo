@@ -1,93 +1,30 @@
-﻿texture tex;
+﻿texture Texture;
 float4x4 MatrixTransform;
-float Scale = 1;
 
 sampler2D colorMapSampler = sampler_state
 {
-    Texture = <tex>;
+    Texture = <Texture>;
     AddressU = clamp;
     AddressV = clamp;
 };
-
-
-struct InstancingVSinput
-{
-	float4 Position : POSITION;
-	float2 UV : TEXCOORD;
-    float2 InstancePos : POSITION1;
-    float4 Color : COLOR;
-    float2 Size : TEXCOORD2;
-    float Radius : TEXCOORD3;
-};
-
-
-struct InstancingVSoutput
-{
-	float4 Position : POSITION;
-	float2 UV : TEXCOORD;
-	float4 Color : COLOR;
-	float2 Size : TEXCOORD2;
-	float Radius : TEXCOORD3;
-};
-
 
 struct BasicVSinput
 {
     float4 Position : POSITION;
     float2 UV : TEXCOORD;
+    float2 Size : TEXCOORD1;
+    float4 Color : COLOR;
+    float Radius : TEXCOORD2;
 };
 
 struct BasicVSoutput
 {
     float4 Position : POSITION;
     float2 UV : TEXCOORD;
+    float2 Size : TEXCOORD1;
+    float4 Color : COLOR;
+    float Radius : TEXCOORD2;
 };
-
-
-
-InstancingVSoutput InstancingVS(InstancingVSinput input)
-{
-    InstancingVSoutput output;
-    input.Position.xy = input.Position.xy * input.Size + input.InstancePos;
-    output.Position = mul(input.Position, MatrixTransform);
-	
-    output.UV = input.UV;
-    output.Color = input.Color;
-
-    output.Size = input.Size;
-    output.Radius = input.Radius;
-   
-    return output;
-}
-
-
-//Signed Distance Field
-//Returns how far a pixel is from the edge of the shape
-float roundedBoxSDF(float2 centerPosition, float2 size, float radius)
-{
-	return length(max(abs(centerPosition) - (size / 2) + radius, 0)) - radius;
-}
-
-//-----------------------------------------------------------------------------
-// Pixel shader.
-//-----------------------------------------------------------------------------
-float4 RoundedBlockPS(InstancingVSoutput input) : COLOR0
-{
-	//Convert our UV position (that go from 0 - 1) to pixel positions relative to the rectangle
-    float2 pixelPos = float2(input.UV.x * input.Size.x, input.UV.y * input.Size.y);
-
-	// Calculate distance to edge.   
-    float distance = roundedBoxSDF(pixelPos - (input.Size / 2.0f), input.Size, input.Radius) +1;
-	
-   // clip(1 - distance);
-	
-	// Smooth the result (free antialiasing).
-	// How soft the edges should be (in pixels). Higher values could be used to simulate a drop shadow.
-
-    float smoothness = 1.2 - min((Scale / 6), 1.19);
-	return input.Color * smoothstep(smoothness, 0, distance);
-   // return input.Color;
-}
 
 BasicVSoutput BasicVS(BasicVSinput input)
 {
@@ -95,13 +32,34 @@ BasicVSoutput BasicVS(BasicVSinput input)
 
     output.Position = mul(input.Position, MatrixTransform);
     output.UV = input.UV;
+    output.Size = input.Size;
+    output.Color = input.Color;
+    output.Radius = input.Radius;
     return output;
 }
 
-float4 SpritePixelShader(InstancingVSoutput input) : SV_Target0
+float4 TexturePS(BasicVSoutput input) : SV_Target0
 {
     float4 outColor = tex2D(colorMapSampler, input.UV);
     return outColor;
+}
+
+//Signed Distance Field
+//Returns how far a pixel is from the edge of the shape
+float roundedBoxSDF(float2 centerPosition, float2 size, float radius)
+{
+    return length(max(abs(centerPosition) - (size / 2) + radius, 0)) - radius;
+}
+
+float4 RoundedBlockPS(BasicVSoutput input) : COLOR0
+{
+	//Convert our UV position (that go from 0 - 1) to pixel positions relative to the rectangle
+    float2 pixelPos = input.Size * input.UV;
+
+	// Calculate distance to edge.   
+    float distance = roundedBoxSDF(pixelPos - (input.Size / 2.0f), input.Size, input.Radius) + 0.7;
+    
+    return smoothstep(1, 0, distance) * input.Color;
 }
 
 float2 SafeNormalize(in float2 v)
@@ -152,29 +110,29 @@ float4 msdfPS(BasicVSoutput input) : COLOR
     return color;
 }
 
-technique Instancing
-{
-	pass P0
-	{
-        VertexShader = compile vs_3_0 InstancingVS();
-        PixelShader = compile ps_3_0 RoundedBlockPS();
-    }
-};
-
-technique InstancingTexture
-{
-    pass P0
-    {
-        VertexShader = compile vs_3_0 InstancingVS();
-        PixelShader = compile ps_3_0 SpritePixelShader();
-    }
-};
-
 technique BasicTexture
 {
     pass P0
     {
         VertexShader = compile vs_3_0 BasicVS();
+        PixelShader = compile ps_3_0 TexturePS();
+    }
+};
+
+technique Glyphs
+{
+    pass P0
+    {
+        VertexShader = compile vs_3_0 BasicVS();
         PixelShader = compile ps_3_0 msdfPS();
+    }
+};
+
+technique Block
+{
+    pass P0
+    {
+        VertexShader = compile vs_3_0 BasicVS();
+        PixelShader = compile ps_3_0 RoundedBlockPS();
     }
 };

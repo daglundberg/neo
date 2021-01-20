@@ -17,7 +17,6 @@ namespace Neo
 		{
 
 		}
-
 	}
 
 	public class NeoGlyph
@@ -63,6 +62,4 @@ namespace Neo
 				a.Right * b,
 				a.Top * b);
 	}
-
-
 }

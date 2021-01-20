@@ -16,7 +16,7 @@ namespace Neo.Controls
 		{
 			get
 			{
-				return new Block[] { new Block { Position = Bounds.Location.ToVector2(), Size = Bounds.Size.ToVector2(), Color = BackgroundColor.ToVector4(), Radius = 10 } };
+				return new Block[] { new Block { Position = Bounds.Location.ToVector2(), Size = Bounds.Size.ToVector2(), Color = BackgroundColor, Radius = 10 } };
 			}
 		}
 

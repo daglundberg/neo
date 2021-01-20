@@ -1,4 +1,4 @@
-﻿/*using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
@@ -8,62 +8,77 @@ namespace Neo.Controls
 	{
 		public enum Result
 		{
-			Ok,
-			Cancel,
-			Yes,
-			No,
-			Accept,
-			Decline,
-			Continue,
-			Stop,
-			Back,
-			Next,
-			Close,
-			Done
+			Ok, Cancel,	Yes, No, Accept,
+			Decline, Continue, Stop,
+			Back, Next, Close, Done
 		}
 
 		public event EventHandler Closed;
 
-		public MessageBox(string message, Result[] resultButtons)
+		Row _buttonRow;
+		public MessageBox(Neo neo, string message, Result[] resultButtons)
 		{
-*//*			Flow = Flow.Center;
+			_neo = neo;
 			WantsMouse = true;
-			Container _box = new Container(*//*new ScreenUnit(0, 0), new ScreenUnit(600, 300)*//*);
-			_box.Flow = Flow.Center;
-			_box.WantsMouse = true;
+			_buttonRow = new Row();
+			_buttonRow.Anchors = Anchors.Bottom | Anchors.Left | Anchors.Right;
+			_buttonRow.LayoutRule = Row.LayoutRules.RightToLeft;
+			_buttonRow.Margins = new Margins(15);
+			_buttonRow.Size = new Size(100);			
 
 			Label _label = new Label(message);
-			_label.Flow = Flow.Center;
+			_label.Anchors = Anchors.Top;
+			_label.Margins = new Margins(20);
+			
 
 			foreach(Result r in resultButtons)
 			{
 				ResultButton _btn = new ResultButton(r);
-				_btn.Flow = resultButtons.Length > 1 ? Flow.HorizontalSharing : Flow.Bottom;
+				_btn.Size = new Size(100);
+				_btn.Anchors = Anchors.Bottom;
 				_btn.Clicked += btnClicked;
-				_btn.Offset = new Point(0, 20);
-				_box.AddChild(_btn);
+				_buttonRow.AddChild(_btn);
 			}
 
-			_box.AddChild(_label);
-			AddChild(_box) ;*//*
+			AddChild(_label);
+			AddChild(_buttonRow);
 		}
 
-		public MessageBox(string message) : this(message, new Result[] { Result.Ok })
-		{
-		}
+		public MessageBox(Neo neo, string message) : this(neo, message, new Result[] { Result.Ok }) { }
 
 		Action<Result> _method;
-		public MessageBox(string message, Action<Result> method): this (message)
+		public MessageBox(Neo neo, string message, Action<Result> method): this (neo, message)
 		{
 			_method = method;
 		}
 
-		public MessageBox(string message, Action<Result> method, Result result1, Result result2) : this(message, new Result[] { result1, result2 })
+		internal override void Draw(GameTime gameTime, NeoBatch guiBatch)
+		{
+			if (IsClipped != true)
+			{
+				foreach (Block b in Blocks)
+					guiBatch.Draw(b);
+
+				foreach (Control c in this)
+					c.Draw(gameTime, guiBatch);
+			}
+		}
+
+		public MessageBox(Neo neo, string message, Action<Result> method,
+			Result result1,
+			Result result2) : this(
+				neo, message,
+				new Result[] { result1, result2 })
 		{
 			_method = method;
 		}
 
-		public MessageBox(string message, Action<Result> method, Result result1, Result result2, Result result3) : this(message, new Result[] { result1, result2, result3 })
+		public MessageBox(Neo neo, string message, Action<Result> method,
+			Result result1,
+			Result result2,
+			Result result3) : this(
+				neo, message,
+				new Result[] { result1, result2, result3 })
 		{
 			_method = method;
 		}
@@ -75,19 +90,13 @@ namespace Neo.Controls
 			Closed?.Invoke(this, e);
 		}
 
-		Neo _neo;
-		internal override void Initialize(Neo neo)
-		{
-			_neo = neo;
-		}
-
 		internal override void SetBounds(Rectangle bounds)
 		{
-			throw new NotImplementedException();
+			Bounds = bounds;
 		}
 	}
 
-*//*	public class ResultButton : Button
+	public class ResultButton : Button
 	{
 		public MessageBox.Result Result { get; private set; }
 		public ResultButton(MessageBox.Result result)
@@ -95,6 +104,5 @@ namespace Neo.Controls
 			Result = result;
 			Text = result.ToString();
 		}
-	}*//*
+	}
 }
-*/

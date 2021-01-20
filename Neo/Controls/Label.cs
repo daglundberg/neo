@@ -27,10 +27,10 @@ namespace Neo.Controls
 			Bounds = bounds;
 		}
 
-		internal override void Draw(GameTime gameTime, GuiBatch guiBatch)
+		internal override void Draw(GameTime gameTime, NeoBatch guiBatch)
 		{
 			if (_neo != null)
-				guiBatch.DrawString(_neo.DefaultFont, Text, Bounds.Location.ToVector2() + new Vector2(10, 10), 30f, Color.White);
+				guiBatch.DrawString(_neo.DefaultFont, Text, Bounds.Location.ToVector2() + new Vector2(10, 10), 30f, Color.White);			
 		}
 	}
 }

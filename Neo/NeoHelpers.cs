@@ -81,11 +81,11 @@ namespace Neo
         public int Bottom { get; set; }
     }
 
-    public struct Block
+/*    public struct Block
     {
         public Vector2 Position;
         public Vector4 Color;
         public Vector2 Size;
         public float Radius;
-    }
+    }*/
 }

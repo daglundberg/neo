@@ -39,11 +39,10 @@ namespace Neo.Controls
 
 		internal virtual void Initialize(Neo neo)
 		{
-			foreach (Control child in this)
-			{
-				_neo = neo;
-				child.Initialize(neo);
-			}
+			_neo = neo;
+
+			foreach (Control child in this)			
+				child.Initialize(neo);			
 		}
 
 		internal abstract void SetBounds(Rectangle bounds);
@@ -54,16 +53,16 @@ namespace Neo.Controls
 		{
 			get
 			{
-				return new Block[] { new Block { Position = Bounds.Location.ToVector2(), Size = Bounds.Size.ToVector2(), Color = new Color(0.2f, 0.2f, 0.2f, 0.2f).ToVector4(), Radius = 4 } };
+				return new Block[] { new Block { Position = Bounds.Location.ToVector2(), Size = Bounds.Size.ToVector2(), Color = new Color(0.2f, 0.2f, 0.2f, 0.2f), Radius = 4 } };
 			}
 		}
 
-		internal virtual void Draw(GameTime gameTime, GuiBatch guiBatch)
+		internal virtual void Draw(GameTime gameTime, NeoBatch guiBatch)
 		{
 			if (IsClipped != true)
 			{
 				foreach (Block b in Blocks)
-					guiBatch.DrawBlock(b);
+					guiBatch.Draw(b);
 
 				foreach (Control c in this)
 					c.Draw(gameTime, guiBatch);
@@ -72,8 +71,8 @@ namespace Neo.Controls
 
 		internal bool ListensForMouseOrTouchAt(Point mousePosition)
 		{
-			foreach (Control c in this)
-				if (c.ListensForMouseOrTouchAt(mousePosition))
+			foreach (Control child in this)
+				if (child.ListensForMouseOrTouchAt(mousePosition))
 					return true;
 
 			if (IsClipped)
@@ -85,10 +84,10 @@ namespace Neo.Controls
 		//Returns true if the click was consumed
 		internal bool Click(Point mousePosition)
 		{
-			foreach (Control c in this)
-				if (c.ListensForMouseOrTouchAt(mousePosition))
+			foreach (Control child in this)
+				if (child.ListensForMouseOrTouchAt(mousePosition))
 				{
-					if (c.Click(mousePosition))
+					if (child.Click(mousePosition))
 						return true;					
 				}
 
