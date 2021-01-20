@@ -80,12 +80,4 @@ namespace Neo
         public int Right { get; set; }
         public int Bottom { get; set; }
     }
-
-/*    public struct Block
-    {
-        public Vector2 Position;
-        public Vector4 Color;
-        public Vector2 Size;
-        public float Radius;
-    }*/
 }
