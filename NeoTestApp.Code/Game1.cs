@@ -24,18 +24,16 @@ namespace NeoTestApp.Code
 		protected override void Initialize()
 		{
 			if (CurrentPlatform == MonoGamePlatform.Android)
-			{
 				_graphics.IsFullScreen = true;
-				TouchPanel.EnabledGestures = GestureType.HorizontalDrag | GestureType.VerticalDrag | GestureType.Pinch | GestureType.Tap;
-			}
 			else
 			{
 				_graphics.PreferredBackBufferWidth = 800;
 				_graphics.PreferredBackBufferHeight = 600;
+				Window.AllowUserResizing = true;
+				Window.ClientSizeChanged += OnResize;
 			}
 			_graphics.ApplyChanges();
-			Window.AllowUserResizing = true;
-			Window.ClientSizeChanged += OnResize;
+
 
 			base.Initialize();
 

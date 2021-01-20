@@ -5,7 +5,7 @@ namespace Neo.Controls
 {
 	public class Switch : Control
 	{
-		public Switch()
+		public Switch(Neo neo) : base(neo)
 		{
 			WantsMouse = true;
 			Clicked += Switch_Clicked;

@@ -135,12 +135,18 @@ namespace Neo
 				{
 					numBatchesToProcess = MaxBatchSize;
 				}
+				NeoBatchItem.ItemType lastType;
 				// Avoid the array checking overhead by using pointer indexing!
 				fixed (BlockVertex* vertexArrayFixedPtr = _vertexArray)
 				{
 					var vertexArrayPtr = vertexArrayFixedPtr;
 
-					NeoBatchItem.ItemType lastType = NeoBatchItem.ItemType.Texture;
+					
+					if (_batchItemList[0] != null)
+						lastType = _batchItemList[0].Type;
+					else
+						lastType = NeoBatchItem.ItemType.Texture;
+
 					// Draw the batches
 					for (int i = 0; i < numBatchesToProcess; i++, batchIndex++, index += 4, vertexArrayPtr += 4)
 					{
@@ -169,7 +175,7 @@ namespace Neo
 					}
 				}
 				// flush the remaining vertexArray data
-				FlushVertexArray(startIndex, index, tex, NeoBatchItem.ItemType.Block);
+				FlushVertexArray(startIndex, index, tex, lastType);
 				// Update our batch count to continue the process of culling down
 				// large batches
 				batchCount -= numBatchesToProcess;

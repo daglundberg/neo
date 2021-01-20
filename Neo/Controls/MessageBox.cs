@@ -6,36 +6,30 @@ namespace Neo.Controls
 {
 	public class MessageBox : Control
 	{
-		public enum Result
-		{
-			Ok, Cancel,	Yes, No, Accept,
-			Decline, Continue, Stop,
-			Back, Next, Close, Done
-		}
-
 		public event EventHandler Closed;
 
 		Row _buttonRow;
-		public MessageBox(Neo neo, string message, Result[] resultButtons)
+		public MessageBox(Neo neo, string message, Result[] resultButtons) : base (neo, true)
 		{
-			_neo = neo;
 			WantsMouse = true;
-			_buttonRow = new Row();
+			_buttonRow = new Row(neo);
 			_buttonRow.Anchors = Anchors.Bottom | Anchors.Left | Anchors.Right;
+			
 			_buttonRow.LayoutRule = Row.LayoutRules.RightToLeft;
 			_buttonRow.Margins = new Margins(15);
-			_buttonRow.Size = new Size(100);			
+			_buttonRow.Size = new Size(50);			
 
-			Label _label = new Label(message);
-			_label.Anchors = Anchors.Top;
-			_label.Margins = new Margins(20);
-			
+			Label _label = new Label(neo, message);
+			_label.Anchors = Anchors.Left | Anchors.Top;
+			_label.Margins = new Margins(20);			
 
 			foreach(Result r in resultButtons)
 			{
-				ResultButton _btn = new ResultButton(r);
-				_btn.Size = new Size(100);
-				_btn.Anchors = Anchors.Bottom;
+				ResultButton _btn = new ResultButton(neo, r);
+				_btn.Size = new Size(27 + 10 * r.ToString().Length, 38);
+				//_btn.Anchors = Anchors.Bottom;
+				_btn.Color = Color.Aqua;
+				_btn.Margins = new Margins(5, 0, 5, 0);
 				_btn.Clicked += btnClicked;
 				_buttonRow.AddChild(_btn);
 			}
@@ -86,20 +80,24 @@ namespace Neo.Controls
 		private void btnClicked(object sender, EventArgs e)
 		{
 			_neo.RemoveChild(this);
-		//	_method?.Invoke(((ResultButton)sender).Result);
-			Closed?.Invoke(this, e);
+			//_method?.Invoke(((ResultButton)sender).Result);
+			Closed?.Invoke(((ResultButton)sender).Result, e);
 		}
 
 		internal override void SetBounds(Rectangle bounds)
 		{
 			Bounds = bounds;
+			foreach (Control child in this)
+				child.SetBounds(CalculateChildBounds(Bounds, child, true, true));
 		}
+
+		public enum Result { Ok, Cancel, Yes, No, Close, Continue, Stop, Back, Next, Done, Accept, Decline }
 	}
 
 	public class ResultButton : Button
 	{
 		public MessageBox.Result Result { get; private set; }
-		public ResultButton(MessageBox.Result result)
+		public ResultButton(Neo neo, MessageBox.Result result) : base(neo)
 		{
 			Result = result;
 			Text = result.ToString();

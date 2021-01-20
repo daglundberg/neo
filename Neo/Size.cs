@@ -7,19 +7,13 @@ using System.Runtime.Serialization;
 namespace Neo
 {
 	/// <summary>
-	/// Describes a 2D-point.
+	/// Describes a 2D-size.
 	/// </summary>
 	[DataContract]
 	[DebuggerDisplay("{DebugDisplayString,nq}")]
 	public struct Size : IEquatable<Size>
 	{
-		#region Private Fields
-
 		private static readonly Size zeroPoint = new Size();
-
-		#endregion
-
-		#region Public Fields
 
 		/// <summary>
 		/// The width of this <see cref="Size"/>.
@@ -33,10 +27,6 @@ namespace Neo
 		[DataMember]
 		public int Height;
 
-		#endregion
-
-		#region Properties
-
 		/// <summary>
 		/// Returns a <see cref="Size"/> with coordinates 0, 0.
 		/// </summary>
@@ -44,25 +34,6 @@ namespace Neo
 		{
 			get { return zeroPoint; }
 		}
-
-		#endregion
-
-		/*            #region Internal Properties
-
-					internal string DebugDisplayString
-					{
-						get
-						{
-							return string.Concat(
-								this.Width.ToString(), "  ",
-								this.Height.ToString()
-							);
-						}
-					}
-
-					#endregion*/
-
-		#region Constructors
 
 		/// <summary>
 		/// Constructs a point with Width and Height from two values.
@@ -84,10 +55,6 @@ namespace Neo
 			this.Width = value;
 			this.Height = value;
 		}
-
-		#endregion
-
-		#region Operators
 
 		/// <summary>
 		/// Adds two points.
@@ -154,10 +121,6 @@ namespace Neo
 		{
 			return !a.Equals(b);
 		}
-
-		#endregion
-
-		#region Public methods
 
 		/// <summary>
 		/// Compares whether current instance is equal to specified <see cref="Object"/>.
@@ -235,7 +198,6 @@ namespace Neo
 			width = Width;
 			height = Height;
 		}
-		#endregion
 	}
 }
 

@@ -9,15 +9,8 @@ namespace Neo.Controls
 		public string Text;
 		public Color Color;
 
-		public Label(string text)
+		public Label(Neo neo, string text) : base (neo)
 		{
-			Color = Color.White;
-			Text = text;
-		}
-
-		public Label(Neo neo, string text)
-		{
-			_neo = neo;
 			Color = Color.White;
 			Text = text;
 		}

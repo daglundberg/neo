@@ -10,16 +10,9 @@ namespace Neo.Controls
 		public string Text;
 		public Color Color { get; set; } = new Color(0.9f, 0.3f, 0.0f, 1f);
 
-		public Button() : base (false)
+		public Button(Neo neo) : base (neo, false)
 		{
-			Text = "button";
-			WantsMouse = true;
-			Clicked += Button_Clicked;
-		}
-
-		public Button(Neo neo) : base(false)
-		{
-			_neo = neo;
+			Text = "btn";
 			WantsMouse = true;
 			Clicked += Button_Clicked;
 		}
@@ -32,7 +25,7 @@ namespace Neo.Controls
 
 		internal override void SetBounds(Rectangle bounds)
 		{
-			Bounds = bounds;			
+			Bounds = bounds;
 		}
 
 		internal override void Draw(GameTime gameTime, NeoBatch guiBatch)

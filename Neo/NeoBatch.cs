@@ -135,7 +135,7 @@ namespace Neo
             }
         }
 
-        public void Flush()
+        public void End()
         {
             _batcher.DrawBatch();
         }

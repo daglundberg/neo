@@ -8,7 +8,6 @@ namespace Neo
 {
 	public partial class Neo : Grid
 	{
-		public Style Style { get; private set; }
 		private MonoGamePlatform _currentPlatform;
 
 		private Game _game;
@@ -17,12 +16,10 @@ namespace Neo
 
 		public NeoFont DefaultFont { get; private set; }
 
-		public Neo(Game game, Style style, MonoGamePlatform platform)
+		public Neo(Game game, MonoGamePlatform platform) : base(null)
 		{
 			_game = game;
 			_currentPlatform = platform;
-
-			Style = style;
 
 			_game.Window.ClientSizeChanged += OnResize;		
 
@@ -33,23 +30,15 @@ namespace Neo
 
 			DefaultFont = game.Content.Load<NeoFont>("output");
 			DefaultFont.Atlas = game.Content.Load<Texture2D>("atlas");
+			_neo = this;
 		}
 
 		private void OnResize(object sender, EventArgs e) { ForceRefresh(); }
 
-		public void Ready()
-		{
-			Initialize(this);
-		}
-
-		internal override void Initialize(Neo neo)
+		public void Create()
 		{
 			_neoBatch = new NeoBatch(_game.GraphicsDevice, _game.Content, this);
 			SetBounds(new Rectangle(0, 0, (int)(_game.GraphicsDevice.Viewport.Width / Scale), (int)(_game.GraphicsDevice.Viewport.Height / Scale)));
-
-			base.Initialize(neo);
-			foreach (Control child in this)
-				child.Initialize(neo);
 		}
 
 		public void ForceRefresh()
@@ -60,18 +49,18 @@ namespace Neo
 
 		public void Draw(GameTime gameTime)
 		{
-			foreach (Control c in this)
-				c.Draw(gameTime, _neoBatch);
+			foreach (Control child in this)
+				child.Draw(gameTime, _neoBatch);
 
-			_neoBatch.Flush();
+			_neoBatch.End();
 		}
 
 		public new bool ListensForMouseOrTouchAt(Point mouseOrTouchPosition)
 		{
 			Point pos = new Point((int)(mouseOrTouchPosition.X / Scale), (int)(mouseOrTouchPosition.Y / Scale));
 
-			foreach (Control c in this)
-				if (c.ListensForMouseOrTouchAt(pos))
+			foreach (Control child in this)
+				if (child.ListensForMouseOrTouchAt(pos))
 					return true;
 
 			return false;
@@ -81,10 +70,10 @@ namespace Neo
 		{
 			Point pos = new Point((int)(mouseOrTouchPosition.X / Scale), (int)(mouseOrTouchPosition.Y / Scale));
 
-			foreach (Control c in this)
-				if (c.ListensForMouseOrTouchAt(pos))
+			foreach (Control child in this)
+				if (child.ListensForMouseOrTouchAt(pos))
 				{
-					if (c.Click(pos))
+					if (child.Click(pos))
 						return true;
 				}
 

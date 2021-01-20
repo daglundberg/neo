@@ -8,7 +8,7 @@ namespace Neo.Controls
 	{
 		public LayoutRules LayoutRule { get; set; } = LayoutRules.LeftToRight;
 
-		public Row() { }
+		public Row(Neo neo) : base(neo, true) { WantsMouse = true; }
 
 		public Color BackgroundColor { get; set; } = new Color(0.1f, 0.1f, 0.1f, 0.1f);
 
@@ -16,7 +16,7 @@ namespace Neo.Controls
 		{
 			get
 			{
-				return new Block[] { new Block { Position = Bounds.Location.ToVector2(), Size = Bounds.Size.ToVector2(), Color = BackgroundColor, Radius = 10 } };
+				return new Block[] {/* new Block { Position = Bounds.Location.ToVector2(), Size = Bounds.Size.ToVector2(), Color = BackgroundColor, Radius = 10 }*/ };
 			}
 		}
 

@@ -3,112 +3,57 @@ using Neo.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
-using System;
+using static Neo.Controls.MessageBox;
 
 namespace NeoTestApp.Code
 {
 	class Gui : DrawableGameComponent
 	{
 		Neo.Neo _neo;
-		Row r;
-		Label l;
-		Button btn;
+		Button btnClickMe;
+		Row row;
+
 		public Gui(Game game) : base(game)
 		{
-			Style style = new Style(Game.Content);
-			_neo = new Neo.Neo(game, style, Game1.CurrentPlatform);
 
-			btn = new Button(_neo)
-			{
-				Anchors = Anchors.Left | Anchors.Bottom,
-				Size = new Size(130, 40),
-				Margins = new Margins(30),
-				Color = Color.Blue,
-				Text = "My Button.."
-			};
-			btn.Clicked += Btn_Clicked;
+			_neo = new Neo.Neo(game, Game1.CurrentPlatform);
 
-			r = new Row();
-			r.Anchors = Anchors.Top | Anchors.Left | Anchors.Bottom;
-			r.Size = new Size(80);
-			r.Margins = new Margins(25, 50, 0, 100);
-			r.LayoutRule = Row.LayoutRules.TopToBottom;
-			r.AddChildren(
-						new Control[]
-						{
-							new Grid()
-							{
-								Size = new Size(50),
-								Margins = new Margins(4,16,4,4)
-							},
-							new Switch()
-							{
-								Size = new Size(60,30),
-								Margins = new Margins(4),
-								Checked = true
-							},
-							new Button()
-							{
-								Size = new Size(50),
-								Margins = new Margins(4),
-							},
-							new Switch()
-							{
-								Size = new Size(60,30),
-								Margins = new Margins(4),
-								Checked = false
-							},
-							new Switch()
-							{
-								Size = new Size(60,30),
-								Margins = new Margins(4),
-								Checked = true
-							},
-							new Grid()
-							{
-								Size = new Size(50),
-								Margins = new Margins(4,4,16,4)
-							},
-						});
+			btnClickMe = new Button(_neo);
+			btnClickMe.Text = "Click me";
+			btnClickMe.Size = new Size(110, 38);
+			btnClickMe.Margins = new Margins(50);
+			btnClickMe.Anchors = Anchors.Left;
+			btnClickMe.Clicked += BtnClickMe_Clicked;
 
-			l = new Label(_neo, "Scale: ")
-			{
-				Anchors = Anchors.None,
-				Size = new Size(110)
-			};
+			row = new Row(_neo);
+			row.Anchors = Anchors.Left | Anchors.Right | Anchors.Top;
+			row.Size = new Size(50);
+			row.Margins = new Margins(20);
 
 			_neo.AddChildren(
 				new Control[]
 				{
-					new Label(_neo, "Here's a label..")
-					{
-						Anchors = Anchors.Top,
-						Margins = new Margins(20),
-						Size = new Size(160)
-					},
-
-					
-					new Button(_neo)
-					{
-						Anchors = Anchors.Right | Anchors.Bottom,
-						Size = new Size(110, 40),
-						Margins = new Margins(30),
-						Text = "Next..."
-					},
-					r,
-					btn,
+					btnClickMe,
+					row
 				});
 
-		_neo.Ready();
+			_neo.Create();
 		}
 
-		private void Btn_Clicked(object sender, EventArgs e)
+		private void BtnClickMe_Clicked(object sender, System.EventArgs e)
 		{
-			btn.Text = "Clicked";
-			MessageBox messageBox = new MessageBox(_neo, "Heyy", new MessageBox.Result[] { MessageBox.Result.Ok, MessageBox.Result.No });
-			messageBox.Size = new Size(210);
-			
-			_neo.AddChild(messageBox);
+			btnClickMe.Text = "Clicked!";
+			row.Margins = new Margins(50,100,50,50);
+			MessageBox msg = new MessageBox(_neo, "yeah!", new Result[] { Result.Ok, Result.Cancel });
+			msg.Size = new Size(350, 240);
+			msg.Closed += Msg_Closed;
+			_neo.AddChild(msg);
+			_neo.ForceRefresh();			
+		}
+
+		private void Msg_Closed(object sender, System.EventArgs e)
+		{
+			btnClickMe.Text = ((Result)sender).ToString();
 		}
 
 		public override void Draw(GameTime gameTime)
@@ -120,7 +65,6 @@ namespace NeoTestApp.Code
 		{
 			CheckMouse();
 			CheckTouch();
-			l.Text = $"Scale: {Math.Round(_neo.Scale, 2)}";
 
 			base.Update(gameTime);
 		}
@@ -146,7 +90,6 @@ namespace NeoTestApp.Code
 			{
 				_neo.Scale -= 0.07f;
 				_neo.ForceRefresh();
-
 			}
 
 			if (_oldMouseState.ScrollWheelValue < _newMouseState.ScrollWheelValue)
