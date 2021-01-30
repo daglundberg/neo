@@ -34,7 +34,6 @@ namespace NeoTestApp.Code
 			}
 			_graphics.ApplyChanges();
 
-
 			base.Initialize();
 
 			_gui = new Gui(this);
@@ -42,8 +41,8 @@ namespace NeoTestApp.Code
 
 		public void OnResize(Object sender, EventArgs e)
 		{
-			_graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
-			_graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
+/*			_graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
+			_graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;*/
 		}
 
 		protected override void LoadContent() { }

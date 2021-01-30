@@ -7,12 +7,11 @@ using TImport = Neo.NeoFont;
 
 namespace QuadFontContentPipelineExtension
 {
-	[ContentImporter(".neofont", DisplayName = "Neo font data importer", DefaultProcessor = "")]
-	public class Importer1 : ContentImporter<TImport>
+	[ContentImporter(".neofont", DisplayName = "NeoFont glyph data importer", DefaultProcessor = "PassThroughProcessor")]
+	public class NeoFontImporter : ContentImporter<TImport>
 	{
 		public override TImport Import(string filename, ContentImporterContext context)
 		{
-
 			StreamReader streamReader = new StreamReader(filename);
 			List<NeoGlyph> glyphs = new List<NeoGlyph>();
 			while (!streamReader.EndOfStream)

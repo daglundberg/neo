@@ -10,7 +10,7 @@
 
 #-------------------------------- References --------------------------------#
 
-/reference:..\..\QuadFontContentPipelineExtension\bin\Release\netstandard2.0\QuadFontContentPipelineExtension.dll
+/reference:..\..\NeoFontContentPipelineExtension\bin\Release\netstandard2.0\NeoFontContentPipelineExtension.dll
 
 #---------------------------------- Content ---------------------------------#
 
@@ -39,7 +39,7 @@
 /build:neo_shader.fx
 
 #begin output.csv
-/importer:Importer1
+/importer:NeoFontImporter
 /processor:PassThroughProcessor
 /build:output.csv
 

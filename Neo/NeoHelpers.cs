@@ -3,50 +3,6 @@ using System;
 
 namespace Neo
 {
-	public partial class Neo
-	{
-        /// <summary>
-        /// Takes two sizes and returns the coordinate for centering the second size in the first one.
-        /// <param name="a">Size of container.</param>
-        /// <param name="b">Size of component to be centered in the container.</param>
-        /// </summary>
-        public static Size Center(Size a, Size b)
-        {
-            return new Size(
-                a.Width / 2 - b.Width / 2,
-                a.Height / 2 - b.Height / 2);
-        }
-
-        /// <summary>
-        /// Takes two sizes and an offset. Returns the coordinate for centering the second size in the first one.
-        /// <param name="a">Size of container.</param>
-        /// <param name="b">Size of component to be centered in the container.</param>
-        /// </summary>
-        public static Size Center(Size a, Size b, int offsetHeight)
-        {
-            return new Size(
-                a.Width / 2 - b.Width / 2,
-                (a.Height / 2 - b.Height / 2) + offsetHeight);
-        }
-
-        /// <summary>
-        /// Takes two sizes and an offset. Returns the coordinate for centering the second size in the first one.
-        /// <param name="a">Size of container.</param>
-        /// <param name="b">Size of component to be centered in the container.</param>
-        /// </summary>
-        public static Vector2 Center(Size a, Size b, Size offset)
-        {
-            return offset.ToVector2() + new Size(
-                a.Width / 2 - b.Width / 2,
-                a.Height / 2 - b.Height / 2).ToVector2();
-        }
-
-        public static Vector2 FromBottomRight(Vector2 screenSize, int x, int y)
-        {
-            return new Vector2(screenSize.X - x, screenSize.Y - y);
-        }
-    }
-
     [Flags]
     public enum Anchors
     {

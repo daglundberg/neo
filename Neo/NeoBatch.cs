@@ -97,8 +97,10 @@ namespace Neo
 
         }
 
-        public void DrawString(NeoFont font, string text, Vector2 position, float scale, Color color)
+        public void DrawString(string text, Vector2 position, float scale, Color color)
         {
+            NeoFont font = _neo.DefaultFont;
+
             if (text != null)
             {
                 float advance = 0;
@@ -123,6 +125,7 @@ namespace Neo
                     NeoGlyph g;
                     font.Glyphs.TryGetValue(c, out g);
                     Bounds gg = g.PlaneBounds * scale;
+
                     if (g != null)
                     {
                         DrawGlyph(font.Atlas, new Rectangle((int)(gg.Left + (advance * scale + position.X)), (int)(scale - gg.Top + position.Y + (row * 1 * scale)), (int)(gg.Right - gg.Left), (int)(gg.Top - gg.Bottom)),

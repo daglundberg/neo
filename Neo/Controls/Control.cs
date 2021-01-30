@@ -52,7 +52,7 @@ namespace Neo.Controls
 			}
 		}
 
-		internal bool ListensForMouseOrTouchAt(Point mousePosition)
+		public bool ListensForMouseOrTouchAt(Point mousePosition)
 		{
 			foreach (Control child in this)
 				if (child.ListensForMouseOrTouchAt(mousePosition))
@@ -65,7 +65,7 @@ namespace Neo.Controls
 		}
 
 		//Returns true if the click was consumed
-		internal bool Click(Point mousePosition)
+		public bool Click(Point mousePosition)
 		{
 			foreach (Control child in this)
 				if (child.ListensForMouseOrTouchAt(mousePosition))				

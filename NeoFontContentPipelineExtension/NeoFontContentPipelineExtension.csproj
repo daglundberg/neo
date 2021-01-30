@@ -2,6 +2,9 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
   <ItemGroup>
     <Content Remove="C:\Users\Dag\.nuget\packages\monogame.framework.content.pipeline\3.8.0.1641\contentFiles\any\netstandard2.0\CppNet.dll" />
     <Content Remove="C:\Users\Dag\.nuget\packages\monogame.framework.content.pipeline\3.8.0.1641\contentFiles\any\netstandard2.0\libmojoshader_64.dll" />

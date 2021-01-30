@@ -2,6 +2,9 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Shaders\**" />
     <EmbeddedResource Remove="Shaders\**" />
@@ -20,6 +23,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Neo\Neo.csproj" />
-    <ProjectReference Include="..\QuadFontContentPipelineExtension\QuadFontContentPipelineExtension.csproj" />
+    <ProjectReference Include="..\QuadFontContentPipelineExtension\NeoFontContentPipelineExtension.csproj" />
   </ItemGroup>
 </Project>

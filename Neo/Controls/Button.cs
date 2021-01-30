@@ -44,7 +44,7 @@ namespace Neo.Controls
 				});
 
 				if (_neo != null)
-					guiBatch.DrawString(_neo.DefaultFont, Text, Bounds.Location.ToVector2() + new Vector2(10, 5+(10 - 10 * anim)), 22f, Color.White);
+					guiBatch.DrawString(Text, Bounds.Location.ToVector2() + new Vector2(10, 5+(10 - 10 * anim)), 22f, Color.White);
 			}
 		}
 	}
