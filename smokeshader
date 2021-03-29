@@ -1,0 +1,29 @@
+//Smoke shader
+
+#define TAU 6.28318530718
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord ) 
+{
+	float time = iTime * .1+23.0;
+
+	vec2 uv = fragCoord.xy / iResolution.xy;   
+
+    vec2 p = mod(uv*TAU, TAU)-250.0;
+
+	vec2 i = vec2(p);
+	float c = 1.0;
+	float inten = .025;
+
+	for (int n = 0; n < 5; n++) 
+	{
+		float t = time * (1.0 - (1.0 / float(n+1)));
+		i = p + vec2(cos(t - i.x) + sin(t + i.y), sin(t - i.y) + cos(t + i.x));
+		c += 1.0/length(vec2(p.x / (sin(i.x+t)/inten),p.y / (cos(i.y+t)/inten)));
+	}
+
+	c = 1.17-pow(c, 1.4);
+    c *= 0.12;
+    c +=.35;
+
+	fragColor = vec4(c,c,c,1.0);
+}

@@ -22,7 +22,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NeoFontContentPipelineExtension\NeoFontContentPipelineExtension.csproj" />
     <ProjectReference Include="..\Neo\Neo.csproj" />
-    <ProjectReference Include="..\QuadFontContentPipelineExtension\NeoFontContentPipelineExtension.csproj" />
   </ItemGroup>
 </Project>

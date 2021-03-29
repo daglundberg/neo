@@ -19,8 +19,8 @@ namespace Neo.Controls
 		private List<Control> _children;
 		public bool HasChildren { get { return _children.Count > 0; } }
 		public int ChildCount { get { return _children.Count; } }
-		public Control AddChild(Control child) { _children.Add(child); return this; }
-		public Control AddChildren(Control[] children) { _children.AddRange(children); return this; }
+		public Control AddChild(Control child) { _children.Add(child); SetBounds(Bounds); return this; }
+		public Control AddChildren(Control[] children) { _children.AddRange(children); SetBounds(Bounds); return this; }
 		public void RemoveChild(Control child) { _children.Remove(child); }
 		public IEnumerator GetEnumerator() { return _children.GetEnumerator(); }
 		public Control this[int index] { get { return _children[index]; } }
