@@ -1,29 +1,37 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="ComponentsOld\**" />
-    <EmbeddedResource Remove="ComponentsOld\**" />
-    <None Remove="ComponentsOld\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="GuiBatch.cs" />
-    <Compile Remove="GuiBatcher.cs" />
-    <Compile Remove="GuiBatcherSpriteBatcherStuff.cs" />
-    <Compile Remove="GuiBatchItem.cs" />
-    <Compile Remove="GuiFont.cs" />
-    <Compile Remove="InstancedRectangles.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641">
-      <PrivateAssets>All</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>10</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+    <ItemGroup>
+        <Using Include="System.Collections"/>
+        <Using Include="Microsoft.Xna.Framework"/>
+        <Using Include="Microsoft.Xna.Framework.Graphics"/>
+        <Using Include="Microsoft.Xna.Framework.Content"/>
+    </ItemGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Remove="ComponentsOld\**"/>
+        <EmbeddedResource Remove="ComponentsOld\**"/>
+        <None Remove="ComponentsOld\**"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Remove="GuiBatch.cs"/>
+        <Compile Remove="GuiBatcher.cs"/>
+        <Compile Remove="GuiBatcherSpriteBatcherStuff.cs"/>
+        <Compile Remove="GuiBatchItem.cs"/>
+        <Compile Remove="GuiFont.cs"/>
+        <Compile Remove="InstancedRectangles.cs"/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641">
+            <PrivateAssets>All</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
 </Project>
