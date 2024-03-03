@@ -180,6 +180,7 @@ internal class NeoBatcher
 
 			// flush the remaining vertexArray data
 			FlushVertexArray(startIndex, index, tex, lastType);
+		//FlushVertexArray(startIndex, index, tex, NeoBatchItem.ItemType.Block);
 			// Update our batch count to continue the process of culling down
 			// large batches
 			batchCount -= numBatchesToProcess;

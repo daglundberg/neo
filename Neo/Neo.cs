@@ -1,6 +1,7 @@
 ﻿using MonoGame.Framework.Utilities;
 using Neo.Controls;
 
+
 namespace Neo;
 
 public class Neo : Grid
@@ -23,8 +24,8 @@ public class Neo : Grid
 		else
 			Scale = 1f;
 
-		DefaultFont = game.Content.Load<NeoFont>("output");
-		DefaultFont.Atlas = game.Content.Load<Texture2D>("atlas");
+		DefaultFont = game.Content.Load<NeoFont>("default_font_map");
+		DefaultFont.Atlas = game.Content.Load<Texture2D>("default_font_atlas");
 		_neo = this;
 	}
 

@@ -19,7 +19,7 @@ namespace NeoTestApp.Code
 			_neo = new Neo.Neo(game, Game1.CurrentPlatform);
 
 			btnClickMe = new Button(_neo);
-			btnClickMe.Text = "Click me";
+			btnClickMe.Text = "!Click Me!";
 			btnClickMe.Size = new Size(110, 38);
 			btnClickMe.Margins = new Margins(50);
 			btnClickMe.Anchors = Anchors.Left;
@@ -43,13 +43,13 @@ namespace NeoTestApp.Code
 
 		private void BtnClickMe_Clicked(object sender, System.EventArgs e)
 		{
-			btnClickMe.Text = "Clicked!";
-			row.Margins = new Margins(50,100,50,50);
-			MessageBox msg = new MessageBox(_neo, $"yeah...", new Result[] { Result.Ok, Result.Cancel });
-			msg.Size = new Size(350, 240);
-			msg.Closed += Msg_Closed;
-			_neo.AddChild(msg);
-			_neo.ForceRefresh();			
+		//	btnClickMe.Text = "A";
+		//	row.Margins = new Margins(50,100,50,50);
+		//	MessageBox msg = new MessageBox(_neo, $"yeah...", new Result[] { Result.Ok, Result.Cancel });
+		//	msg.Size = new Size(350, 240);
+		//	msg.Closed += Msg_Closed;
+		//	_neo.AddChild(msg);
+		//	_neo.ForceRefresh();			
 		}
 
 		private void Msg_Closed(object sender, System.EventArgs e)

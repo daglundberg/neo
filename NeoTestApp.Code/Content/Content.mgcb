@@ -10,11 +10,11 @@
 
 #-------------------------------- References --------------------------------#
 
-/reference:..\..\NeoFontContentPipelineExtension\bin\Release\netstandard2.0\NeoFontContentPipelineExtension.dll
+/reference:..\..\NeoFontContentPipelineExtension\bin\Debug\net6.0\NeoFontContentPipelineExtension.dll
 
 #---------------------------------- Content ---------------------------------#
 
-#begin atlas.png
+#begin default_font_atlas.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -24,22 +24,15 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:atlas.png
+/build:default_font_atlas.png
 
-#begin InstancingRectangleShader.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:InstancingRectangleShader.fx
+#begin default_font_map.csv
+/importer:NeoFontImporter
+/processor:PassThroughProcessor
+/build:default_font_map.csv
 
 #begin neo_shader.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:neo_shader.fx
-
-#begin output.csv
-/importer:NeoFontImporter
-/processor:PassThroughProcessor
-/build:output.csv
-

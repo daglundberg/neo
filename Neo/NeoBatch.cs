@@ -33,6 +33,7 @@ public class NeoBatch
 		_effect = content.Load<Effect>("neo_shader");
 
 		_batcher = new NeoBatcher(graphicsDevice, _effect);
+		
 
 		CheckScreenResolution();
 
@@ -90,6 +91,31 @@ public class NeoBatch
 			_texCoordTL,
 			_texCoordBR);
 		item.Type = NeoBatchItem.ItemType.Glyph;
+		
+		Draw(new Block
+		{
+			Position = destinationRectangle.Location.ToVector2(),
+			Size = new Vector2(10,10),
+			Color = Color.Blue,
+			Radius = 0.1f,
+		});
+	}
+	
+	/// <summary>
+	///     Submit a block for drawing in the current batch.
+	/// </summary>
+	public void Draw(Block block)
+	{
+		var item = _batcher.CreateBatchItem();
+
+		item.SetBlock(block.Position.X,
+			block.Position.Y,
+			block.Size.X,
+			block.Size.Y,
+			block.Color,
+			Vector2.Zero,
+			Vector2.One,
+			block.Radius);
 	}
 
 	public void DrawString(string text, Vector2 position, float scale, Color color)
@@ -118,14 +144,16 @@ public class NeoBatch
 				}
 
 				NeoGlyph g;
-				font.Glyphs.TryGetValue(c, out g);
+				bool found = font.Glyphs.TryGetValue(c, out g);
 				var gg = g.PlaneBounds * scale;
 
-				if (g != null)
+				if (found)
 				{
 					DrawGlyph(font.Atlas,
-						new Rectangle((int) (gg.Left + (advance * scale + position.X)),
-							(int) (scale - gg.Top + position.Y + row * 1 * scale), (int) (gg.Right - gg.Left),
+						new Rectangle(
+							(int) (gg.Left + (advance * scale + position.X)),
+							(int) (scale - gg.Top + position.Y + row * 1 * scale),
+							(int) (gg.Right - gg.Left),
 							(int) (gg.Top - gg.Bottom)),
 						g.AtlasBounds.Left, g.AtlasBounds.Bottom, g.AtlasBounds.Right, g.AtlasBounds.Top,
 						color);
@@ -479,23 +507,6 @@ public class NeoBatch
 			Vector2.Zero,
 			Vector2.One,
 			radius);
-	}
-
-	/// <summary>
-	///     Submit a block for drawing in the current batch.
-	/// </summary>
-	public void Draw(Block block)
-	{
-		var item = _batcher.CreateBatchItem();
-
-		item.SetBlock(block.Position.X,
-			block.Position.Y,
-			block.Size.X,
-			block.Size.Y,
-			block.Color,
-			Vector2.Zero,
-			Vector2.One,
-			block.Radius);
 	}
 
 	/*        /// <summary>
