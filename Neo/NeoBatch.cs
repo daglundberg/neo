@@ -23,18 +23,18 @@ public class NeoBatch
 	///     next multiple of 64).
 	/// </param>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="graphicsDevice" /> is null.</exception>
-	public NeoBatch(GraphicsDevice graphicsDevice, ContentManager content, Neo neo)
+	public NeoBatch(Effect shader, GraphicsDevice graphicsDevice, ContentManager content, Neo neo)
 	{
 		_neo = neo;
 		if (graphicsDevice == null) throw new ArgumentNullException("graphicsDevice");
 
 		_graphicsDevice = graphicsDevice;
 
-		_effect = content.Load<Effect>("neo_shader");
-
+		//_effect = Effect content.Load<Effect>("neo_shader");
+		_effect = shader;
 		_batcher = new NeoBatcher(graphicsDevice, _effect);
-		
 
+		
 		CheckScreenResolution();
 
 		_graphicsDevice.BlendState = BlendState.AlphaBlend;

@@ -32,8 +32,7 @@ public class NeoFontImporter : ContentImporter<NeoFont>
 				Right = (float)Convert.ToDouble(cols[4]),
 				Top = (float)Convert.ToDouble(cols[5])
 			};
-			Console.Write(planeBounds.Top);
-			Console.Write(", ");
+
 			var atlasBounds = new Bounds()
 			{
 				Left = (float)Convert.ToDouble(cols[6]),
@@ -41,9 +40,7 @@ public class NeoFontImporter : ContentImporter<NeoFont>
 				Right = (float)Convert.ToDouble(cols[8]),
 				Top = (float)Convert.ToDouble(cols[9])
 			};
-			Console.Write("\n");
-			Console.Write(atlasBounds.Top);
-			Console.Write(", ");
+
 			var glyph = new NeoGlyph(character, advance, planeBounds, atlasBounds);
 			glyphs.Add(glyph);
 		}

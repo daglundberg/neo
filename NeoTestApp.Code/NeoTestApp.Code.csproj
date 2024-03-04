@@ -6,17 +6,6 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Shaders\**" />
-    <EmbeddedResource Remove="Shaders\**" />
-    <None Remove="Shaders\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Camera.cs" />
-    <Compile Remove="CubeMap.cs" />
-    <Compile Remove="InstancedRectangles.cs" />
-    <Compile Remove="NonInstanced.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>

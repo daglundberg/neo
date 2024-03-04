@@ -1,4 +1,6 @@
-﻿namespace Neo;
+﻿using System.Globalization;
+
+namespace Neo;
 
 [Flags]
 public enum Anchors

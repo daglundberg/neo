@@ -1,6 +1,6 @@
-﻿using MonoGame.Framework.Utilities;
+﻿using System.Reflection;
+using MonoGame.Framework.Utilities;
 using Neo.Controls;
-
 
 namespace Neo;
 
@@ -10,6 +10,7 @@ public class Neo : Grid
 
 	private readonly Game _game;
 	private NeoBatch _neoBatch;
+	private Effect _shader;
 	public float Scale;
 
 	public Neo(Game game, MonoGamePlatform platform) : base(null)
@@ -23,9 +24,23 @@ public class Neo : Grid
 			Scale = 2.5f;
 		else
 			Scale = 1f;
+		
+		var assembly = Assembly.GetExecutingAssembly();
+		
+		using Stream font_map_stream = assembly.GetManifestResourceStream("Neo.Content.default_font_map.csv");
+		using Stream font_atlas_stream = assembly.GetManifestResourceStream("Neo.Content.default_font_atlas.png");
+		using Stream shader_stream = assembly.GetManifestResourceStream("Neo.Content.shader_compiled_opengl.mgfx");
+		
+		DefaultFont = NeoFont.FromStream(font_map_stream);
+		DefaultFont.Atlas = Texture2D.FromStream(_game.GraphicsDevice, font_atlas_stream);
 
-		DefaultFont = game.Content.Load<NeoFont>("default_font_map");
-		DefaultFont.Atlas = game.Content.Load<Texture2D>("default_font_atlas");
+		MemoryStream memoryStream = new ();
+		shader_stream.CopyTo(memoryStream);
+		_shader = new Effect(_game.GraphicsDevice, memoryStream.ToArray());
+		
+		//DefaultFont = game.Content.Load<NeoFont>("default_font_map");
+		//DefaultFont.Atlas = game.Content.Load<Texture2D>("default_font_atlas");
+		
 		_neo = this;
 	}
 
@@ -38,7 +53,7 @@ public class Neo : Grid
 
 	public void Create()
 	{
-		_neoBatch = new NeoBatch(_game.GraphicsDevice, _game.Content, this);
+		_neoBatch = new NeoBatch(_shader, _game.GraphicsDevice, _game.Content, this);
 		SetBounds(new Rectangle(0, 0, (int) (_game.GraphicsDevice.Viewport.Width / Scale),
 			(int) (_game.GraphicsDevice.Viewport.Height / Scale)));
 	}
