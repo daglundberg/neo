@@ -91,14 +91,6 @@ public class NeoBatch
 			_texCoordTL,
 			_texCoordBR);
 		item.Type = NeoBatchItem.ItemType.Glyph;
-		
-		Draw(new Block
-		{
-			Position = destinationRectangle.Location.ToVector2(),
-			Size = new Vector2(10,10),
-			Color = Color.Blue,
-			Radius = 0.1f,
-		});
 	}
 	
 	/// <summary>
@@ -117,14 +109,29 @@ public class NeoBatch
 			Vector2.One,
 			block.Radius);
 	}
+	
+	public void Draw(CustomBlock block)
+	{
+		var item = _batcher.CreateBatchItem();
 
-	public void DrawString(string text, Vector2 position, float scale, Color color)
+		item.SetCustomBlock(
+			block.Position.X,
+			block.Position.Y,
+			block.Size.X,
+			block.Size.Y,
+			Vector2.Zero,
+			Vector2.One,
+			block.RadiusTL, block.RadiusTR, block.RadiusBL, block.RadiusBR, block.Color, block.Color, block.Color, block.Color);
+	}
+
+	public float DrawString(string text, Vector2 position, float scale, Color color)
 	{
 		var font = _neo.DefaultFont;
-
+		float advance = 0;
+		
 		if (text != null)
 		{
-			float advance = 0;
+			
 			float row = 0;
 			for (var i = 0; i < text.Length; ++i)
 			{
@@ -161,6 +168,59 @@ public class NeoBatch
 				}
 			}
 		}
+
+		return advance * scale;
+	}
+
+	public float TextWidth(string text, float scale)
+	{
+		var font = _neo.DefaultFont;
+		
+		if (text != null)
+		{
+			float advance = 0;
+			float row = 0;
+			for (var i = 0; i < text.Length; ++i)
+			{
+				var c = text[i];
+
+				if (c == ' ')
+				{
+					advance += 0.35f;
+					continue;
+				}
+
+				if (c == '\n')
+				{
+					row++;
+					advance = 0;
+					continue;
+				}
+
+				NeoGlyph g;
+				bool found = font.Glyphs.TryGetValue(c, out g);
+				var gg = g.PlaneBounds * scale;
+
+				if (found)
+				{
+					advance += g.Advance;
+					/*DrawGlyph(font.Atlas,
+						new Rectangle(
+							(int) (gg.Left + (advance * scale)),
+							(int) (scale - gg.Top + row * 1 * scale),
+							(int) (gg.Right - gg.Left),
+							(int) (gg.Top - gg.Bottom)),
+						g.AtlasBounds.Left, g.AtlasBounds.Bottom, g.AtlasBounds.Right, g.AtlasBounds.Top,
+						color);
+					advance += g.Advance;*/
+					return advance * scale;
+
+				}
+
+				
+			}
+		}
+		return 0;
 	}
 
 	public void End()

@@ -22,7 +22,7 @@ public class MessageBox : Control
 
 	private Action<Result> _method;
 
-	public MessageBox(Neo neo, string message, Result[] resultButtons) : base(neo, true)
+	public MessageBox(Neo neo, string title, string message, Result[] resultButtons) : base(neo, true)
 	{
 		WantsMouse = true;
 		_buttonRow = new Row(neo);
@@ -32,9 +32,14 @@ public class MessageBox : Control
 		_buttonRow.Margins = new Margins(15);
 		_buttonRow.Size = new Size(50);
 
-		var _label = new Label(neo, message);
+		var _label = new Label(neo, title);
 		_label.Anchors = Anchors.Left | Anchors.Top;
-		_label.Margins = new Margins(20);
+		_label.Margins = new Margins(10,2,0,0);
+		
+		var _label2 = new Label(neo, message);
+		_label2.FontSize = _label.FontSize * 0.6f;
+		_label2.Anchors = Anchors.Left | Anchors.Top;
+		_label2.Margins = new Margins(12, 62, 0, 0);
 
 		foreach (var r in resultButtons)
 		{
@@ -48,32 +53,33 @@ public class MessageBox : Control
 		}
 
 		AddChild(_label);
+		AddChild(_label2);
 		AddChild(_buttonRow);
 	}
 
-	public MessageBox(Neo neo, string message) : this(neo, message, new[] {Result.Ok})
+	public MessageBox(Neo neo, string title, string msg) : this(neo, title, msg, new[] {Result.Ok})
 	{
 	}
 
-	public MessageBox(Neo neo, string message, Action<Result> method) : this(neo, message)
+	public MessageBox(Neo neo, string title,  string msg, Action<Result> method) : this(neo, title,msg )
 	{
 		_method = method;
 	}
 
-	public MessageBox(Neo neo, string message, Action<Result> method,
+	public MessageBox(Neo neo, string title, string msg, Action<Result> method,
 		Result result1,
 		Result result2) : this(
-		neo, message,
+		neo, title, msg,
 		new[] {result1, result2})
 	{
 		_method = method;
 	}
 
-	public MessageBox(Neo neo, string message, Action<Result> method,
+	public MessageBox(Neo neo, string title, string msg, Action<Result> method,
 		Result result1,
 		Result result2,
 		Result result3) : this(
-		neo, message,
+		neo, title, msg,
 		new[] {result1, result2, result3})
 	{
 		_method = method;
@@ -87,8 +93,13 @@ public class MessageBox : Control
 		{
 			guiBatch.Draw(new Block
 			{
-				Color = Color.Aquamarine, Position = Bounds.Location.ToVector2(), Radius = 5,
-				Size = Bounds.Size.ToVector2()
+				Color = new Color(44,44,44), Position = Bounds.Location.ToVector2()+new Vector2(0,30), Radius = 5,
+				Size = Bounds.Size.ToVector2() - new Vector2(0, 30)
+			});
+			guiBatch.Draw(new CustomBlock
+			{
+				Color = new Color(77,77,77), Position = Bounds.Location.ToVector2(), RadiusTL = 20, RadiusBR = 3f, RadiusBL = 3f, RadiusTR = 20f, 
+				Size = new Vector2(Bounds.Size.X, 60)
 			});
 
 			foreach (Control c in this)

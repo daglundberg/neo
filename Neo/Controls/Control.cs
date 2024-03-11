@@ -1,4 +1,6 @@
-﻿namespace Neo.Controls;
+﻿using Microsoft.Xna.Framework.Input;
+
+namespace Neo.Controls;
 
 public abstract class Control : IEnumerable
 {
@@ -25,6 +27,8 @@ public abstract class Control : IEnumerable
 	public Margins Margins { get; set; }
 	public Anchors Anchors { get; set; }
 
+	public bool HasFocus { get; }
+	
 	internal bool IsClipped { get; set; }
 
 	internal Rectangle Bounds { get; set; }
@@ -68,7 +72,31 @@ public abstract class Control : IEnumerable
 		return false;
 	}
 
+	//Returns true if the event was consumed
+	public bool MouseDown(Point mousePosition)
+	{
+		foreach (Control child in this)
+			if (child.ListensForMouseOrTouchAt(mousePosition))
+				if (child.MouseDown(mousePosition))
+					return true;
+
+
+		if (Bounds.Contains(mousePosition) && WantsMouse)
+		{
+			MouseDowned?.Invoke(this, new EventArgs());
+			return true;
+		}
+
+		return false;
+	}
+
 	public event EventHandler Clicked;
+	public event EventHandler MouseDowned;
+
+	public virtual void KeyPress(Keys[] key)
+	{
+		
+	}
 
 
 	internal Rectangle CalculateChildBounds(Rectangle parentBounds, Control child, bool calculateHorizontal,
@@ -157,6 +185,7 @@ public abstract class Control : IEnumerable
 
 	public void RemoveChild(Control child)
 	{
+		//TODO:This is bad
 		_children.Remove(child);
 	}
 

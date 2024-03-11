@@ -12,6 +12,8 @@ public class Neo : Grid
 	private NeoBatch _neoBatch;
 	private Effect _shader;
 	public float Scale;
+	
+	public Control FocusedControl { get; set; }
 
 	public Neo(Game game, MonoGamePlatform platform) : base(null)
 	{
@@ -91,6 +93,18 @@ public class Neo : Grid
 		foreach (Control child in this)
 			if (child.ListensForMouseOrTouchAt(pos))
 				if (child.Click(pos))
+					return true;
+
+		return false;
+	}
+	
+	public new bool MouseDown(Point mouseOrTouchPosition)
+	{
+		var pos = new Point((int) (mouseOrTouchPosition.X / Scale), (int) (mouseOrTouchPosition.Y / Scale));
+
+		foreach (Control child in this)
+			if (child.ListensForMouseOrTouchAt(pos))
+				if (child.MouseDown(pos))
 					return true;
 
 		return false;
